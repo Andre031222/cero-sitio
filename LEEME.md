@@ -103,10 +103,24 @@ la red, que es donde está el riesgo real de esa API.
 La carpeta `en/` tiene la traducción lista. Falta montar las rutas `/en/…`, el conmutador y el
 `hreflang` — la decisión de si el sitio nace bilingüe sigue abierta.
 
+## La marca
+
+Un cuervo facetado, en `frontend/public/marca/`. Del mismo original salen tres cosas:
+
+| Archivo | Dónde | Cómo |
+|---|---|---|
+| `cuervo-color.webp` | La portada | El dibujo con sus grises, 76 KB. No se tinta: los tonos facetados se sostienen igual sobre blanco que sobre negro |
+| `cuervo-marca.png` | La barra | La silueta sacada del canal alfa, para poder tintarla con `var(--acento)` |
+| `favicon.svg` | La pestaña | La misma silueta en magenta dentro de una caja de 64 |
+
+**El original venía en JPEG con el damero de transparencia pintado en los píxeles**, no con canal
+alfa. Recortarlo no fue un color-key: el damero alterna gris claro y blanco, que son justo los
+tonos de las facetas claras del ave. Lo que funciona es **relleno por inundación desde las cuatro
+esquinas**, porque el fondo toca el borde y las facetas claras del interior no. Quedó una zona
+cerrada **entre las patas** que hubo que inundar aparte.
+
 ## Pendiente
 
-- **El logo.** `Marco.jsx` tiene el hueco marcado con la clase `.logo`; ahora mismo es un
-  rectángulo del color de acento. En cuanto llegue el archivo, entra ahí.
 - Que el sitio nazca bilingüe: la traducción está en `contenido/en/`, faltan las rutas
   `/en/…`, el conmutador y el `hreflang`.
 - El dominio `corvo.ginit.dev` con su vhost, su certificado y el 301 desde `luxcore.ginit.dev`.

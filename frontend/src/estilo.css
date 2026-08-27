@@ -151,26 +151,23 @@ pre { overflow-x: auto; max-width: 100%; }
 .cuervo {
   position: absolute;
   right: 0;
-  top: 5rem;
-  width: clamp(12rem, 20vw, 18rem);
-  border-bottom: 3px solid var(--tinta);
+  top: 3.5rem;
+  width: clamp(11rem, 18vw, 16rem);
   pointer-events: none;
 }
 .cuervo::before {
   content: "";
   display: block;
   width: 100%;
-  padding-top: 104%;
-  background: var(--tinta);
-  -webkit-mask: url("/marca/cuervo.webp") center bottom/contain no-repeat;
-          mask: url("/marca/cuervo.webp") center bottom/contain no-repeat;
+  padding-top: 134%;                 /* proporción del dibujo, 723×970 */
+  background: url("/marca/cuervo-color.webp") center bottom/contain no-repeat;
 }
 /* Por debajo de esto no hay hueco libre y el ave pisaría el titular. */
 @media (max-width: 62rem) { .cuervo { display: none; } }
 
 /* la marca de la barra */
 .marca .logo {
-  width: 2.6rem; height: 1.75rem; border-radius: 0;
+  width: 1.6rem; height: 2.15rem; border-radius: 0;
   background: var(--acento);
   -webkit-mask: url("/marca/cuervo-marca.png") center/contain no-repeat;
           mask: url("/marca/cuervo-marca.png") center/contain no-repeat;
