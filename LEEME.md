@@ -159,17 +159,38 @@ Twitter no ejecutan JavaScript. Una etiqueta puesta al montar un componente no l
 
 ### El color
 
-`--acento` es **bermellón** — `#c0341d` en claro, `#ff6a4d` en oscuro. Antes era magenta
-(`#c2136a` / `#ff3d9a`).
+**Cobalto.** `--acento` es `#1a49d6` en claro y `#5b8dff` en oscuro; `--acento-2` (`#3f86f5` /
+`#7fb4ff`) existe solo para los degradados —un degradado de un color a sí mismo aclarado se ve
+sucio, y con dos tonos vecinos de verdad el titular tiene profundidad.
 
-Los dos pasan AA de sobra (5,8× y 5,6× sobre blanco), así que la decisión no era de contraste sino
-de qué dice el color. El magenta es un acento de producto, y choca con un grabado en blanco y
-negro y una tipografía con serifas. El bermellón es tinta y lacre: acompaña al ave en vez de
-competir con ella, y no cae en el azul o el morado de todos los sitios de herramientas.
+Pasó por magenta (`#c2136a`) y por bermellón (`#c0341d`) antes de esto.
 
-Está definido tres veces —`:root`, `prefers-color-scheme` y `[data-tema]`— para que el conmutador
-gane en las dos direcciones. Cambiarlo son esas tres líneas de `estilo.css`, más recolorear el
-favicon, que lleva el color quemado en su paleta.
+7,08× sobre blanco y 6,70× sobre negro. `--acento-2` se queda en 3,54×, que **solo** basta para
+texto grande: por eso aparece únicamente en degradados sobre el titular, las cifras y reglas
+decorativas, nunca en texto corrido.
+
+La tinta pasó de azul marino (`#0e1b3d`) a casi negro (`#0f141c`). Con un acento azul, una tinta
+azul marino se le confunde y el acento deja de acentuar.
+
+Los tokens están definidos tres veces —`:root`, `prefers-color-scheme` y `[data-tema]`— para que
+el conmutador gane en las dos direcciones. Cambiar la marca son esas líneas, más recolorear el
+favicon y la tarjeta de enlace, que llevan el color quemado dentro.
+
+### Que la página no sea blanco sobre blanco
+
+Todo se apoya en esos dos tokens; ninguna regla trae su propio color escrito a mano:
+
+- Un halo detrás del ave, **a ancho de ventana**. Dentro de `.marco` su borde caía donde acaba el
+  contenido y se veía el canto recto del degradado atravesando la página.
+- El titular y las cifras en degradado con `background-clip: text`.
+- El botón lleno con degradado y sombra **del propio color**: una sombra gris debajo de un botón
+  de color lo ensucia.
+- La terminal ya no es un agujero negro en medio de una página blanca. Tenía seis colores escritos
+  a mano; ahora usa sus propios tokens y **sigue al tema** como el resto.
+
+El recorte horizontal se hace en `html`, no en la portada. Recortando en la portada, el corte caía
+en el borde de `.marco` y dejaba una línea recta visible. `clip` y no `hidden`: `hidden` haría de
+la raíz un contenedor de desplazamiento y rompería el `sticky` de la barra.
 
 ### El cuervo de la portada
 

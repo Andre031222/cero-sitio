@@ -22,22 +22,25 @@
 :root {
   --papel: #ffffff;
   --panel: #f4f6fa;
-  --tinta: #0e1b3d;
+  --tinta: #0f141c;
   --apagado: #5b6784;
-  --acento: #c0341d;
-  --linea: rgba(14, 27, 61, .14);
+  --acento: #1a49d6;
+  /* El segundo acento existe para los degradados. Un degradado de un color a sí mismo
+     aclarado se ve sucio; con dos tonos vecinos de verdad el titular tiene profundidad. */
+  --acento-2: #3f86f5;
+  --linea: rgba(15, 20, 28, .14);
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --serif: "Source Serif", Georgia, "Times New Roman", serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) {
     --papel: #000000; --panel: #0d1424; --tinta: #eaf0fa;
-    --apagado: #93a0bc; --acento: #ff6a4d; --linea: rgba(234, 240, 250, .16);
+    --apagado: #93a0bc; --acento: #5b8dff; --acento-2: #7fb4ff; --linea: rgba(234, 240, 250, .16);
   }
 }
 :root[data-tema="oscuro"] {
   --papel: #000000; --panel: #0d1424; --tinta: #eaf0fa;
-  --apagado: #93a0bc; --acento: #ff6a4d; --linea: rgba(234, 240, 250, .16);
+  --apagado: #93a0bc; --acento: #5b8dff; --acento-2: #7fb4ff; --linea: rgba(234, 240, 250, .16);
 }
 
 * { box-sizing: border-box; }
@@ -146,20 +149,27 @@ pre { overflow-x: auto; max-width: 100%; }
 /* Grabado de François-Nicolas Martinet (1731-1800), lámina 495 de la Histoire Naturelle des
    Oiseaux de Buffon. Dominio público. Va como máscara sobre var(--tinta): un solo archivo
    sirve para claro y para oscuro porque el color lo pone el tema. */
-/* overflow-x: clip y no hidden: `hidden` convertiría la portada en un contenedor de
-   desplazamiento y rompería el `position: sticky` de la barra. `clip` recorta y ya.
-   Hace falta porque el ave sobresale a propósito por la derecha, y sin recorte esos
-   píxeles ensanchan el documento entero en el teléfono. */
-.portada { position: relative; overflow-x: clip; overflow-y: visible; }
+/* El recorte se hace arriba del todo, en la raíz, y no en la portada.
+
+   Recortando en la portada, el corte caía justo en el borde de `.marco` —a 78 rem del
+   centro— y dejaba una línea recta y visible atravesando el ave y el degradado. Aquí el
+   documento no se ensancha igual, y no hay ningún canto que se vea.
+
+   `clip` y no `hidden`: `hidden` convertiría la raíz en contenedor de desplazamiento y
+   rompería el `position: sticky` de la barra. */
+html { overflow-x: clip; }
+.portada { position: relative; }
 
 /* La escena: aquí vive la perspectiva, y el hijo es el que gira dentro de ella. Si la
    perspectiva se pusiera en el mismo elemento que rota, el giro sería plano — una perspective
    solo afecta a los descendientes. */
 .cuervo {
   position: absolute;
-  right: -1.5rem;
-  top: 1.5rem;
-  width: clamp(14rem, 26vw, 23rem);
+  right: 0;
+  top: 1rem;
+  /* Dentro del ancho del contenido, no sobresaliendo: así no hay nada que recortar y el ave
+     no aparece rebanada por la derecha. */
+  width: clamp(15rem, 31vw, 27rem);
   perspective: 900px;
   pointer-events: none;
   z-index: 0;
@@ -180,11 +190,32 @@ pre { overflow-x: auto; max-width: 100%; }
                       color-mix(in srgb, var(--tinta) 30%, transparent));
   /* La cola llega justo al borde inferior del grabado, así que sin esto el ave termina en un
      corte recto. Se disuelve en el papel y parece que sigue más abajo. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 99%);
-          mask-image: linear-gradient(to bottom, #000 78%, transparent 99%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
   animation: cuervo-entra 1s cubic-bezier(.16, 1, .3, 1) both,
              cuervo-flota 7s ease-in-out 1s infinite;
 }
+
+/* El suelo. Una elipse difuminada bajo las patas: sin ella el ave está pegada al papel y
+   flota; con ella se posa. Va detrás de la figura y se estrecha cuando el ave sube en la
+   flotación, que es lo que hace una sombra de verdad. */
+.cuervo::after {
+  content: "";
+  position: absolute;
+  left: 22%; right: 14%;
+  bottom: 4%;
+  height: 2.6rem;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side,
+    color-mix(in srgb, var(--tinta) 26%, transparent) 0%, transparent 78%);
+  animation: cuervo-sombra 7s ease-in-out 1s infinite;
+}
+@keyframes cuervo-sombra {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(.9); opacity: .72; }
+}
+@media (prefers-reduced-motion: reduce) { .cuervo::after { animation: none; } }
 
 /* Entra planeando: baja un poco, se endereza y se acerca. Un fade suelto no dice nada; esto
    sugiere que el ave se posa. */
@@ -205,13 +236,16 @@ pre { overflow-x: auto; max-width: 100%; }
    existir solo en pantallas grandes. */
 @media (max-width: 62rem) {
   .cuervo {
-    right: -8%;
+    right: -6%;
     top: -1rem;
-    width: 58%;
+    width: 60%;
     opacity: .13;
     z-index: -1;
   }
   .cuervo-figura { filter: none; }
+  .cuervo::after { display: none; }   /* una marca de agua no proyecta sombra */
+  /* Aquí sí sobresale a propósito, y aquí sí se recorta. */
+  .portada { overflow-x: clip; overflow-y: visible; }
   .portada > :not(.cuervo) { position: relative; z-index: 1; }
 }
 
@@ -411,28 +445,50 @@ ul.prosa li { margin-bottom: .45rem; }
 
 /* ─── terminal ─── */
 
-.terminal { border: 1px solid var(--linea); border-radius: 6px; overflow: hidden;
-  background: #0b1020; margin: 2.2rem 0 1rem; max-width: 46rem; }
+/* La terminal tenía sus seis colores escritos a mano y salía negra también en el tema claro:
+   un agujero oscuro en medio de una página blanca. Ahora usa sus propios tokens, redefinidos
+   en cada tema como el resto de la hoja. */
+.terminal {
+  --term-fondo: #f7f9fc;
+  --term-barra: #eaeef6;
+  --term-borde: rgba(15, 20, 28, .12);
+  --term-texto: #2b3653;
+  --term-orden: #0f141c;
+  --term-tenue: #616c87;
+
+  border: 1px solid var(--term-borde); border-radius: 6px; overflow: hidden;
+  background: var(--term-fondo); margin: 2.2rem 0 1rem; max-width: 46rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) .terminal {
+    --term-fondo: #0b1020; --term-barra: #141a2e; --term-borde: rgba(255, 255, 255, .1);
+    --term-texto: #c8d2e8; --term-orden: #eaf0fa; --term-tenue: #7c88a8;
+  }
+}
+:root[data-tema="oscuro"] .terminal {
+  --term-fondo: #0b1020; --term-barra: #141a2e; --term-borde: rgba(255, 255, 255, .1);
+  --term-texto: #c8d2e8; --term-orden: #eaf0fa; --term-tenue: #7c88a8;
+}
 .terminal-barra { display: flex; align-items: center; gap: .8rem;
-  padding: .5rem .8rem; background: #141a2e; border-bottom: 1px solid rgba(255,255,255,.08); }
+  padding: .5rem .8rem; background: var(--term-barra); border-bottom: 1px solid var(--term-borde); }
 .terminal-barra .luces { display: flex; gap: .35rem; }
-.terminal-barra .luces i { width: 10px; height: 10px; border-radius: 50%; background: #3a4159; }
+.terminal-barra .luces i { width: 10px; height: 10px; border-radius: 50%; background: var(--term-tenue); }
 .terminal-barra .luces i:nth-child(1) { background: #ff5f57; }
 .terminal-barra .luces i:nth-child(2) { background: #febc2e; }
 .terminal-barra .luces i:nth-child(3) { background: #28c840; }
-.terminal-barra .ruta { flex: 1; font-family: var(--mono); font-size: .72rem; color: #7c88a8; }
+.terminal-barra .ruta { flex: 1; font-family: var(--mono); font-size: .72rem; color: var(--term-tenue); }
 .terminal-barra button { font-family: var(--mono); font-size: .66rem; letter-spacing: .08em;
-  text-transform: uppercase; border: 1px solid rgba(255,255,255,.16); background: transparent;
-  color: #7c88a8; padding: .22rem .55rem; border-radius: 4px; cursor: pointer; }
-.terminal-barra button:hover:not(:disabled) { color: #fff; border-color: rgba(255,255,255,.4); }
+  text-transform: uppercase; border: 1px solid var(--term-borde); background: transparent;
+  color: var(--term-tenue); padding: .22rem .55rem; border-radius: 4px; cursor: pointer; }
+.terminal-barra button:hover:not(:disabled) { color: var(--acento); border-color: var(--acento); }
 .terminal-barra button:disabled { opacity: .4; cursor: default; }
 
 .terminal-pantalla { margin: 0; padding: 1rem 1.1rem; min-height: 17rem;
   font-family: var(--mono); font-size: .78rem; line-height: 1.75;
-  color: #c8d2e8; white-space: pre-wrap; word-break: break-word; }
-.linea-orden { color: #eaf0fa; }
+  color: var(--term-texto); white-space: pre-wrap; word-break: break-word; }
+.linea-orden { color: var(--term-orden); }
 .linea-orden .senal { color: var(--acento); font-weight: 700; }
-.linea-salida { color: #7c88a8; }
+.linea-salida { color: var(--term-tenue); }
 .cursor { display: inline-block; width: .55em; height: 1.05em; background: var(--acento);
   vertical-align: text-bottom; margin-left: 1px; }
 @media (prefers-reduced-motion: no-preference) {
@@ -502,3 +558,106 @@ ul.prosa li { margin-bottom: .45rem; }
   opacity: .65;
 }
 .atajo.todo { border-style: solid; border-color: var(--acento); color: var(--acento); }
+
+
+/* ─── color: que la página deje de ser blanco sobre blanco ─── */
+
+/* Todo lo de aquí abajo se apoya en var(--acento) y var(--acento-2). Cambiar la marca sigue
+   siendo cambiar esas dos líneas: ninguna regla trae su propio color escrito a mano. */
+
+/* Un halo detrás del ave. Va en la portada y no en la figura para que el color quede debajo
+   del texto también, y la esquina superior derecha deje de ser un vacío blanco. */
+/* El halo sale de `.marco` y ocupa el ancho de la ventana: si se queda dentro, su borde
+   cae donde acaba el contenido y se ve el canto del degradado. Los radiales mueren en
+   transparente por su cuenta, así que no hace falta recortarlo en ningún lado. */
+.portada::before {
+  content: "";
+  position: absolute;
+  top: -7rem;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  height: 52rem;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(46% 58% at 74% 26%,
+      color-mix(in srgb, var(--acento) 17%, transparent) 0%, transparent 70%),
+    radial-gradient(40% 50% at 14% 6%,
+      color-mix(in srgb, var(--acento-2) 12%, transparent) 0%, transparent 72%);
+}
+
+/* El titular en degradado. Es el elemento más grande de la página; teñirlo de un solo plano
+   era desaprovecharlo. background-clip:text necesita color transparente, y el fallback es el
+   color sólido de la línea de arriba, que ya estaba bien. */
+.titular span {
+  background: linear-gradient(102deg, var(--acento) 12%, var(--acento-2) 88%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--acento);
+}
+
+/* Las cifras: el número en color y una regla superior teñida. Antes eran tres números negros
+   sobre blanco con una raya gris, que es exactamente lo que nadie mira. */
+.cifra b {
+  background: linear-gradient(160deg, var(--acento) 0%, var(--acento-2) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: var(--acento);
+}
+.cifras {
+  position: relative;
+  padding-top: 2.2rem;
+}
+.cifras::before {
+  content: "";
+  position: absolute; inset: 0 0 auto 0; height: 2px;
+  background: linear-gradient(90deg, var(--acento), var(--acento-2) 42%, transparent 92%);
+}
+
+/* El botón lleno: degradado y una sombra del propio color. Una sombra gris debajo de un botón
+   de color lo ensucia; teñirla lo levanta del papel. */
+.boton.principal {
+  background: linear-gradient(135deg, var(--acento) 0%, var(--acento-2) 130%);
+  box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--acento) 55%, transparent);
+}
+.boton.principal:hover {
+  box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--acento) 70%, transparent);
+}
+
+/* La franja del contenido: el bloque de la orden y la terminal sobre papel teñido, para
+   partir la página en dos zonas en vez de un rollo blanco continuo. */
+.orden {
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--acento) 6%, var(--papel)) 0%,
+      var(--panel) 100%);
+  border-color: color-mix(in srgb, var(--acento) 22%, var(--linea));
+}
+.orden .senal { color: var(--acento); }
+
+/* El sello «Nuevo» también en degradado, que es lo primero que se lee. */
+.antetitulo .nuevo {
+  background: linear-gradient(120deg, var(--acento), var(--acento-2));
+}
+
+/* Fichas y módulos: el estado marcado se nota más, y el que viene arrastrado se distingue
+   del que elegiste a propósito. */
+.atajo.activo {
+  background: linear-gradient(120deg, var(--acento), var(--acento-2));
+  border-color: transparent;
+}
+.modulo.marcado { background: color-mix(in srgb, var(--acento) 9%, var(--papel)); }
+.bajar .boton { border-color: transparent; }
+
+/* La barra superior, con un filo de color abajo: separa sin meter otra línea gris. */
+.barra { border-bottom-color: color-mix(in srgb, var(--acento) 20%, var(--linea)); }
+
+/* Los títulos de las páginas interiores llevaban el mismo negro que el cuerpo. */
+.titulo-pagina::after {
+  content: "";
+  display: block; width: 3.5rem; height: 3px; margin-top: .7rem;
+  background: linear-gradient(90deg, var(--acento), var(--acento-2));
+}
