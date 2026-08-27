@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { idiomaDe, TEXTOS } from '../idioma.js'
 
 /**
  * Elegir módulos y ver qué te llevas.
@@ -8,6 +10,8 @@ import { useEffect, useState } from 'react'
  * enseña lo que se arrastra sin pedirlo, que es la parte que sorprende.
  */
 export default function Descargas() {
+  const { pathname } = useLocation()
+  const t = TEXTOS[idiomaDe(pathname)].descargas
   const [catalogo, setCatalogo] = useState([])
   const [elegidos, setElegidos] = useState(new Set())
   const [resultado, setResultado] = useState(null)
@@ -18,7 +22,7 @@ export default function Descargas() {
     fetch('/api/modulos')
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
       .then(setCatalogo)
-      .catch((e) => setFallo(`No se pudo leer el catálogo: ${e.message}`))
+      .catch((e) => setFallo(`${t.falloCatalogo}: ${e.message}`))
   }, [])
 
   useEffect(() => {
@@ -31,7 +35,7 @@ export default function Descargas() {
     })
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
       .then((d) => { if (!cancelado) { setResultado(d); setFallo(null) } })
-      .catch((e) => { if (!cancelado) setFallo(`No se pudo resolver: ${e.message}`) })
+      .catch((e) => { if (!cancelado) setFallo(`${t.falloResolver}: ${e.message}`) })
     return () => { cancelado = true }
   }, [elegidos])
 
@@ -59,10 +63,9 @@ export default function Descargas() {
 
   return (
     <section className="descargas">
-      <h1 className="titulo-pagina">Descargas</h1>
+      <h1 className="titulo-pagina">{t.titulo}</h1>
       <p className="entradilla">
-        Toma solo lo que uses. Marca lo que necesitas y te decimos qué arrastra, cuánto pesa
-        y qué declarar en tu <code>pom.xml</code>.
+{t.entrada[0]}<code>pom.xml</code>{t.entrada[1]}
       </p>
 
       {fallo && <p className="fallo" role="alert">{fallo}</p>}
@@ -82,9 +85,9 @@ export default function Descargas() {
                   <span className="peso">{m.kb} KB</span>
                 </div>
                 <p>{m.hace}</p>
-                {m.necesita && <p className="necesita">necesita {m.necesita}</p>}
+                {m.necesita && <p className="necesita">{t.necesita} {m.necesita}</p>}
                 {arrastrado(m.nombre) && !marcado && (
-                  <p className="aviso">viene incluido por lo que elegiste</p>
+                  <p className="aviso">{t.incluido}</p>
                 )}
               </div>
             </label>
@@ -95,22 +98,21 @@ export default function Descargas() {
       {resultado && (
         <div className="resumen">
           <div className="total">
-            <div><b>{resultado.kb}</b><span>KB</span><em>en total</em></div>
-            <div><b>{resultado.clases}</b><span></span><em>clases</em></div>
-            <div><b>{resultado.resueltos.length}</b><span></span><em>módulos</em></div>
+            <div><b>{resultado.kb}</b><span>KB</span><em>{t.enTotal}</em></div>
+            <div><b>{resultado.clases}</b><span></span><em>{t.clases}</em></div>
+            <div><b>{resultado.resueltos.length}</b><span></span><em>{t.modulos}</em></div>
           </div>
 
           {resultado.arrastrados.length > 0 && (
             <p className="nota">
-              Se añaden solos: <b>{resultado.arrastrados.join(', ')}</b>. No hay que declararlos:
-              Maven los trae con lo que sí declaras.
+{t.seAnaden[0]}<b>{resultado.arrastrados.join(', ')}</b>{t.seAnaden[1]}
             </p>
           )}
 
           <div className="codigo">
             <div className="barra-codigo">
               <span>pom.xml</span>
-              <button type="button" onClick={copiar}>{copiado ? 'copiado' : 'copiar'}</button>
+              <button type="button" onClick={copiar}>{copiado ? t.copiado : t.copiar}</button>
             </div>
             <pre>{resultado.pom}</pre>
           </div>
@@ -118,7 +120,7 @@ export default function Descargas() {
       )}
 
       {!resultado && !fallo && (
-        <p className="nota">Marca al menos un módulo para ver el resultado.</p>
+        <p className="nota">{t.marcaAlgo}</p>
       )}
     </section>
   )
