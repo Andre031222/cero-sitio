@@ -107,6 +107,7 @@ La carpeta `en/` tiene la traducción lista. Falta montar las rutas `/en/…`, e
 
 - **El logo.** `Marco.jsx` tiene el hueco marcado con la clase `.logo`; ahora mismo es un
   rectángulo del color de acento. En cuanto llegue el archivo, entra ahí.
-- Más páginas: guía, módulos, referencia.
+- Que el sitio nazca bilingüe: la traducción está en `contenido/en/`, faltan las rutas
+  `/en/…`, el conmutador y el `hreflang`.
 - El dominio `corvo.ginit.dev` con su vhost, su certificado y el 301 desde `luxcore.ginit.dev`.
   **Ojo:** hoy ese subdominio existe por un comodín DNS y sirve AgroYachay con su certificado.
