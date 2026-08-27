@@ -8,3 +8,6 @@ node_modules/
 # El front compilado: lo genera `npm run build` y va a los recursos del backend.
 # No se versiona — se rehace, y versionarlo garantiza conflictos en cada rama.
 backend/src/main/resources/front/
+
+# El jar de despliegue: lo arma `./construir` y pesa 1,3 MB. Es un artefacto, no fuente.
+corvo-sitio.jar

@@ -98,8 +98,23 @@ public class ModulosController {
         return salida;
     }
 
+    /** ¿Existe ese módulo? Lo usa DescargaController antes de tocar el disco. */
+    static boolean existe(String nombre) {
+        return CATALOGO.containsKey(nombre);
+    }
+
+    /** Cuántos módulos hay en total; sirve para saber si una selección es «todo». */
+    static int cuantos() {
+        return CATALOGO.size();
+    }
+
+    /** El pom de una lista ya resuelta, para meterlo en el LEEME del zip. */
+    static String pomDe(java.util.Collection<String> modulos) {
+        return pom(new LinkedHashSet<>(modulos));
+    }
+
     /** Mete el módulo y, antes, aquello de lo que depende. */
-    private static void arrastrar(String nombre, Set<String> dentro) {
+    static void arrastrar(String nombre, Set<String> dentro) {
         Modulo m = CATALOGO.get(nombre);
         if (m == null || dentro.contains(nombre)) {
             return;

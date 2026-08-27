@@ -24,7 +24,7 @@
   --panel: #f4f6fa;
   --tinta: #0e1b3d;
   --apagado: #5b6784;
-  --acento: #c2136a;
+  --acento: #c0341d;
   --linea: rgba(14, 27, 61, .14);
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --serif: "Source Serif", Georgia, "Times New Roman", serif;
@@ -32,12 +32,12 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) {
     --papel: #000000; --panel: #0d1424; --tinta: #eaf0fa;
-    --apagado: #93a0bc; --acento: #ff3d9a; --linea: rgba(234, 240, 250, .16);
+    --apagado: #93a0bc; --acento: #ff6a4d; --linea: rgba(234, 240, 250, .16);
   }
 }
 :root[data-tema="oscuro"] {
   --papel: #000000; --panel: #0d1424; --tinta: #eaf0fa;
-  --apagado: #93a0bc; --acento: #ff3d9a; --linea: rgba(234, 240, 250, .16);
+  --apagado: #93a0bc; --acento: #ff6a4d; --linea: rgba(234, 240, 250, .16);
 }
 
 * { box-sizing: border-box; }
@@ -61,7 +61,6 @@ pre { overflow-x: auto; max-width: 100%; }
          background: color-mix(in srgb, var(--papel) 92%, transparent); backdrop-filter: blur(12px); }
 .barra .marco { grid-template-columns: auto 1fr; align-items: center; gap: 1.5rem; height: 3.6rem; }
 .marca { display: flex; align-items: center; gap: .6rem; text-decoration: none; }
-.marca .logo { width: 2.4rem; height: 1.6rem; background: var(--acento); border-radius: 2px; }
 .marca .palabra { font-family: var(--mono); font-weight: 700; font-size: 1rem; letter-spacing: -.02em; }
 .barra nav { display: flex; gap: .2rem; }
 .barra nav a {
@@ -147,30 +146,91 @@ pre { overflow-x: auto; max-width: 100%; }
 /* Grabado de François-Nicolas Martinet (1731-1800), lámina 495 de la Histoire Naturelle des
    Oiseaux de Buffon. Dominio público. Va como máscara sobre var(--tinta): un solo archivo
    sirve para claro y para oscuro porque el color lo pone el tema. */
-.portada { position: relative; }
+/* overflow-x: clip y no hidden: `hidden` convertiría la portada en un contenedor de
+   desplazamiento y rompería el `position: sticky` de la barra. `clip` recorta y ya.
+   Hace falta porque el ave sobresale a propósito por la derecha, y sin recorte esos
+   píxeles ensanchan el documento entero en el teléfono. */
+.portada { position: relative; overflow-x: clip; overflow-y: visible; }
+
+/* La escena: aquí vive la perspectiva, y el hijo es el que gira dentro de ella. Si la
+   perspectiva se pusiera en el mismo elemento que rota, el giro sería plano — una perspective
+   solo afecta a los descendientes. */
 .cuervo {
   position: absolute;
-  right: 0;
-  top: 3.5rem;
-  width: clamp(11rem, 18vw, 16rem);
+  right: -1.5rem;
+  top: 1.5rem;
+  width: clamp(14rem, 26vw, 23rem);
+  perspective: 900px;
   pointer-events: none;
+  z-index: 0;
+  --giro-x: 0deg;
+  --giro-y: 0deg;
+  --sombra-x: 0px;
+  --sombra-y: 12px;
 }
-.cuervo::before {
-  content: "";
-  display: block;
+
+.cuervo-figura {
   width: 100%;
   padding-top: 134%;                 /* proporción del dibujo, 723×970 */
   background: url("/marca/cuervo-color.webp") center bottom/contain no-repeat;
+  transform: rotateX(var(--giro-x)) rotateY(var(--giro-y));
+  transform-style: preserve-3d;
+  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
+  filter: drop-shadow(var(--sombra-x) var(--sombra-y) 22px
+                      color-mix(in srgb, var(--tinta) 30%, transparent));
+  /* La cola llega justo al borde inferior del grabado, así que sin esto el ave termina en un
+     corte recto. Se disuelve en el papel y parece que sigue más abajo. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 99%);
+          mask-image: linear-gradient(to bottom, #000 78%, transparent 99%);
+  animation: cuervo-entra 1s cubic-bezier(.16, 1, .3, 1) both,
+             cuervo-flota 7s ease-in-out 1s infinite;
 }
-/* Por debajo de esto no hay hueco libre y el ave pisaría el titular. */
-@media (max-width: 62rem) { .cuervo { display: none; } }
+
+/* Entra planeando: baja un poco, se endereza y se acerca. Un fade suelto no dice nada; esto
+   sugiere que el ave se posa. */
+@keyframes cuervo-entra {
+  from { opacity: 0; transform: translateY(-1.6rem) rotateZ(-4deg) scale(.94); }
+  to   { opacity: 1; transform: translateY(0) rotateZ(0) scale(1); }
+}
+
+/* Y luego respira. Un recorrido de 8 px en siete segundos: se percibe que está vivo sin que
+   nadie llegue a mirarlo moverse. */
+@keyframes cuervo-flota {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -8px; }
+}
+
+/* En cuanto no hay sitio al lado del titular, el ave pasa a ser marca de agua: se agranda,
+   se apaga y se mete detrás del texto. Antes desaparecía, y la marca del sitio no debería
+   existir solo en pantallas grandes. */
+@media (max-width: 62rem) {
+  .cuervo {
+    right: -8%;
+    top: -1rem;
+    width: 58%;
+    opacity: .13;
+    z-index: -1;
+  }
+  .cuervo-figura { filter: none; }
+  .portada > :not(.cuervo) { position: relative; z-index: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cuervo-figura { animation: none; transition: none; }
+}
 
 /* la marca de la barra */
+.marca { perspective: 400px; }
 .marca .logo {
-  width: 1.6rem; height: 2.15rem; border-radius: 0;
+  width: 2.1rem; height: 2.8rem; border-radius: 0;
   background: var(--acento);
   -webkit-mask: url("/marca/cuervo-marca.png") center/contain no-repeat;
           mask: url("/marca/cuervo-marca.png") center/contain no-repeat;
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+}
+.marca:hover .logo { transform: rotateY(-18deg) scale(1.06); }
+@media (prefers-reduced-motion: reduce) {
+  .marca .logo, .marca:hover .logo { transform: none; transition: none; }
 }
 
 /* ─── conmutador de tema ─── */
@@ -230,6 +290,10 @@ pre { overflow-x: auto; max-width: 100%; }
   overflow-x: auto;
   scrollbar-width: none;
   min-width: 0;
+  /* Que el corte se vea como corte: el último enlace se desvanece en lugar de quedar
+     rebanado contra el borde, y así se entiende que ahí hay más y se puede arrastrar. */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent 100%);
+          mask-image: linear-gradient(to right, #000 calc(100% - 2rem), transparent 100%);
 }
 .barra nav::-webkit-scrollbar { display: none; }
 .barra .marco { gap: .75rem; }
@@ -407,3 +471,34 @@ ul.prosa li { margin-bottom: .45rem; }
   content: "habitual"; margin-left: .5rem; font-size: .6rem; letter-spacing: .1em;
   text-transform: uppercase; color: var(--acento); vertical-align: middle;
 }
+
+/* ─── descargar los jar ─── */
+
+/* El botón grande primero y los módulos sueltos debajo: la mayoría quiere el zip con todo
+   resuelto, y quien busca un jar concreto sabe lo que busca y lo encuentra en la lista. */
+.bajar { margin-top: 1.6rem; }
+.bajar .boton {
+  width: 100%; flex-direction: column; gap: .3rem; padding: .95rem 1.35rem; text-align: center;
+}
+/* color: inherit a propósito. Hay un .detalle global en var(--apagado), y ese gris azulado
+   sobre el rojo del botón relleno era ilegible. Aquí el color lo pone el botón. */
+.bajar .boton .detalle {
+  color: inherit; opacity: .78;
+  font-weight: 400; font-size: .7rem; letter-spacing: .03em; text-transform: none;
+}
+.bajar .sueltos {
+  list-style: none; margin: .7rem 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: .4rem;
+}
+.bajar .sueltos a {
+  display: inline-flex; align-items: baseline; gap: .45rem;
+  padding: .3rem .6rem; border: 1px solid var(--linea); border-radius: 4px;
+  text-decoration: none; font-size: .78rem; color: var(--apagado);
+  transition: border-color .14s, color .14s;
+}
+.bajar .sueltos a:hover { color: var(--acento); border-color: var(--acento); }
+.bajar .sueltos .peso {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+  opacity: .65;
+}
+.atajo.todo { border-style: solid; border-color: var(--acento); color: var(--acento); }

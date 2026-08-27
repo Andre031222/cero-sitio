@@ -135,6 +135,10 @@ Result.view(<span class="st">"lista.html"</span>, modelo)    Result.redirect(<sp
 Result.created(objeto)                 Result.noContent()
 Result.status(<span class="st">404</span>, <span class="st">"no existe"</span>)
 
+<span class="cm">// binary: a PDF, an image, a zip built on the fly</span>
+Result.bytes(data, <span class="st">"application/pdf"</span>)
+Result.download(data, <span class="st">"report.pdf"</span>, <span class="st">"application/pdf"</span>)
+
 <span class="cm">// chainable</span>
 <span class="kw">return</span> Result.json(tarea)
              .status(<span class="st">201</span>)

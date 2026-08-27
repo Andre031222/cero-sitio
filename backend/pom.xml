@@ -25,4 +25,68 @@
             <version>${corvo.version}</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <!-- Los jar que la página ofrece descargar viajan dentro del propio jar del sitio.
+
+                 La alternativa era leerlos del repositorio local de Maven en tiempo de
+                 ejecución, y eso ata el sitio a la máquina donde se compiló: en el servidor no
+                 hay ~/.m2 y las descargas darían 503 sin que nadie se entere hasta que alguien
+                 pulse el botón. Así el despliegue sigue siendo copiar un jar. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>artefactos-descargables</id>
+                        <phase>prepare-package</phase>
+                        <goals><goal>copy</goal></goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/artefactos</outputDirectory>
+                            <overWriteReleases>true</overWriteReleases>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>dev.ginit.corvo</groupId>
+                                    <artifactId>corvo-http</artifactId>
+                                    <version>${corvo.version}</version>
+                                    <type>jar</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>dev.ginit.corvo</groupId>
+                                    <artifactId>corvo-core</artifactId>
+                                    <version>${corvo.version}</version>
+                                    <type>jar</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>dev.ginit.corvo</groupId>
+                                    <artifactId>corvo-view</artifactId>
+                                    <version>${corvo.version}</version>
+                                    <type>jar</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>dev.ginit.corvo</groupId>
+                                    <artifactId>corvo-data</artifactId>
+                                    <version>${corvo.version}</version>
+                                    <type>jar</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>dev.ginit.corvo</groupId>
+                                    <artifactId>corvo-adapter-servlet</artifactId>
+                                    <version>${corvo.version}</version>
+                                    <type>jar</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>dev.ginit.corvo</groupId>
+                                    <artifactId>corvo-launcher</artifactId>
+                                    <version>${corvo.version}</version>
+                                    <type>jar</type>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

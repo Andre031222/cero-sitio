@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import Orden from '../Orden.jsx'
 import Terminal from '../Terminal.jsx'
+import Cuervo from '../Cuervo.jsx'
 import { idiomaDe, TEXTOS, raizDe } from '../idioma.js'
 
 export default function Portada() {
@@ -18,7 +19,7 @@ export default function Portada() {
 
   return (
     <section className="portada">
-      <span className="cuervo" aria-hidden="true" />
+      <Cuervo />
 
       <p className="antetitulo">
         <span className="nuevo">{t.nuevo}</span>

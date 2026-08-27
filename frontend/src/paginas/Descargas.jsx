@@ -86,6 +86,10 @@ export default function Descargas() {
               </button>
             )
           })}
+          <button type="button" className="atajo todo"
+                  onClick={() => { setElegidos(new Set(catalogo.map((m) => m.nombre))); setCopiado(false) }}>
+            {t.bajarTodo}
+          </button>
           {elegidos.size > 0 && (
             <button type="button" className="atajo vaciar"
                     onClick={() => { setElegidos(new Set()); setCopiado(false) }}>
@@ -134,6 +138,31 @@ export default function Descargas() {
 {t.seAnaden[0]}<b>{resultado.arrastrados.join(', ')}</b>{t.seAnaden[1]}
             </p>
           )}
+
+          {/* El botón va antes del pom: quien viene a por los jar no debería tener que
+              pasar por delante de un bloque XML para encontrarlos. Es un <a> y no un fetch
+              porque así el navegador descarga con su propia barra de progreso, y funciona
+              igual con el botón derecho o si se abre en otra pestaña. */}
+          <div className="bajar">
+            <a className="boton principal"
+               href={`/api/zip?modulos=${[...elegidos].join(',')}`}
+               download>
+              {t.bajarZip}
+              <span className="detalle">
+                {t.pesoZip[0]}{resultado.resueltos.length}{t.pesoZip[1]} · {resultado.kb} KB
+              </span>
+            </a>
+            <ul className="sueltos">
+              {resultado.resueltos.map((n) => (
+                <li key={n}>
+                  <a href={`/api/jar?modulo=${n}`} download>
+                    <span className="mono">{n}</span>
+                    <span className="peso">{t.bajarUno}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           <div className="codigo">
             <div className="barra-codigo">

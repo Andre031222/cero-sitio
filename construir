@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Deja el sitio entero en un jar: `java -jar corvo-sitio.jar 8080` y ya está.
+#
+# Dentro van el frontend compilado, la API, el framework y los jar que la página ofrece
+# descargar. Desplegar es copiar un archivo; no hace falta nginx delante para juntar nada ni
+# un classpath que mantener a mano en el servidor.
+#
+# Lo empaqueta corvo-launcher, la herramienta del propio framework. Un plugin de terceros aquí
+# desmentiría el argumento del proyecto.
+set -euo pipefail
+
+AQUI="$(cd "$(dirname "$0")" && pwd)"
+FRAMEWORK="${CORVO_FRAMEWORK:-$AQUI/../45.Soft_LuxCore}"
+SALIDA="$AQUI/corvo-sitio.jar"
+
+azul() { printf '\033[34m%s\033[0m\n' "$*"; }
+malo() { printf '\033[31m%s\033[0m\n' "$*" >&2; }
+
+[ -d "$FRAMEWORK/java" ] || {
+  malo "no encuentro el framework en $FRAMEWORK"
+  malo "dime dónde está:  CORVO_FRAMEWORK=/ruta/al/framework ./construir"
+  exit 1
+}
+
+# El orden importa y no es reversible: Vite escribe dentro de los recursos del backend, así que
+# empaquetar primero el backend metería la compilación anterior del front sin avisar a nadie.
+azul "1/4 · el front"
+(cd "$AQUI/frontend" && npm install --silent && npm run build)
+
+azul "2/4 · el framework, instalado en el repositorio local"
+(cd "$FRAMEWORK/java" && mvn -q -DskipTests install)
+
+azul "3/4 · el backend"
+(cd "$AQUI/backend" \
+  && mvn -q -DskipTests package \
+  && mvn -q dependency:build-classpath -Dmdep.outputFile=target/classpath.txt)
+
+azul "4/4 · un solo jar"
+java -cp "$FRAMEWORK/java/corvo-launcher/target/classes" corvo.launcher.Packager \
+     --main dev.ginit.corvoweb.App --out "$SALIDA" \
+     "$AQUI/backend/target/classes" \
+     $(tr ':' '\n' < "$AQUI/backend/target/classpath.txt")
+
+printf '\n\033[32m%s\033[0m\n' "listo · $(du -h "$SALIDA" | cut -f1) · $SALIDA"
+echo "arráncalo con:  java -jar $(basename "$SALIDA") 8080"
