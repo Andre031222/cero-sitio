@@ -17,7 +17,7 @@ const GUION = [
   { orden: 'curl -fsSL https://corvo.ginit.dev/instalar | sh', salida: [
       'descargando corvo-0.4.0.tar.gz … 452 KB',
       'comprobando huella sha256 … correcta',
-      'compilando … 1 258 pruebas en verde',
+      'compilando … 1 260 pruebas en verde',
       'orden corvo lista en ~/.local/bin',
   ]},
   { orden: 'corvo new mi-app', salida: [

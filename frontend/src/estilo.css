@@ -56,10 +56,18 @@ a { color: inherit; }
    minmax(0,·) cualquier tabla o <pre> ancho desborda la página entera en el teléfono. */
 .marco {
   /* 78 rem fijos dejaban la mitad de una pantalla de 2560 en blanco: 49 % aprovechado.
-     Con esto son el 96 % del ancho hasta el tope, y el tope está donde el diseño deja de
-     ganar algo. Que el texto no se estire con él lo resuelve cada bloque con su propia
-     medida, no el contenedor. */
-  width: min(96%, 118rem); margin: 0 auto; padding: 0 1.5rem;
+
+     Tres límites, y gana el más pequeño:
+       96 %                 manda por debajo de 960 px — móvil y tableta, sin cambios
+       calc(84vw + 7.2rem)  manda de 960 px arriba, y va cediendo margen según crece la
+                            pantalla: 92 % a 1440, 90 % a 1920. Un porcentaje fijo daría el
+                            mismo 96 % en las dos, y a 1920 el contenido llega demasiado al
+                            canto
+       118 rem              el tope, donde el diseño deja de ganar nada por ensanchar
+
+     Que el texto no se estire con el contenedor lo resuelve cada bloque con su propia
+     medida, no esto. */
+  width: min(96%, calc(84vw + 7.2rem), 118rem); margin: 0 auto; padding: 0 1.5rem;
   display: grid; grid-template-columns: minmax(0, 1fr);
 }
 pre { overflow-x: auto; max-width: 100%; }

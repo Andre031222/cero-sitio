@@ -41,7 +41,7 @@ export const TEXTOS = {
                 '. ', ' y está corriendo — sin Tomcat, sin ', ', sin despliegue.'],
       empezar: 'Empezar', codigo: 'Código',
       windows: ['En Windows, ', '. Requiere Maven y un JDK 21. Después: '],
-      cifras: [['308','KB','Desplegado'],['106','ms','Arranque'],['0','deps','En ejecución'],['1258','','Pruebas']],
+      cifras: [['308','KB','Desplegado'],['106','ms','Arranque'],['0','deps','En ejecución'],['1260','','Pruebas']],
       nota: 'Esta página la sirve el propio Corvo: la API en Java y el front en React, dentro del mismo jar. Si el framework falla, falla aquí antes que en las aplicaciones de nadie.',
     },
     descargas: {
@@ -85,7 +85,7 @@ export const TEXTOS = {
                 '. ', ' and it is running — no Tomcat, no ', ', no deployment.'],
       empezar: 'Get started', codigo: 'Source',
       windows: ['On Windows, ', '. Requires Maven and a JDK 21. Then: '],
-      cifras: [['308','KB','Deployed'],['106','ms','Boot'],['0','deps','At runtime'],['1258','','Tests']],
+      cifras: [['308','KB','Deployed'],['106','ms','Boot'],['0','deps','At runtime'],['1260','','Tests']],
       nota: 'This page is served by Corvo itself: the API in Java and the front end in React, inside the same jar. If the framework breaks, it breaks here before it breaks anyone else\u2019s application.',
     },
     descargas: {
