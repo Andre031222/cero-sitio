@@ -244,3 +244,106 @@ pre { overflow-x: auto; max-width: 100%; }
   /* El mínimo del clamp hacía que «contenedor.» midiera 276 px en 272 disponibles. */
   .titular { font-size: clamp(2.3rem, 11vw, 6.5rem); }
 }
+
+/* ─── páginas de contenido ─── */
+
+.cabecera-pagina { padding: 1.3rem 0 1.5rem; border-bottom: 2px solid var(--tinta); }
+.entradilla { color: var(--apagado); font-size: 1.06rem; max-width: 42rem; margin: 0; text-wrap: balance; }
+.medida { max-width: 40rem; }
+
+/* minmax(0, ·) no es opcional: un ítem de grid tiene min-width:auto y sin esto cualquier
+   tabla o <pre> ancho desborda la página entera en el teléfono. */
+.cuerpo { display: grid; grid-template-columns: 13.5rem minmax(0, 1fr); gap: 3.5rem; margin-top: 2.5rem; }
+.cuerpo > * { min-width: 0; }
+.cuerpo.sin-indice { display: block; margin-top: 2.5rem; }
+
+nav.indice { position: sticky; top: 5rem; align-self: start; max-height: calc(100vh - 7rem); overflow-y: auto; }
+nav.indice ol { list-style: none; margin: 0; padding: 0; }
+nav.indice a {
+  display: flex; gap: .55rem; padding: .22rem 0 .22rem .6rem;
+  font-family: var(--mono); font-size: .75rem; color: var(--apagado);
+  text-decoration: none; border-left: 2px solid transparent;
+}
+nav.indice a:hover { color: var(--tinta); }
+nav.indice a .n { color: var(--apagado); opacity: .6; font-variant-numeric: tabular-nums; }
+@media (max-width: 60rem) {
+  .cuerpo { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+  nav.indice { position: static; max-height: none; border-bottom: 1px solid var(--linea); padding-bottom: 1rem; }
+  nav.indice ol { display: flex; flex-wrap: wrap; gap: .15rem .9rem; }
+}
+
+.pagina section { padding-top: 3rem; scroll-margin-top: 5rem; }
+.pagina section:first-child { padding-top: 0; }
+.titulo-seccion { display: flex; align-items: baseline; gap: .8rem; border-bottom: 2px solid var(--tinta);
+  padding-bottom: .5rem; margin-bottom: 1.5rem; }
+.titulo-seccion h2 { font-family: var(--mono); font-size: 1.05rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; margin: 0; }
+.indice-num { font-family: var(--mono); font-size: .8rem; color: var(--acento); font-weight: 700; }
+.pagina h3 { font-family: var(--mono); font-size: .95rem; font-weight: 700; letter-spacing: .04em;
+  margin: 2rem 0 .75rem; }
+.pagina p { max-width: 42rem; }
+
+/* tablas: la envoltura las desplaza en vez de dejarlas romper la página */
+.envoltura { overflow-x: auto; margin-bottom: 1.25rem; }
+.pagina table { width: 100%; border-collapse: collapse; font-size: .8438rem; min-width: 32rem; }
+.pagina th { font-family: var(--mono); font-size: .6875rem; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--apagado); text-align: left;
+  padding: 0 1rem .5rem 0; border-bottom: 1px solid var(--linea); white-space: nowrap; }
+.pagina td { padding: .62rem 1rem .62rem 0; border-bottom: 1px solid color-mix(in srgb, var(--linea) 55%, transparent);
+  vertical-align: top; }
+td.cifra, th.cifra { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); padding-right: 0; }
+.pagina .mono, .mono-clave { font-family: var(--mono); }
+.mono-clave { font-size: .8125rem; color: var(--acento); }
+.detalle { color: var(--apagado); font-size: .8125rem; display: block; margin-top: .12rem; }
+.pagina tbody tr:last-child td { border-bottom: none; }
+tr.total td { border-top: 2px solid var(--tinta); font-weight: 600; }
+
+/* código: el scroll va en el propio <pre>, para cubrir también los que viven fuera de .codigo */
+.pagina pre { overflow-x: auto; max-width: 100%; }
+.codigo { background: var(--panel); border: 1px solid color-mix(in srgb, var(--linea) 55%, transparent);
+  border-radius: 4px; overflow-x: auto; margin: 0 0 1.25rem; }
+.codigo .barra { display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding: .48rem .9rem; border-bottom: 1px solid color-mix(in srgb, var(--linea) 55%, transparent);
+  position: sticky; left: 0; }
+.codigo pre { margin: 0; padding: .95rem 1.1rem 1.1rem; font-size: .8125rem; line-height: 1.72; tab-size: 4; }
+.cm { color: var(--apagado); }
+.an { color: var(--acento); }
+.kw { color: var(--tinta); font-weight: 600; }
+.st { color: #2f8f5b; }
+:root[data-tema="oscuro"] .st, :root:not([data-tema="claro"]) .st { color: #56c98a; }
+@media (prefers-color-scheme: light) { :root:not([data-tema="oscuro"]) .st { color: #2f8f5b; } }
+
+.aviso { border-left: 3px solid var(--acento); background: color-mix(in srgb, var(--acento) 5%, transparent);
+  padding: 1rem 1.2rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+.aviso.nota { border-left-color: var(--apagado); background: var(--panel); }
+.aviso .etiqueta { display: block; margin-bottom: .4rem; }
+.aviso p { margin: 0 0 .6rem; font-size: .95rem; }
+.aviso p:last-child { margin-bottom: 0; }
+.aviso pre { margin: .8rem 0; font-size: .8rem; }
+
+.ficha { display: grid; gap: 1px; background: var(--linea); border: 1px solid var(--linea);
+  border-radius: 5px; overflow: hidden; margin: 1.25rem 0; }
+.campo { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 1rem;
+  padding: .85rem 1.1rem; background: var(--papel); font-size: .9rem; }
+@media (max-width: 40rem) { .campo { grid-template-columns: minmax(0, 1fr); gap: .3rem; } }
+
+.pastilla { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  padding: .18rem .5rem; border-radius: 3px; white-space: nowrap; }
+.pastilla.ok { background: color-mix(in srgb, #2f8f5b 16%, transparent); color: #2f8f5b; }
+.pastilla.parcial { background: var(--panel); color: var(--apagado); }
+.pastilla.pend { background: color-mix(in srgb, var(--acento) 14%, transparent); color: var(--acento); }
+
+ul.prosa { margin: 0 0 1rem; padding-left: 1.15rem; max-width: 42rem; }
+ul.prosa li { margin-bottom: .45rem; }
+
+.rejilla-rasgos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1px; background: var(--linea); border: 1px solid var(--linea); border-radius: 5px; overflow: hidden; }
+.rasgo { background: var(--papel); padding: 1rem 1.15rem; }
+.rasgo p { margin: .4rem 0 0; font-size: .9rem; color: var(--apagado); }
+
+.tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1px; background: var(--linea); border: 1px solid var(--linea); border-radius: 5px; overflow: hidden; }
+.tarjeta { background: var(--papel); padding: 1.1rem 1.2rem; text-decoration: none; display: block; }
+.tarjeta:hover { background: var(--panel); }
+.tarjeta h3 { margin: .3rem 0 .4rem; }
+.tarjeta p { margin: 0; font-size: .9rem; color: var(--apagado); }

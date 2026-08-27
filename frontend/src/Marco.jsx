@@ -19,6 +19,10 @@ export default function Marco({ children }) {
           </Link>
           <nav>
             {enlace('/', 'Inicio')}
+            {enlace('/empezar', 'Empezar')}
+            {enlace('/guia', 'Guía')}
+            {enlace('/modulos', 'Módulos')}
+            {enlace('/referencia', 'Referencia')}
             {enlace('/descargas', 'Descargas')}
           </nav>
           <Tema />

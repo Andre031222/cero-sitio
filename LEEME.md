@@ -25,8 +25,14 @@ regresión del framework, antes que las de nadie más.
         ├── main.jsx             # rutas
         ├── Marco.jsx            # barra y pie
         ├── estilo.css
+        ├── Tema.jsx             # conmutador claro / oscuro / sistema
+        ├── Orden.jsx            # orden de terminal con copiar
+        ├── contenido/           # el cuerpo de cada página, en HTML
+        │   ├── *.html           # castellano
+        │   └── en/*.html        # inglés, ya traducido
         └── paginas/
             ├── Portada.jsx
+            ├── Contenido.jsx    # rinde un archivo de contenido/
             └── Descargas.jsx    # elegir módulos
 ```
 
@@ -81,6 +87,21 @@ silencio y hacerte perder el rato buscando por qué falta.
 
 El grafo de dependencias vive en `ModulosController`, en un solo sitio. Al añadir un módulo al
 framework hay que registrarlo ahí.
+
+## El contenido
+
+Las páginas de Empezar, Guía, Módulos y Referencia son **HTML**, no JSX, y están en
+`frontend/src/contenido/`. Son 5 800 palabras con tablas, bloques de código y avisos, escritas y
+revisadas una vez: pasarlas a JSX sería copiarlas a mano con la posibilidad de erratas y sin
+ganar nada. Se incrustan en el bundle con `?raw`, así que una página no espera a una segunda
+petición para pintarse.
+
+`Contenido.jsx` las rinde con `dangerouslySetInnerHTML`, y eso pide justificación: el HTML es
+**nuestro**, vive en el repositorio y se compila dentro del bundle. No viene de un usuario ni de
+la red, que es donde está el riesgo real de esa API.
+
+La carpeta `en/` tiene la traducción lista. Falta montar las rutas `/en/…`, el conmutador y el
+`hreflang` — la decisión de si el sitio nace bilingüe sigue abierta.
 
 ## Pendiente
 
