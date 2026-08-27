@@ -1,6 +1,23 @@
 /* Corvo — hoja de estilo del sitio.
+
+   Las tipografías van alojadas, no traídas de Google: es una dependencia externa en un proyecto
+   cuyo argumento es no tener ninguna. Subconjunto latino y eje óptico fijado, 55 KB las dos.
+
    Cada color se define tres veces: en :root, bajo prefers-color-scheme y bajo [data-tema],
    para que el conmutador gane en las dos direcciones. */
+
+@font-face {
+  font-family: "Source Serif";
+  src: url("/fuentes/source-serif-4-latin.woff2") format("woff2");
+  font-weight: 400 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fuentes/jetbrains-mono-latin.woff2") format("woff2");
+  font-weight: 400 800;
+  font-display: swap;
+}
 
 :root {
   --papel: #ffffff;
@@ -9,8 +26,8 @@
   --apagado: #5b6784;
   --acento: #c2136a;
   --linea: rgba(14, 27, 61, .14);
-  --mono: ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo, monospace;
-  --serif: "Source Serif 4", Georgia, serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --serif: "Source Serif", Georgia, "Times New Roman", serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) {
@@ -122,4 +139,108 @@ pre { overflow-x: auto; max-width: 100%; }
   .pie { grid-template-columns: minmax(0, 1fr); }
   .pie div { text-align: left !important; }
   .total { gap: 1.5rem; }
+}
+
+
+/* ─── el cuervo de la portada ─── */
+
+/* Grabado de François-Nicolas Martinet (1731-1800), lámina 495 de la Histoire Naturelle des
+   Oiseaux de Buffon. Dominio público. Va como máscara sobre var(--tinta): un solo archivo
+   sirve para claro y para oscuro porque el color lo pone el tema. */
+.portada { position: relative; }
+.cuervo {
+  position: absolute;
+  right: 0;
+  top: 5rem;
+  width: clamp(12rem, 20vw, 18rem);
+  border-bottom: 3px solid var(--tinta);
+  pointer-events: none;
+}
+.cuervo::before {
+  content: "";
+  display: block;
+  width: 100%;
+  padding-top: 104%;
+  background: var(--tinta);
+  -webkit-mask: url("/marca/cuervo.webp") center bottom/contain no-repeat;
+          mask: url("/marca/cuervo.webp") center bottom/contain no-repeat;
+}
+/* Por debajo de esto no hay hueco libre y el ave pisaría el titular. */
+@media (max-width: 62rem) { .cuervo { display: none; } }
+
+/* la marca de la barra */
+.marca .logo {
+  width: 2.6rem; height: 1.75rem; border-radius: 0;
+  background: var(--acento);
+  -webkit-mask: url("/marca/cuervo-marca.png") center/contain no-repeat;
+          mask: url("/marca/cuervo-marca.png") center/contain no-repeat;
+}
+
+/* ─── conmutador de tema ─── */
+
+.barra .marco { grid-template-columns: auto 1fr auto; }
+.tema {
+  flex: none; width: 2rem; height: 2rem; display: grid; place-items: center;
+  border: 1px solid var(--linea); border-radius: 6px; background: transparent;
+  color: var(--apagado); cursor: pointer; transition: color .15s, border-color .15s;
+}
+.tema:hover { color: var(--acento); border-color: var(--acento); }
+.tema svg { width: 15px; height: 15px; }
+
+/* ─── botones y orden de instalación ─── */
+
+.botones { display: flex; flex-wrap: wrap; gap: .75rem; margin: 2.6rem 0 0; }
+.boton {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: .62rem 1.35rem; border-radius: 4px; border: 1px solid var(--linea);
+  font-family: var(--mono); font-size: .8125rem; font-weight: 600; letter-spacing: .04em;
+  text-decoration: none; color: var(--tinta); background: transparent;
+  transition: transform .14s cubic-bezier(.16,1,.3,1), border-color .14s, background .14s;
+}
+.boton:hover { border-color: var(--acento); color: var(--acento); transform: translateY(-1px); }
+.boton.principal { background: var(--acento); border-color: var(--acento); color: var(--papel); }
+.boton.principal:hover { color: var(--papel); filter: brightness(1.08); }
+@media (prefers-reduced-motion: reduce) { .boton, .boton:hover { transform: none; transition: none; } }
+
+.orden {
+  display: flex; align-items: center; gap: .75rem; margin: 2.2rem 0 .6rem;
+  max-width: 34rem; padding: .7rem .95rem;
+  border: 1px solid var(--linea); border-radius: 5px; background: var(--panel);
+}
+.orden code { flex: 1; min-width: 0; overflow-x: auto; font-size: .8125rem; white-space: nowrap; }
+.orden .senal { color: var(--acento); font-weight: 700; margin-right: .35rem; }
+.orden button {
+  flex: none; width: 1.8rem; height: 1.8rem; display: grid; place-items: center;
+  border: 1px solid var(--linea); border-radius: 4px; background: transparent;
+  color: var(--apagado); cursor: pointer; font-family: var(--mono); font-size: .8rem;
+}
+.orden button:hover { color: var(--acento); border-color: var(--acento); }
+.orden button svg { width: 14px; height: 14px; }
+.tras-orden { color: var(--apagado); font-size: .9rem; max-width: 42rem; margin: 0; }
+.tras-orden code { font-size: .88em; background: color-mix(in srgb, var(--acento) 9%, transparent);
+  padding: .1em .35em; border-radius: 3px; }
+
+@media (max-width: 40rem) {
+  .botones .boton { flex: 1 1 auto; }
+}
+
+/* ─── que nada desborde a lo ancho ─── */
+
+/* La barra desbordaba a 320 px: marca + menú + conmutador no caben. El menú se desplaza
+   dentro de sí mismo en vez de empujar la página. Si la página desborda, `position: fixed`
+   y `sticky` siguen al viewport de composición y la barra se va de lado al desplazarse. */
+.barra nav {
+  overflow-x: auto;
+  scrollbar-width: none;
+  min-width: 0;
+}
+.barra nav::-webkit-scrollbar { display: none; }
+.barra .marco { gap: .75rem; }
+
+@media (max-width: 26rem) {
+  .marco { padding: 0 1rem; }
+  .marca .palabra { display: none; }        /* a este ancho, la marca basta */
+  .barra nav a { padding: .35rem .5rem; font-size: .72rem; }
+  /* El mínimo del clamp hacía que «contenedor.» midiera 276 px en 272 disponibles. */
+  .titular { font-size: clamp(2.3rem, 11vw, 6.5rem); }
 }

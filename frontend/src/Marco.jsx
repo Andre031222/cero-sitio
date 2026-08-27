@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
+import Tema from './Tema.jsx'
 
 /** La barra y el pie, que no cambian entre páginas. */
 export default function Marco({ children }) {
@@ -20,6 +21,7 @@ export default function Marco({ children }) {
             {enlace('/', 'Inicio')}
             {enlace('/descargas', 'Descargas')}
           </nav>
+          <Tema />
         </div>
       </header>
 
