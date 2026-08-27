@@ -21,22 +21,27 @@ export default function Portada() {
     <section className="portada">
       <Cuervo />
 
-      <p className="antetitulo">
-        <span className="nuevo">{t.nuevo}</span>
-        {t.ante}
-        <span className="desde">v0.4.0</span>
-      </p>
+      {/* El bloque de la propuesta va envuelto para que en pantallas anchas sea UNA celda del
+          grid junto al ave. Sin envolver, cada párrafo era su propia fila y la altura del ave
+          las estiraba todas: el texto salía desparramado con huecos entre medias. */}
+      <div className="propuesta">
+        <p className="antetitulo">
+          <span className="nuevo">{t.nuevo}</span>
+          {t.ante}
+          <span className="desde">v0.4.0</span>
+        </p>
 
-      <h1 className="titular">{t.titular[0]}<br /><span>{t.titular[1]}</span></h1>
+        <h1 className="titular">{t.titular[0]}<br /><span>{t.titular[1]}</span></h1>
 
-      <p className="promesa">
-        {t.promesa[0]}<b>{t.promesa[1]}</b>{t.promesa[2]}
-        <code>java -jar</code>{t.promesa[3]}<code>web.xml</code>{t.promesa[4]}
-      </p>
+        <p className="promesa">
+          {t.promesa[0]}<b>{t.promesa[1]}</b>{t.promesa[2]}
+          <code>java -jar</code>{t.promesa[3]}<code>web.xml</code>{t.promesa[4]}
+        </p>
 
-      <div className="botones">
-        <Link className="boton principal" to={`${raiz}/empezar`}>{t.empezar}</Link>
-        <a className="boton" href="https://github.com/Andre031222/Corvo">{t.codigo}</a>
+        <div className="botones">
+          <Link className="boton principal" to={`${raiz}/empezar`}>{t.empezar}</Link>
+          <a className="boton" href="https://github.com/Andre031222/Corvo">{t.codigo}</a>
+        </div>
       </div>
 
       <Orden>curl -fsSL https://corvo.ginit.dev/instalar | sh</Orden>

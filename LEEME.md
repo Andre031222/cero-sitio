@@ -38,20 +38,27 @@ regresión del framework, antes que las de nadie más.
 
 ## Desarrollo
 
-Dos procesos: el backend en el 8080 y Vite en el 5173, que hace de proxy de `/api`.
+Dos procesos: el backend en el **8181** y Vite en el 5173, que hace de proxy de `/api`.
 
 ```bash
 # terminal 1 — la API
 cd backend
 mvn -q dependency:build-classpath -Dmdep.outputFile=target/cp.txt
 mvn -q -DskipTests package
-java -cp "target/classes:$(cat target/cp.txt)" dev.ginit.corvoweb.App 8080
+java -cp "target/classes:$(cat target/cp.txt)" dev.ginit.corvoweb.App 8181
 
 # terminal 2 — el front, con recarga en caliente
 cd frontend
 npm install
 npm run dev            # http://localhost:5173
 ```
+
+**El 8181 y no el 8080, a propósito.** El 8080 es un puerto disputado —en esta máquina lo tenía
+un contenedor de Docker atado a `127.0.0.1`— y el modo en que falla es de los malos: el proxy
+recibe un **200 con HTML de otra aplicación**, `r.json()` revienta y la página de descargas dice
+«no se pudo leer el catálogo» como si el fallo fuera suyo. En producción sigue siendo el 8080.
+
+Para apuntar a otro sitio: `CORVO_API=http://127.0.0.1:9000 npm run dev`.
 
 El backend abre CORS **solo** para `localhost:5173` y `127.0.0.1:5173`.
 

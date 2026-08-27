@@ -55,7 +55,11 @@ a { color: inherit; }
 /* Un grid de una columna que puede encoger: los ítems de grid tienen min-width:auto y sin
    minmax(0,·) cualquier tabla o <pre> ancho desborda la página entera en el teléfono. */
 .marco {
-  max-width: 78rem; margin: 0 auto; padding: 0 1.5rem;
+  /* 78 rem fijos dejaban la mitad de una pantalla de 2560 en blanco: 49 % aprovechado.
+     Con esto son el 96 % del ancho hasta el tope, y el tope está donde el diseño deja de
+     ganar algo. Que el texto no se estire con él lo resuelve cada bloque con su propia
+     medida, no el contenedor. */
+  width: min(96%, 118rem); margin: 0 auto; padding: 0 1.5rem;
   display: grid; grid-template-columns: minmax(0, 1fr);
 }
 pre { overflow-x: auto; max-width: 100%; }
@@ -660,4 +664,92 @@ ul.prosa li { margin-bottom: .45rem; }
   content: "";
   display: block; width: 3.5rem; height: 3px; margin-top: .7rem;
   background: linear-gradient(90deg, var(--acento), var(--acento-2));
+}
+
+
+/* ─── pantallas anchas: la portada a dos columnas ─── */
+
+/* Ensanchar el marco a secas no basta. El ave iba absolutamente posicionada a la derecha y
+   el texto tiene su propia medida, así que al estirar el contenedor lo único que crecía era
+   el hueco entre los dos. En dos columnas de verdad el ancho extra tiene trabajo: la
+   propuesta a la izquierda, el ave y la terminal a la derecha. */
+@media (min-width: 78rem) {
+  .portada {
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
+    grid-template-areas:
+      "propuesta ave"
+      "orden     term"
+      "tras      term"
+      "cifras    cifras"
+      "nota      nota";
+    /* La terminal ocupa dos filas y es alta; sin decir dónde va el sobrante, se reparte entre
+       las dos y deja el «En Windows…» flotando lejos de la orden. Con la tercera fila en 1fr,
+       todo el hueco cae ahí y el texto queda pegado a lo que explica. */
+    grid-template-rows: auto auto 1fr auto auto;
+    column-gap: clamp(2.5rem, 5vw, 6rem);
+    align-items: start;
+  }
+  .portada > .propuesta  { grid-area: propuesta; align-self: center; }
+  .portada > .orden      { grid-area: orden; max-width: 40rem; }
+  .portada > .tras-orden { grid-area: tras; }
+  .portada > .terminal   { grid-area: term; max-width: none; margin-top: 0; }
+  .portada > .cifras     { grid-area: cifras; }
+  .portada > .nota       { grid-area: nota; }
+
+  /* El ave deja de estar absolutamente posicionada y pasa a ocupar su columna. Ya no hay
+     que adivinar un `right` ni un `top` que funcionen en todos los anchos. */
+  .cuervo {
+    grid-area: ave;
+    position: relative;
+    right: auto; top: auto;
+    /* Atada a la ventana y no al 100 % de su columna: llenando la columna, a 1440 el ave
+       medía 45 rem de alto y empujaba la terminal fuera de la pantalla. La altura sale sola
+       de la proporción del dibujo, así que limitar el ancho limita las dos. */
+    width: min(100%, clamp(19rem, 23vw, 32rem));
+    justify-self: end;
+    align-self: center;
+  }
+
+  /* Y el halo se centra sobre su columna en vez de sobre la página. */
+  .portada::before { top: -8rem; height: 58rem; }
+
+  /* La promesa puede respirar un poco más cuando tiene su propia columna, pero sin pasar de
+     la medida en la que una línea deja de leerse de un vistazo. */
+  .promesa { max-width: 34rem; }
+}
+
+/* Muy anchas: el titular puede crecer, y las cifras se reparten mejor. */
+@media (min-width: 100rem) {
+  .titular { font-size: clamp(4rem, 5.6vw, 7.5rem); }
+  .promesa { max-width: 38rem; font-size: 1.4rem; }
+}
+
+/* Las páginas de contenido también estaban desaprovechando el ancho: el índice fijo de
+   13,5 rem y el cuerpo con la prosa a 42 rem dejaban un río de blanco a la derecha. */
+@media (min-width: 90rem) {
+  .cuerpo { grid-template-columns: 16rem minmax(0, 1fr); gap: 4.5rem; }
+  .pagina p, ul.prosa { max-width: 52rem; }
+  .entradilla { max-width: 52rem; }
+
+  /* Tablas y bloques de código también tienen medida. Estirar una tabla de tres columnas a
+     1550 px no la hace más legible: deja las celdas a un palmo unas de otras y el ojo pierde
+     la fila. El ancho extra lo aprovecha la página; el contenido conserva su escala. */
+  .envoltura, .codigo, .pagina pre { max-width: 72rem; }
+}
+
+
+/* ─── descargas en pantallas anchas ─── */
+
+/* auto-fit repartía seis módulos en cinco columnas y dejaba el sexto solo en una fila, con
+   el fondo de la rejilla asomando como un hueco gris. Tres columnas fijas: dos filas
+   llenas. Si algún día hay siete módulos habrá que volver aquí — y se verá enseguida. */
+@media (min-width: 62rem) {
+  .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* El resumen y su botón tienen medida propia. Un botón de 1 800 px deja de leerse como un
+   botón y pasa a ser una franja de color. */
+@media (min-width: 78rem) {
+  .resumen { max-width: 58rem; }
 }
