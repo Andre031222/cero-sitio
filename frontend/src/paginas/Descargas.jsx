@@ -1,0 +1,125 @@
+import { useEffect, useState } from 'react'
+
+/**
+ * Elegir módulos y ver qué te llevas.
+ *
+ * Quien llega aquí no pregunta «qué módulos hay» sino «qué necesito y cuánto pesa». Por eso las
+ * dependencias las resuelve el servidor —que es quien conoce el grafo de verdad— y la página
+ * enseña lo que se arrastra sin pedirlo, que es la parte que sorprende.
+ */
+export default function Descargas() {
+  const [catalogo, setCatalogo] = useState([])
+  const [elegidos, setElegidos] = useState(new Set())
+  const [resultado, setResultado] = useState(null)
+  const [fallo, setFallo] = useState(null)
+  const [copiado, setCopiado] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/modulos')
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+      .then(setCatalogo)
+      .catch((e) => setFallo(`No se pudo leer el catálogo: ${e.message}`))
+  }, [])
+
+  useEffect(() => {
+    if (elegidos.size === 0) { setResultado(null); return }
+    let cancelado = false
+    fetch('/api/seleccion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ modulos: [...elegidos] }),
+    })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+      .then((d) => { if (!cancelado) { setResultado(d); setFallo(null) } })
+      .catch((e) => { if (!cancelado) setFallo(`No se pudo resolver: ${e.message}`) })
+    return () => { cancelado = true }
+  }, [elegidos])
+
+  const alternar = (nombre) => {
+    setElegidos((antes) => {
+      const s = new Set(antes)
+      s.has(nombre) ? s.delete(nombre) : s.add(nombre)
+      return s
+    })
+    setCopiado(false)
+  }
+
+  const copiar = async () => {
+    if (!resultado?.pom) return
+    try {
+      await navigator.clipboard.writeText(resultado.pom)
+      setCopiado(true)
+      setTimeout(() => setCopiado(false), 1600)
+    } catch {
+      // Si el navegador no deja copiar, el bloque sigue ahí para seleccionarlo a mano.
+    }
+  }
+
+  const arrastrado = (n) => resultado?.arrastrados?.includes(n)
+
+  return (
+    <section className="descargas">
+      <h1 className="titulo-pagina">Descargas</h1>
+      <p className="entradilla">
+        Toma solo lo que uses. Marca lo que necesitas y te decimos qué arrastra, cuánto pesa
+        y qué declarar en tu <code>pom.xml</code>.
+      </p>
+
+      {fallo && <p className="fallo" role="alert">{fallo}</p>}
+
+      <div className="rejilla">
+        {catalogo.map((m) => {
+          const marcado = elegidos.has(m.nombre)
+          return (
+            <label
+              key={m.nombre}
+              className={`modulo${marcado ? ' marcado' : ''}${arrastrado(m.nombre) ? ' arrastrado' : ''}`}
+            >
+              <input type="checkbox" checked={marcado} onChange={() => alternar(m.nombre)} />
+              <div>
+                <div className="cabeza">
+                  <span className="mono">{m.nombre}</span>
+                  <span className="peso">{m.kb} KB</span>
+                </div>
+                <p>{m.hace}</p>
+                {m.necesita && <p className="necesita">necesita {m.necesita}</p>}
+                {arrastrado(m.nombre) && !marcado && (
+                  <p className="aviso">viene incluido por lo que elegiste</p>
+                )}
+              </div>
+            </label>
+          )
+        })}
+      </div>
+
+      {resultado && (
+        <div className="resumen">
+          <div className="total">
+            <div><b>{resultado.kb}</b><span>KB</span><em>en total</em></div>
+            <div><b>{resultado.clases}</b><span></span><em>clases</em></div>
+            <div><b>{resultado.resueltos.length}</b><span></span><em>módulos</em></div>
+          </div>
+
+          {resultado.arrastrados.length > 0 && (
+            <p className="nota">
+              Se añaden solos: <b>{resultado.arrastrados.join(', ')}</b>. No hay que declararlos:
+              Maven los trae con lo que sí declaras.
+            </p>
+          )}
+
+          <div className="codigo">
+            <div className="barra-codigo">
+              <span>pom.xml</span>
+              <button type="button" onClick={copiar}>{copiado ? 'copiado' : 'copiar'}</button>
+            </div>
+            <pre>{resultado.pom}</pre>
+          </div>
+        </div>
+      )}
+
+      {!resultado && !fallo && (
+        <p className="nota">Marca al menos un módulo para ver el resultado.</p>
+      )}
+    </section>
+  )
+}

@@ -1,0 +1,10 @@
+# Maven
+target/
+
+# Node
+node_modules/
+*.log
+
+# El front compilado: lo genera `npm run build` y va a los recursos del backend.
+# No se versiona — se rehace, y versionarlo garantiza conflictos en cada rama.
+backend/src/main/resources/front/

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>dev.ginit.corvoweb</groupId>
+    <artifactId>corvo-sitio</artifactId>
+    <version>0.1.0</version>
+    <name>corvo-sitio</name>
+    <description>El sitio de Corvo, servido por el propio Corvo</description>
+
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <corvo.version>0.4.0</corvo.version>
+    </properties>
+
+    <dependencies>
+        <!-- El sitio de Corvo corre sobre Corvo. Si algo del framework falla, falla aquí
+             antes que en las aplicaciones de nadie. -->
+        <dependency>
+            <groupId>dev.ginit.corvo</groupId>
+            <artifactId>corvo-core</artifactId>
+            <version>${corvo.version}</version>
+        </dependency>
+    </dependencies>
+</project>
