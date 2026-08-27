@@ -390,3 +390,23 @@ ul.prosa li { margin-bottom: .45rem; }
 }
 .idioma:hover { color: var(--acento); border-color: var(--acento); }
 @media (max-width: 26rem) { .idioma { padding: 0 .4rem; font-size: .62rem; } }
+
+/* ─── atajos por escenario ─── */
+.atajos { margin: 0 0 1.5rem; }
+.atajos .etiqueta { display: block; margin-bottom: .6rem; }
+.atajos .fichas { display: flex; flex-wrap: wrap; gap: .45rem; }
+.atajo {
+  font-family: var(--mono); font-size: .74rem; letter-spacing: .02em;
+  padding: .42rem .8rem; border-radius: 20px; cursor: pointer;
+  border: 1px solid var(--linea); background: transparent; color: var(--apagado);
+  transition: color .14s, border-color .14s, background .14s;
+}
+.atajo:hover { color: var(--tinta); border-color: var(--apagado); }
+.atajo.activo { background: var(--acento); border-color: var(--acento); color: var(--papel); }
+.atajo.vaciar { color: var(--acento); border-style: dashed; }
+
+/* Los dos habituales pesan más: es la elección de la mayoría y conviene que se vea. */
+.modulo.habitual .cabeza .mono::after {
+  content: "habitual"; margin-left: .5rem; font-size: .6rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--acento); vertical-align: middle;
+}

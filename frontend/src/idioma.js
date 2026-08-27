@@ -53,6 +53,15 @@ export const TEXTOS = {
       copiar: 'copiar', copiado: 'copiado',
       marcaAlgo: 'Marca al menos un módulo para ver el resultado.',
       falloCatalogo: 'No se pudo leer el catálogo', falloResolver: 'No se pudo resolver',
+      atajos: 'Empieza por lo que quieres hacer',
+      escenarios: [
+        ['Solo atender HTTP', ['corvo-http']],
+        ['Una API JSON', ['corvo-core']],
+        ['Una web con HTML', ['corvo-view']],
+        ['Con base de datos', ['corvo-core', 'corvo-data']],
+        ['Migrando desde Tomcat', ['corvo-adapter-servlet']],
+      ],
+      limpiar: 'limpiar',
     },
   },
   en: {
@@ -84,6 +93,15 @@ export const TEXTOS = {
       copiar: 'copy', copiado: 'copied',
       marcaAlgo: 'Tick at least one module to see the result.',
       falloCatalogo: 'Could not read the catalogue', falloResolver: 'Could not resolve',
+      atajos: 'Start from what you want to build',
+      escenarios: [
+        ['Just answer HTTP', ['corvo-http']],
+        ['A JSON API', ['corvo-core']],
+        ['A site with HTML', ['corvo-view']],
+        ['With a database', ['corvo-core', 'corvo-data']],
+        ['Migrating from Tomcat', ['corvo-adapter-servlet']],
+      ],
+      limpiar: 'clear',
     },
   },
 }

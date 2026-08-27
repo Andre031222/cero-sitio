@@ -70,13 +70,39 @@ export default function Descargas() {
 
       {fallo && <p className="fallo" role="alert">{fallo}</p>}
 
+      {/* Quien llega no piensa en módulos, piensa en lo que quiere construir. Los atajos
+          traducen esa intención a una selección, que luego se puede afinar a mano. */}
+      <div className="atajos">
+        <span className="etiqueta">{t.atajos}</span>
+        <div className="fichas">
+          {t.escenarios.map(([nombre, modulos]) => {
+            const activo = modulos.every((m) => elegidos.has(m))
+              && [...elegidos].every((m) => modulos.includes(m))
+            return (
+              <button key={nombre} type="button"
+                      className={`atajo${activo ? ' activo' : ''}`}
+                      onClick={() => { setElegidos(new Set(modulos)); setCopiado(false) }}>
+                {nombre}
+              </button>
+            )
+          })}
+          {elegidos.size > 0 && (
+            <button type="button" className="atajo vaciar"
+                    onClick={() => { setElegidos(new Set()); setCopiado(false) }}>
+              {t.limpiar}
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="rejilla">
         {catalogo.map((m) => {
           const marcado = elegidos.has(m.nombre)
           return (
             <label
               key={m.nombre}
-              className={`modulo${marcado ? ' marcado' : ''}${arrastrado(m.nombre) ? ' arrastrado' : ''}`}
+              className={`modulo${marcado ? ' marcado' : ''}${arrastrado(m.nombre) ? ' arrastrado' : ''}`
+                + (['corvo-core', 'corvo-http'].includes(m.nombre) ? ' habitual' : '')}
             >
               <input type="checkbox" checked={marcado} onChange={() => alternar(m.nombre)} />
               <div>
