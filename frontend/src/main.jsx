@@ -13,10 +13,14 @@ import empezar from './contenido/empezar.html?raw'
 import guia from './contenido/guia.html?raw'
 import modulos from './contenido/modulos.html?raw'
 import referencia from './contenido/referencia.html?raw'
+import migrar from './contenido/migrar.html?raw'
+import acerca from './contenido/acerca.html?raw'
 import empezarEn from './contenido/en/empezar.html?raw'
 import guiaEn from './contenido/en/guia.html?raw'
 import modulosEn from './contenido/en/modulos.html?raw'
 import referenciaEn from './contenido/en/referencia.html?raw'
+import migrarEn from './contenido/en/migrar.html?raw'
+import acercaEn from './contenido/en/acerca.html?raw'
 
 // Los nombres de ruta no se traducen: /en/guia y no /en/guide. Así cada página y su pareja se
 // corresponden con una sustitución, sin tabla de equivalencias que se desincronice.
@@ -25,6 +29,8 @@ const PAGINAS = [
   ['guia', { es: [guia, 'Guía'], en: [guiaEn, 'Guide'] }],
   ['modulos', { es: [modulos, 'Módulos'], en: [modulosEn, 'Modules'] }],
   ['referencia', { es: [referencia, 'Referencia'], en: [referenciaEn, 'Reference'] }],
+  ['migrar', { es: [migrar, 'Migrar'], en: [migrarEn, 'Migrating'] }],
+  ['acerca', { es: [acerca, 'Acerca de'], en: [acercaEn, 'About'] }],
 ]
 
 const noEncontrada = (idioma) => {

@@ -17,7 +17,7 @@
         <p>
           Corvo is not published to Maven Central yet, so there is an installer. It downloads the
           package, checks its fingerprint, builds it, leaves the artefacts in your local Maven
-          repository and puts the <code>lux</code> command within reach. It asks for no password and
+          repository and puts the <code>corvo</code> command within reach. It asks for no password and
           writes nothing outside your home folder.
         </p>
 
@@ -56,14 +56,14 @@
         <div class="codigo">
           <div class="barra"><span class="etiqueta">pom.xml</span><span class="etiqueta">XML</span></div>
 <pre>&lt;dependency&gt;
-    &lt;groupId&gt;<span class="st">lux</span>&lt;/groupId&gt;
+    &lt;groupId&gt;<span class="st">dev.ginit.corvo</span>&lt;/groupId&gt;
     &lt;artifactId&gt;<span class="st">corvo-core</span>&lt;/artifactId&gt;   <span class="cm">&lt;!-- pulls in corvo-http --&gt;</span>
     &lt;version&gt;<span class="st">0.4.0</span>&lt;/version&gt;
 &lt;/dependency&gt;
 
 <span class="cm">&lt;!-- optional --&gt;</span>
-&lt;dependency&gt;&lt;groupId&gt;<span class="st">lux</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">corvo-view</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">0.4.0</span>&lt;/version&gt;&lt;/dependency&gt;
-&lt;dependency&gt;&lt;groupId&gt;<span class="st">lux</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">corvo-data</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">0.4.0</span>&lt;/version&gt;&lt;/dependency&gt;
+&lt;dependency&gt;&lt;groupId&gt;<span class="st">dev.ginit.corvo</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">corvo-view</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">0.4.0</span>&lt;/version&gt;&lt;/dependency&gt;
+&lt;dependency&gt;&lt;groupId&gt;<span class="st">dev.ginit.corvo</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">corvo-data</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">0.4.0</span>&lt;/version&gt;&lt;/dependency&gt;
 
 <span class="cm">&lt;!-- the JDBC driver is your application's business --&gt;</span>
 &lt;dependency&gt;&lt;groupId&gt;<span class="st">org.postgresql</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">postgresql</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">42.7.3</span>&lt;/version&gt;&lt;/dependency&gt;</pre>

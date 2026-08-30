@@ -1,0 +1,158 @@
+  <header class="cabecera-pagina">
+    <h1 class="titulo-pagina">About</h1>
+    <p class="entradilla">Who makes Corvo, where its code comes from, the licence it ships under and how to cite it.</p>
+  </header>
+
+  <div class="cuerpo">
+    <nav class="indice" aria-label="On this page">
+      <ol>
+        <li><a href="#quien"><span class="n">01</span> Who makes it</a></li>
+        <li><a href="#origen"><span class="n">02</span> Where it comes from</a></li>
+        <li><a href="#estado"><span class="n">03</span> What state it is in</a></li>
+        <li><a href="#licencia"><span class="n">04</span> Licence and citation</a></li>
+      </ol>
+    </nav>
+    <main>
+
+      <section id="quien">
+        <div class="titulo-seccion"><span class="indice-num">01</span><h2>Who makes it</h2></div>
+
+        <p>
+          Corvo is the work of two authors at the <b>Universidad Nacional del Altiplano</b>, in Puno,
+          Peru.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Author</th><th>ORCID</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Richar Andre Vilca-Solorzano</td>
+                <td class="mono-clave"><a href="https://orcid.org/0009-0003-2385-5263">0009-0003-2385-5263</a></td>
+              </tr>
+              <tr>
+                <td>Ramiro Pedro Laura-Murillo</td>
+                <td class="mono-clave"><a href="https://orcid.org/0000-0003-1837-4871">0000-0003-1837-4871</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          <b>The work is not split into parts:</b> both are credited as authors of the whole project.
+        </p>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Why the code carries no authorship headers</div>
+          <p>
+            Source files carry no header. Authorship lives in <code>LICENSE</code> and on this page,
+            once, and not repeated in every file. It is consistent with the rest of the project:
+            the code explains itself, without ornament.
+          </p>
+        </div>
+      </section>
+
+      <section id="origen">
+        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Where it comes from</h2></div>
+
+        <p>
+          Corvo —called <b>LuxCore</b> until version 0.4.0— starts from the code of <b>JxMVC 3.4.0</b>,
+          copied on 1 August 2026. The core is inherited: 54 classes, of which <b>40 imported
+          nothing from <code>jakarta.*</code></b> and moved across untouched.
+        </p>
+
+        <p>
+          What changes is the execution model. JxMVC is a WAR that needs Tomcat 10.1 or later. Corvo
+          starts on its own, with its own HTTP server and zero external dependencies.
+        </p>
+
+        <h3>Why it was copied instead of worked on in place</h3>
+
+        <p>
+          Because <b>JxMVC is frozen</b>: it backs a paper under review, and its measurements were
+          taken on bare metal under controlled conditions. Any change to the framework invalidates
+          those numbers. Its <code>.git</code> was not copied either: its <code>origin</code>
+          points at the paper repository, and one distracted <code>git push</code> would rewrite
+          it. Corvo starts with a history of its own.
+        </p>
+
+        <div class="aviso">
+          <div class="etiqueta">Working rule</div>
+          <p>
+            <b>JxMVC is read-only.</b> Nothing that happens in Corvo propagates back to it.
+          </p>
+        </div>
+
+        <h3>And the name</h3>
+        <p>
+          Until 0.4.0 the framework was called LuxCore. The name clashed with a PHP framework in the
+          same environment and the two were constantly confused. <b>Corvo</b> means raven —the
+          mark the project already carried— and keeps the «cor» of LuxCore, which in Latin is
+          heart, the same root as <i>core</i>.
+        </p>
+        <p>
+          Coming from LuxCore, the guide is at <a href="/en/migrar">Migrating</a>. And there is no
+          rush: Maven artifacts are immutable, so the applications you do not migrate keep working
+          exactly as they did.
+        </p>
+      </section>
+
+      <section id="estado">
+        <div class="titulo-seccion"><span class="indice-num">03</span><h2>What state it is in</h2></div>
+
+        <p>
+          Corvo is at <b>0.4.0</b>, and it is worth saying plainly what that means.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th></th><th>State</th></tr></thead>
+            <tbody>
+              <tr><td>Test suite</td><td><b>1,260</b> green, on macOS and on Linux, against real PostgreSQL and MySQL</td></tr>
+              <tr><td>Continuous integration</td><td>JDK 21 and 25, on every change</td></tr>
+              <tr><td>Runtime dependencies</td><td><b>Zero</b></td></tr>
+              <tr><td>Applications in production</td><td>Six, all ours</td></tr>
+              <tr><td>Published to Maven Central</td><td>Not yet — hence the installer</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso">
+          <div class="etiqueta">What is not settled</div>
+          <p>
+            <b>The HTTP parser is young.</b> It is the surface facing the internet and the one that
+            takes the most punishment: until it has miles on it under real traffic and sustained
+            bursts, calling it mature would not be honest.
+          </p>
+          <p>
+            And the performance figures were measured in Docker Desktop, inside a virtual machine. The
+            conditions were identical for every framework compared, so the comparison is fair;
+            <b>the standalone numbers have to be repeated on bare metal before being quoted
+            anywhere</b>.
+          </p>
+        </div>
+      </section>
+
+      <section id="licencia">
+        <div class="titulo-seccion"><span class="indice-num">04</span><h2>Licence and citation</h2></div>
+
+        <p>
+          Corvo ships under the <b>MIT licence</b>. You can use it, modify it and redistribute it,
+          including in commercial projects, keeping the copyright notice.
+        </p>
+
+        <p>If you use it in academic work:</p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Citation</span><span class="etiqueta">BibTeX</span></div>
+<pre>@software{vilcasolorzano2026corvo,
+  title  = {Corvo: núcleo de framework web poliglota sin dependencias},
+  author = {Vilca-Solorzano, Richar Andre and Laura-Murillo, Ramiro Pedro},
+  year   = {2026},
+  url    = {https://github.com/Andre031222/Corvo}
+}</pre>
+        </div>
+      </section>
+
+    </main>
+  </div>

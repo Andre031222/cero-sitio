@@ -1,0 +1,253 @@
+  <header class="cabecera-pagina">
+    <h1 class="titulo-pagina">Migrating</h1>
+    <p class="entradilla">Taking an application from LuxCore 0.2.x or 0.3.x to Corvo 0.4.0. The script does nearly everything; there are three things it cannot do, and all three show up after you deploy.</p>
+  </header>
+
+  <div class="cuerpo">
+    <nav class="indice" aria-label="On this page">
+      <ol>
+        <li><a href="#sin-prisa"><span class="n">01</span> No rush</a></li>
+        <li><a href="#antes"><span class="n">02</span> Before you touch anything</a></li>
+        <li><a href="#migrar"><span class="n">03</span> Migrate</a></li>
+        <li><a href="#a-mano"><span class="n">04</span> What the script cannot do</a></li>
+        <li><a href="#sin-capa"><span class="n">05</span> No compatibility layer</a></li>
+        <li><a href="#volver"><span class="n">06</span> If something goes wrong</a></li>
+        <li><a href="#repaso"><span class="n">07</span> Checklist</a></li>
+      </ol>
+    </nav>
+    <main>
+
+      <section id="sin-prisa">
+        <div class="titulo-seccion"><span class="indice-num">01</span><h2>No rush</h2></div>
+
+        <p>
+          <b>The applications you do not migrate keep working.</b> Maven artifacts are
+          immutable: <code>lux:lux-core:0.3.0</code> is still in your <code>~/.m2</code> and inside every
+          deployed jar. Renaming the framework does not reach in there and change anything.
+        </p>
+
+        <p>
+          You can migrate one, leave the other five as they are for months, and nothing happens. The
+          <code>v0.3.0</code> tag is still there: if one day an old application has to be
+          rebuilt on a clean machine, <code>./lux install</code> from that tag
+          regenerates the old artifacts.
+        </p>
+
+        <div class="aviso nota">
+          <div class="etiqueta">How to do it</div>
+          <p>
+            <b>One at a time.</b> With production involved, that is how you keep a problem to one
+            application instead of six.
+          </p>
+        </div>
+      </section>
+
+      <section id="antes">
+        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Before you touch anything</h2></div>
+
+        <h3>1 · Install Corvo 0.4.0</h3>
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">In the Corvo repository</span><span class="etiqueta">sh</span></div>
+<pre>./corvo install          <span class="cm"># builds, tests and installs into ~/.m2</span></pre>
+        </div>
+
+        <h3>2 · Leave the application's git tree clean</h3>
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">In your application</span><span class="etiqueta">sh</span></div>
+<pre>cd ../mi-app
+git status               <span class="cm"># nothing may be left uncommitted</span></pre>
+        </div>
+        <p>
+          <b>The script refuses to run if there are uncommitted changes</b>, and that is on purpose:
+          git itself is the backup. <code>git diff</code> shows everything it touched and
+          <code>git checkout .</code> undoes all of it. No need to go copying folders around.
+        </p>
+
+        <h3>3 · Rename the migrations table</h3>
+
+        <div class="aviso">
+          <div class="etiqueta">This goes before you start the application</div>
+          <p>
+            If your application uses <code>Migrations</code> from <code>corvo-data</code>, stop and read.
+            The framework records in a table which migrations already ran. It was called
+            <code>lux_migraciones</code> and is now <code>corvo_migraciones</code>. If you start
+            without renaming it, <b>Corvo does not find it, assumes none ever ran, and runs them
+            all again</b>.
+          </p>
+          <p>That does not fail at compile time. It fails against your database.</p>
+        </div>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Before starting</span><span class="etiqueta">SQL</span></div>
+<pre>ALTER TABLE lux_migraciones RENAME TO corvo_migraciones;</pre>
+        </div>
+
+        <p>
+          Same with the sessions table, if you use <code>JdbcSessions</code> and kept the default
+          name:
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Only if you use JdbcSessions</span><span class="etiqueta">SQL</span></div>
+<pre>ALTER TABLE lux_sesiones RENAME TO corvo_sesiones;</pre>
+        </div>
+
+        <p>
+          If you passed a name of your own —<code>JdbcSessions.of("my_sessions")</code>— there is
+          nothing to do.
+        </p>
+      </section>
+
+      <section id="migrar">
+        <div class="titulo-seccion"><span class="indice-num">03</span><h2>Migrate</h2></div>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">In the Corvo repository</span><span class="etiqueta">sh</span></div>
+<pre>./corvo migrar ../mi-app --probar    <span class="cm"># shows what would change, touching nothing</span>
+./corvo migrar ../mi-app             <span class="cm"># applies it</span></pre>
+        </div>
+
+        <h3>What the script changes</h3>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th></th><th>Before</th><th>After</th></tr></thead>
+            <tbody>
+              <tr><td>Packages</td><td class="mono-clave">import lux.core.Route</td><td class="mono-clave">import corvo.core.Route</td></tr>
+              <tr><td>Bootstrap class</td><td class="mono-clave">Lux.run(8080, …)</td><td class="mono-clave">Corvo.run(8080, …)</td></tr>
+              <tr><td>Servlet</td><td class="mono-clave">LuxServlet</td><td class="mono-clave">CorvoServlet</td></tr>
+              <tr><td>groupId</td><td class="mono-clave">lux</td><td class="mono-clave">dev.ginit.corvo</td></tr>
+              <tr><td>Artifacts</td><td class="mono-clave">lux-core, lux-data…</td><td class="mono-clave">corvo-core, corvo-data…</td></tr>
+              <tr><td>Version</td><td class="mono-clave">0.2.x / 0.3.x</td><td class="mono-clave">0.4.0</td></tr>
+              <tr><td>pom property</td><td class="mono-clave">${lux.version}</td><td class="mono-clave">${corvo.version}</td></tr>
+              <tr><td>Config keys</td><td class="mono-clave">lux.oauth.google.id</td><td class="mono-clave">corvo.oauth.google.id</td></tr>
+              <tr><td>Environment variables</td><td class="mono-clave">LUX_SERVER_PORT</td><td class="mono-clave">CORVO_SERVER_PORT</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          It walks <code>.java</code>, <code>pom.xml</code>, <code>.properties</code>,
+          <code>.yml</code>, <code>.yaml</code>, <code>.env</code> and <code>.conf</code>. It skips
+          <code>target/</code>, <code>build/</code>, <code>.git/</code> y
+          <code>node_modules/</code>.
+        </p>
+
+        <h3>Check it</h3>
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">In your application</span><span class="etiqueta">sh</span></div>
+<pre>cd ../mi-app
+git diff                 <span class="cm"># review what changed</span>
+mvn test                 <span class="cm"># and that it still passes</span></pre>
+        </div>
+      </section>
+
+      <section id="a-mano">
+        <div class="titulo-seccion"><span class="indice-num">04</span><h2>What the script cannot do</h2></div>
+
+        <p>
+          Three of them. <b>None fails at compile time</b>, and all three show up after you deploy —
+          which is the worst moment to find out.
+        </p>
+
+        <h3>The session cookie changed name</h3>
+        <p>
+          <code>LUXSESSION</code> becomes <code>CORVOSESSION</code>. Every user's browser keeps
+          sending the old one, which the new application no longer recognises.
+        </p>
+        <div class="aviso">
+          <div class="etiqueta">What follows</div>
+          <p>
+            On deploy, <b>everyone who was signed in has to sign in again.</b> Nothing is lost, but
+            deploy when it does not get in the way, and warn people if it is an application with
+            users at work in it.
+          </p>
+        </div>
+
+        <h3>The metrics changed name</h3>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Before</th><th>After</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-clave">lux_requests_total</td><td class="mono-clave">corvo_requests_total</td></tr>
+              <tr><td class="mono-clave">lux_request_errors_total</td><td class="mono-clave">corvo_request_errors_total</td></tr>
+              <tr><td class="mono-clave">lux_request_duration_ms</td><td class="mono-clave">corvo_request_duration_ms</td></tr>
+              <tr><td class="mono-clave">lux_uptime_ms</td><td class="mono-clave">corvo_uptime_ms</td></tr>
+              <tr><td class="mono-clave">/lux/metrics</td><td class="mono-clave">/corvo/metrics</td></tr>
+              <tr><td class="mono-clave">/lux/metrics/prometheus</td><td class="mono-clave">/corvo/metrics/prometheus</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="aviso">
+          <div class="etiqueta">What follows</div>
+          <p>
+            Prometheus scrapes a path that no longer exists, and the Grafana panels query metrics that
+            stopped being emitted. <b>The panels do not error: they go empty</b>, which is worse,
+            because it looks like the application is getting no traffic. You have to update
+            <code>prometheus.yml</code> and the panel queries.
+          </p>
+        </div>
+
+        <h3>The deployed configuration, not just the one in the repository</h3>
+        <p>
+          The script changes the <code>.properties</code> that live <b>inside</b> the application. If
+          the server has a separate <code>application.properties</code>, or <code>LUX_*</code>
+          variables in <code>systemd</code> or <code>docker-compose</code>, those you change by
+          hand.
+        </p>
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">On the server</span><span class="etiqueta">sh</span></div>
+<pre>grep -rn 'LUX_\|lux\.' /etc/systemd/system/mi-app.service /opt/apps/mi-app/</pre>
+        </div>
+      </section>
+
+      <section id="sin-capa">
+        <div class="titulo-seccion"><span class="indice-num">05</span><h2>No compatibility layer</h2></div>
+        <p>
+          It was the obvious option: have Corvo understand both names for a while. It was dropped on
+          purpose.
+        </p>
+        <p>
+          Only six applications use the framework and they are all ours. Accepting both prefixes would
+          mean carrying dead code <b>forever</b> in a project whose whole argument is having no
+          ballast — and in practice nobody ever removes those layers. Converting six applications
+          once is cheaper than carrying the debt indefinitely.
+        </p>
+      </section>
+
+      <section id="volver">
+        <div class="titulo-seccion"><span class="indice-num">06</span><h2>If something goes wrong</h2></div>
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Undo</span><span class="etiqueta">sh</span></div>
+<pre>git checkout .           <span class="cm"># undoes the whole migration</span></pre>
+        </div>
+        <p>
+          And in the <code>pom.xml</code>, go back to the previous version. The old artifacts are still
+          in <code>~/.m2</code> and the application builds as before, because they never stopped
+          existing.
+        </p>
+        <p>If you already renamed the tables and want to go all the way back:</p>
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Roll back</span><span class="etiqueta">SQL</span></div>
+<pre>ALTER TABLE corvo_migraciones RENAME TO lux_migraciones;
+ALTER TABLE corvo_sesiones RENAME TO lux_sesiones;</pre>
+        </div>
+      </section>
+
+      <section id="repaso">
+        <div class="titulo-seccion"><span class="indice-num">07</span><h2>Checklist</h2></div>
+        <ul class="prosa">
+          <li><code>./corvo install</code> — Corvo 0.4.0 en <code>~/.m2</code></li>
+          <li>The application's git tree, clean</li>
+          <li><code>ALTER TABLE lux_migraciones RENAME TO corvo_migraciones;</code></li>
+          <li><code>ALTER TABLE lux_sesiones RENAME TO corvo_sesiones;</code> (if it applies)</li>
+          <li><code>./corvo migrar ../mi-app --probar</code></li>
+          <li><code>./corvo migrar ../mi-app</code></li>
+          <li><code>git diff</code> y <code>mvn test</code></li>
+          <li>Server configuration: <code>systemd</code>, <code>docker-compose</code>, the production <code>.properties</code></li>
+          <li>Prometheus and the Grafana panels</li>
+          <li>Warn that sessions close on deploy</li>
+        </ul>
+      </section>
+
+    </main>
+  </div>

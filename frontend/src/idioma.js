@@ -27,7 +27,8 @@ export const TEXTOS = {
   es: {
     lang: 'es',
     menu: [['', 'Inicio'], ['/empezar', 'Empezar'], ['/guia', 'Guía'],
-           ['/modulos', 'Módulos'], ['/referencia', 'Referencia'], ['/descargas', 'Descargas']],
+           ['/modulos', 'Módulos'], ['/referencia', 'Referencia'], ['/migrar', 'Migrar'],
+           ['/descargas', 'Descargas'], ['/acerca', 'Acerca de']],
     otro: 'English', otroCodigo: 'EN',
     otroTitulo: 'Read this page in English',
     sede: 'Universidad Nacional del Altiplano · Puno, Perú',
@@ -71,7 +72,8 @@ export const TEXTOS = {
   en: {
     lang: 'en',
     menu: [['', 'Home'], ['/empezar', 'Get started'], ['/guia', 'Guide'],
-           ['/modulos', 'Modules'], ['/referencia', 'Reference'], ['/descargas', 'Downloads']],
+           ['/modulos', 'Modules'], ['/referencia', 'Reference'], ['/migrar', 'Migrating'],
+           ['/descargas', 'Downloads'], ['/acerca', 'About']],
     otro: 'Español', otroCodigo: 'ES',
     otroTitulo: 'Leer esta página en español',
     sede: 'Universidad Nacional del Altiplano · Puno, Peru',

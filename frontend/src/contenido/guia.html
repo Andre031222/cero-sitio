@@ -471,7 +471,7 @@ Corvo.app()
    .service(metricas)
    .use(metricas)
    .use(AccessLog.combined())
-   .routes(r -&gt; r.get(<span class="st">"/lux/metrics"</span>, metricas.endpoint()))
+   .routes(r -&gt; r.get(<span class="st">"/corvo/metrics"</span>, metricas.endpoint()))
    .start();</pre>
         </div>
 
