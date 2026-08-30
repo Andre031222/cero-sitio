@@ -1,13 +1,13 @@
   <header class="cabecera-pagina">
     <h1 class="titulo-pagina">Acerca de</h1>
-    <p class="entradilla">Quién hace Corvo, de dónde sale su código, con qué licencia se distribuye y cómo citarlo.</p>
+    <p class="entradilla">Quién hace Corvo, por qué existe, con qué licencia se distribuye y cómo citarlo.</p>
   </header>
 
   <div class="cuerpo">
     <nav class="indice" aria-label="En esta página">
       <ol>
         <li><a href="#quien"><span class="n">01</span> Quién lo hace</a></li>
-        <li><a href="#origen"><span class="n">02</span> De dónde viene</a></li>
+        <li><a href="#origen"><span class="n">02</span> Por qué existe</a></li>
         <li><a href="#estado"><span class="n">03</span> En qué estado está</a></li>
         <li><a href="#licencia"><span class="n">04</span> Licencia y cita</a></li>
       </ol>
@@ -54,43 +54,47 @@
       </section>
 
       <section id="origen">
-        <div class="titulo-seccion"><span class="indice-num">02</span><h2>De dónde viene</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Por qué existe</h2></div>
 
         <p>
-          Corvo —que hasta la versión 0.4.0 se llamó <b>LuxCore</b>— parte del código de
-          <b>JxMVC 3.4.0</b>, copiado el 1 de agosto de 2026. Se hereda el núcleo: 54 clases, de
-          las cuales <b>40 no importaban nada de <code>jakarta.*</code></b> y se mudaron sin
-          tocarse.
+          Corvo nace de una molestia concreta de estudiante: <b>para levantar una aplicación web
+          en Java había que montar un Tomcat</b>. Empaquetar un WAR, desplegarlo en un contenedor,
+          pelearse con el <code>web.xml</code>, y esperar a que el servidor arrancara cada vez que
+          cambiabas una línea. Para un trabajo de clase, para una prueba rápida, para cualquier
+          cosa pequeña, todo eso sobra.
         </p>
 
         <p>
-          Lo que cambia es el modelo de ejecución. JxMVC es un WAR que necesita Tomcat 10.1 o
-          superior. Corvo arranca solo, con servidor HTTP propio y cero dependencias externas.
+          La pregunta era simple: <i>¿y si el servidor viniera dentro?</i> Así que se escribió uno.
+          <b>4 410 líneas de servidor HTTP/1.1</b> sobre la biblioteca estándar de Java: lectura de
+          peticiones, cabeceras, cuerpos por trozos, TLS recargable, multipart, gzip, estáticos con
+          rangos, WebSocket y SSE. Un hilo virtual por conexión, que es lo que hace que un modelo
+          tan directo aguante.
         </p>
-
-        <h3>Por qué se copió en vez de trabajar sobre el original</h3>
 
         <p>
-          Porque <b>JxMVC está congelado</b>: alimenta un artículo en revisión, y sus mediciones se
-          tomaron en bare-metal bajo condiciones controladas. Cualquier cambio en el framework
-          invalida esos números. Tampoco se copió su <code>.git</code>: su <code>origin</code>
-          apunta al repositorio del artículo, y bastaría un <code>git push</code> distraído para
-          reescribirlo. Corvo arranca con historial propio.
+          El resultado es que <code>java -jar</code> y ya está corriendo. Sin Tomcat, sin
+          <code>web.xml</code>, sin despliegue.
         </p>
 
-        <div class="aviso">
-          <div class="etiqueta">Regla de trabajo</div>
-          <p>
-            <b>JxMVC es de solo lectura.</b> Nada de lo que ocurra en Corvo se propaga hacia allá.
-          </p>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th></th><th class="cifra">Clases</th><th class="cifra">Líneas</th></tr></thead>
+            <tbody>
+              <tr><td>Servidor HTTP propio</td><td class="cifra">39</td><td class="cifra">4 410</td></tr>
+              <tr><td>Núcleo: rutas, inyección, validación, seguridad</td><td class="cifra">66</td><td class="cifra">6 100</td></tr>
+              <tr><td>Plantillas, datos, adaptador y empaquetador</td><td class="cifra">30</td><td class="cifra">3 482</td></tr>
+              <tr class="total"><td>Todo el framework</td><td class="cifra">135</td><td class="cifra">13 992</td></tr>
+            </tbody>
+          </table>
         </div>
 
         <h3>Y el nombre</h3>
         <p>
-          Hasta la 0.4.0 el framework se llamaba LuxCore. El nombre chocaba con un framework PHP
-          del mismo entorno y se confundían constantemente. <b>Corvo</b> significa cuervo —la marca
-          que el proyecto ya llevaba— y conserva el «cor» de LuxCore, que en latín es corazón, la
-          misma raíz de <i>core</i>.
+          Hasta la 0.4.0 el framework se llamó <b>LuxCore</b>. El nombre chocaba con un framework
+          PHP del mismo entorno y se confundían constantemente. <b>Corvo</b> significa cuervo —la
+          marca que el proyecto ya llevaba— y conserva el «cor» de LuxCore, que en latín es
+          corazón, la misma raíz de <i>core</i>.
         </p>
         <p>
           Si vienes de LuxCore, la guía está en <a href="/migrar">Migrar</a>. Y no hay prisa: los
