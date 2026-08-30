@@ -59,8 +59,8 @@
           <table>
             <thead><tr><th>Sistema</th><th>Estado</th><th>Nota</th></tr></thead>
             <tbody>
-              <tr><td class="mono">macOS</td><td><span class="pastilla ok">Probado</span></td><td>Intel y Apple Silicon. Donde se desarrolló y donde corren las 1 342 pruebas.</td></tr>
-              <tr><td class="mono">Linux</td><td><span class="pastilla ok">Probado</span></td><td>Las 1 342 pruebas en verde sobre Linux 6.12, con PostgreSQL y MySQL reales. En integración continua, sobre JDK 21 y 25, en cada cambio.</td></tr>
+              <tr><td class="mono">macOS</td><td><span class="pastilla ok">Probado</span></td><td>Intel y Apple Silicon. Donde se desarrolló y donde corren las 1 260 pruebas.</td></tr>
+              <tr><td class="mono">Linux</td><td><span class="pastilla ok">Probado</span></td><td>Las 1 260 pruebas en verde sobre Linux 6.12, con PostgreSQL y MySQL reales. En integración continua, sobre JDK 21 y 25, en cada cambio.</td></tr>
               <tr><td class="mono">Windows</td><td><span class="pastilla parcial">Sin verificar</span></td><td>Nada toca rutas ni permisos específicos del sistema.</td></tr>
               <tr><td class="mono">Contenedores</td><td><span class="pastilla parcial">Sin verificar</span></td><td>Cualquier imagen con JRE 21. Sin contenedor de servlets, la imagen es el JRE más 223 KB.</td></tr>
             </tbody>
@@ -93,11 +93,11 @@
             <thead><tr><th>Métrica</th><th class="cifra">JxMVC sobre Tomcat</th><th class="cifra">Corvo</th></tr></thead>
             <tbody>
               <tr><td>Arranque</td><td class="cifra">698 ms</td><td class="cifra">106 ms</td></tr>
-              <tr><td>Artefacto</td><td class="cifra">253 KB + ~15 MB</td><td class="cifra">308 KB</td></tr>
+              <tr><td>Artefacto</td><td class="cifra">253 KB + ~15 MB</td><td class="cifra">362 KB</td></tr>
               <tr><td>Necesita contenedor</td><td class="cifra">Tomcat 10.1+</td><td class="cifra">no</td></tr>
               <tr><td>Dependencias en runtime</td><td class="cifra">Jakarta EE 10</td><td class="cifra">ninguna</td></tr>
               <tr><td>Líneas de producción</td><td class="cifra">10 379</td><td class="cifra">12 784</td></tr>
-              <tr><td>Pruebas</td><td class="cifra">347</td><td class="cifra">1 342</td></tr>
+              <tr><td>Pruebas</td><td class="cifra">347</td><td class="cifra">1 260</td></tr>
               <tr><td>Pruebas / código</td><td class="cifra">22 %</td><td class="cifra">54 %</td></tr>
               <tr><td>rps <code>/json</code></td><td class="cifra">23 307</td><td class="cifra">25 431</td></tr>
               <tr><td>Memoria (RSS)</td><td class="cifra">191 MB</td><td class="cifra">136 MB</td></tr>
@@ -133,6 +133,14 @@
             0,2 MB. Arranca 4,3 veces más rápido que el siguiente, gasta la menor memoria de los
             seis y lidera los tres endpoints. En <code>/db</code> —el que mide el framework
             haciendo trabajo de verdad— saca un 38 % al JxMVC del que viene.
+          </p>
+          <p>
+            Esos 0,2 MB no son mérito de JxMVC: son su <b>imagen base</b>. Las dos capas de
+            aplicación pesan lo mismo —2,6 MB— y la diferencia entera está debajo, en que
+            <code>tomcat:10.1-jre21</code> (107,5 MB) resulta ir sobre un JRE más delgado que
+            <code>eclipse-temurin:21-jre</code> (107,7 MB). Esa columna mide qué base elegimos,
+            no qué framework escribimos; cambiando la de Corvo se da la vuelta sin tocar una
+            línea de código.
           </p>
           <p>
             Y no dice cifras absolutas citables: se midió en Docker Desktop, dentro de una VM.

@@ -398,7 +398,16 @@ nav.indice a .n { color: var(--apagado); opacity: .6; font-variant-numeric: tabu
   padding: 0 1rem .5rem 0; border-bottom: 1px solid var(--linea); white-space: nowrap; }
 .pagina td { padding: .62rem 1rem .62rem 0; border-bottom: 1px solid color-mix(in srgb, var(--linea) 55%, transparent);
   vertical-align: top; }
-td.cifra, th.cifra { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); padding-right: 0; }
+/* padding-right: 0 alineaba la última cifra con el borde de la tabla, pero dejaba las
+   columnas numéricas sin separación por ningún lado: las cabeceras salían pegadas —
+   «CLASESLÍNEASPRUEBASTAMAÑO»— y se leían como una sola palabra. El aire va a la
+   izquierda, que es donde no estorba a la alineación derecha.
+
+   nowrap porque «147 KB» partía en dos líneas y descuadraba la fila entera. */
+td.cifra, th.cifra {
+  text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono);
+  padding-right: 0; padding-left: 1.6rem; white-space: nowrap;
+}
 .pagina .mono, .mono-clave { font-family: var(--mono); }
 .mono-clave { font-size: .8125rem; color: var(--acento); }
 .detalle { color: var(--apagado); font-size: .8125rem; display: block; margin-top: .12rem; }
@@ -761,3 +770,6 @@ ul.prosa li { margin-bottom: .45rem; }
 @media (min-width: 78rem) {
   .resumen { max-width: 58rem; }
 }
+
+/* Un identificador no se parte: «corvo-core» salía como «corvo-» / «core». */
+.pagina td.nowrap { white-space: nowrap; }

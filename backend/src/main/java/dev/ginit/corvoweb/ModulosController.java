@@ -36,20 +36,20 @@ public class ModulosController {
     private static final Map<String, Modulo> CATALOGO = new LinkedHashMap<>();
 
     static {
-        registrar(new Modulo("corvo-http", null, 38, 88,
+        registrar(new Modulo("corvo-http", null, 39, 94,
                 "Servidor HTTP/1.1 con un hilo virtual por conexión. TLS recargable, sesiones "
                         + "enchufables, multipart, gzip, estáticos con rangos y WebSocket."));
-        registrar(new Modulo("corvo-core", "corvo-http", 63, 147,
+        registrar(new Modulo("corvo-core", "corvo-http", 66, 160,
                 "Rutas, inyección, JSON, validación declarativa, seguridad, métricas, caché, "
                         + "eventos, tareas y OpenAPI."));
         registrar(new Modulo("corvo-view", "corvo-core", 9, 38,
                 "Plantillas compiladas con herencia, bucles e inclusión. El escapado HTML es el "
                         + "comportamiento por defecto, no una opción que se olvida."));
-        registrar(new Modulo("corvo-data", "corvo-core", 14, 36,
+        registrar(new Modulo("corvo-data", "corvo-core", 16, 48,
                 "JDBC directo sin ORM: pool, transacciones, repositorios y sesiones en tabla."));
         registrar(new Modulo("corvo-adapter-servlet", "corvo-core", 4, 13,
                 "Desplegar la misma aplicación dentro de Tomcat 10.1+, para migrar sin salto."));
-        registrar(new Modulo("corvo-launcher", null, 1, 7,
+        registrar(new Modulo("corvo-launcher", null, 1, 9,
                 "Empaqueta aplicación y framework en un jar ejecutable con java -jar."));
     }
 
