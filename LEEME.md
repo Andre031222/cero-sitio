@@ -152,74 +152,53 @@ por los componentes.
 
 ## La marca
 
-Un cuervo facetado, en `frontend/public/marca/`. Del mismo original salen tres cosas:
+**Hoy la marca es la palabra.** No hay símbolo, a propósito y de forma temporal: el cuervo que
+había salió de un generador de imágenes, y este repositorio acompaña papers. Richar hará el
+suyo.
 
-| Archivo | Dónde | Cómo |
+| Archivo | Dónde | Estado |
 |---|---|---|
-| `cuervo-color.webp` | La portada | El dibujo con sus grises, 76 KB. No se tinta: los tonos facetados se sostienen igual sobre blanco que sobre negro |
-| `cuervo-marca.png` | La barra | La silueta sacada del canal alfa, para poder tintarla con `var(--acento)` |
-| `favicon.svg` | La pestaña | La misma silueta, tintada, dentro de una caja de 64 |
-| `enlace.jpg` | La tarjeta al compartir | 1200×630, generada renderizando el sitio con sus propias tipografías |
+| `favicon.svg` | La pestaña | Provisional: una C tipográfica sobre el acento. Va como ruta y no como `<text>` porque un `<text>` se rinde con la fuente del sistema, que no es la misma en cada máquina — y a 16 px eso se nota |
+| `enlace.jpg` | La tarjeta al compartir | 1200×630, tipografía y cifras, generada renderizando el propio sitio con sus fuentes |
 
 Las etiquetas `og:` van en `index.html` y no en React: los rastreadores de Slack, WhatsApp o
 Twitter no ejecutan JavaScript. Una etiqueta puesta al montar un componente no la ve nadie.
 
+### Cuando llegue el símbolo
+
+El hueco está reservado. Son cuatro sitios y ninguno más:
+
+1. El archivo en `frontend/public/marca/`
+2. `.marca .simbolo` en `estilo.css` — está comentado, descomentar y apuntar al archivo
+3. `<span className="simbolo" />` en `Marco.jsx`, antes de `.palabra`
+4. `favicon.svg` y `enlace.jpg`, que llevan la marca dentro y se regeneran aparte
+
+Que vaya como **máscara CSS** sobre `var(--acento)` y no como imagen a color: un solo archivo
+sirve para el tema claro y para el oscuro, y el símbolo cambia de color con la marca sin
+regenerarlo.
+
+Y una trampa que ya mordió: la barra tenía `.marca .palabra { display: none }` por debajo de
+26 rem, porque a ese ancho el símbolo bastaba. Al quitar el símbolo, la barra se quedó **sin
+nada** en el teléfono. Si vuelve el símbolo y se quiere recuperar esa regla, hay que
+comprobarlo a 320 px antes.
+
 ### El color
 
-**Cobalto.** `--acento` es `#1a49d6` en claro y `#5b8dff` en oscuro; `--acento-2` (`#3f86f5` /
-`#7fb4ff`) existe solo para los degradados —un degradado de un color a sí mismo aclarado se ve
-sucio, y con dos tonos vecinos de verdad el titular tiene profundidad.
+`--acento` es **cobalto** — `#1a49d6` en claro, `#5b8dff` en oscuro — con un `--acento-2`
+(`#3f86f5` / `#7fb4ff`) que existe solo para los degradados: un degradado de un color a sí
+mismo aclarado se ve sucio.
 
-Pasó por magenta (`#c2136a`) y por bermellón (`#c0341d`) antes de esto.
+Pasó por magenta y por bermellón antes. Los tres pasan AA de sobra, así que la decisión nunca
+fue de contraste. `--acento-2` da 3,54× sobre blanco: solo vale para texto grande, y por eso
+aparece únicamente en degradados sobre el titular, las cifras y reglas decorativas, nunca en
+texto corrido.
 
-7,08× sobre blanco y 6,70× sobre negro. `--acento-2` se queda en 3,54×, que **solo** basta para
-texto grande: por eso aparece únicamente en degradados sobre el titular, las cifras y reglas
-decorativas, nunca en texto corrido.
+La tinta bajó de azul marino (`#0e1b3d`) a casi negro (`#0f141c`): con un acento azul, una
+tinta azul marino se le confunde y el acento deja de acentuar.
 
-La tinta pasó de azul marino (`#0e1b3d`) a casi negro (`#0f141c`). Con un acento azul, una tinta
-azul marino se le confunde y el acento deja de acentuar.
-
-Los tokens están definidos tres veces —`:root`, `prefers-color-scheme` y `[data-tema]`— para que
-el conmutador gane en las dos direcciones. Cambiar la marca son esas líneas, más recolorear el
-favicon y la tarjeta de enlace, que llevan el color quemado dentro.
-
-### Que la página no sea blanco sobre blanco
-
-Todo se apoya en esos dos tokens; ninguna regla trae su propio color escrito a mano:
-
-- Un halo detrás del ave, **a ancho de ventana**. Dentro de `.marco` su borde caía donde acaba el
-  contenido y se veía el canto recto del degradado atravesando la página.
-- El titular y las cifras en degradado con `background-clip: text`.
-- El botón lleno con degradado y sombra **del propio color**: una sombra gris debajo de un botón
-  de color lo ensucia.
-- La terminal ya no es un agujero negro en medio de una página blanca. Tenía seis colores escritos
-  a mano; ahora usa sus propios tokens y **sigue al tema** como el resto.
-
-El recorte horizontal se hace en `html`, no en la portada. Recortando en la portada, el corte caía
-en el borde de `.marco` y dejaba una línea recta visible. `clip` y no `hidden`: `hidden` haría de
-la raíz un contenedor de desplazamiento y rompería el `sticky` de la barra.
-
-### El cuervo de la portada
-
-Se inclina siguiendo al puntero sobre una caja con `perspective`, y la sombra se desplaza al revés
-que la figura. El ojo lee eso como relieve aunque el grabado siga siendo plano, y cuesta un
-`transform` en la GPU en vez de una librería 3D que pesaría más que el framework entero.
-
-Tres cosas lo mantienen honrado: el `transform` se escribe dentro de un `requestAnimationFrame`
-—hacerlo en el evento fuerza un reflujo por píxel movido—; el oyente ni se registra donde no hay
-puntero fino; y con `prefers-reduced-motion: reduce` no hay entrada, ni flotación, ni seguimiento.
-
-Por debajo de 62 rem no hay hueco al lado del titular. Antes desaparecía; ahora pasa a ser **marca
-de agua** detrás del texto, porque la marca del sitio no debería existir solo en pantallas
-grandes. La portada lleva `overflow-x: clip` —`clip` y no `hidden`, que convertiría la sección en
-un contenedor de desplazamiento y rompería el `sticky` de la barra— porque el ave sobresale a
-propósito y esos píxeles ensanchaban el documento entero en el teléfono.
-
-**El original venía en JPEG con el damero de transparencia pintado en los píxeles**, no con canal
-alfa. Recortarlo no fue un color-key: el damero alterna gris claro y blanco, que son justo los
-tonos de las facetas claras del ave. Lo que funciona es **relleno por inundación desde las cuatro
-esquinas**, porque el fondo toca el borde y las facetas claras del interior no. Quedó una zona
-cerrada **entre las patas** que hubo que inundar aparte.
+Los tokens están **tres veces** —`:root`, `prefers-color-scheme` y `[data-tema]`— para que el
+conmutador gane en las dos direcciones, y además quemados en `favicon.svg` y `enlace.jpg`, que
+se regeneran aparte.
 
 ## Pendiente
 

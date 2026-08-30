@@ -2,7 +2,6 @@ import { Link, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import Orden from '../Orden.jsx'
 import Terminal from '../Terminal.jsx'
-import Cuervo from '../Cuervo.jsx'
 import { idiomaDe, TEXTOS, raizDe } from '../idioma.js'
 
 export default function Portada() {
@@ -19,11 +18,9 @@ export default function Portada() {
 
   return (
     <section className="portada">
-      <Cuervo />
-
       {/* El bloque de la propuesta va envuelto para que en pantallas anchas sea UNA celda del
-          grid junto al ave. Sin envolver, cada párrafo era su propia fila y la altura del ave
-          las estiraba todas: el texto salía desparramado con huecos entre medias. */}
+          grid, con la terminal al lado. Sin envolver, cada párrafo sería su propia fila y la
+          altura de la terminal las estiraría todas. */}
       <div className="propuesta">
         <p className="antetitulo">
           <span className="nuevo">{t.nuevo}</span>

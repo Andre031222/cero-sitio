@@ -33,7 +33,6 @@ export default function Marco({ children }) {
       <header className="barra">
         <div className="marco">
           <Link to={raiz || '/'} className="marca">
-            <span className="logo" aria-hidden="true" />
             <span className="palabra">Corvo</span>
           </Link>
           <nav>

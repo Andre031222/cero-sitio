@@ -155,129 +155,35 @@ pre { overflow-x: auto; max-width: 100%; }
   .total { gap: 1.5rem; }
 }
 
+/* ─── la marca ─── */
 
-/* ─── el cuervo de la portada ─── */
+/* Aquí iba un cuervo. Fuera: el dibujo venía de un generador de imágenes y este repositorio
+   acompaña papers, así que la marca la hace Richar de cero.
 
-/* Grabado de François-Nicolas Martinet (1731-1800), lámina 495 de la Histoire Naturelle des
-   Oiseaux de Buffon. Dominio público. Va como máscara sobre var(--tinta): un solo archivo
-   sirve para claro y para oscuro porque el color lo pone el tema. */
-/* El recorte se hace arriba del todo, en la raíz, y no en la portada.
+   Mientras tanto la marca es la palabra, que es lo que de verdad hay que reconocer. Cuando
+   llegue el símbolo, esto es lo que hay que tocar y nada más:
 
-   Recortando en la portada, el corte caía justo en el borde de `.marco` —a 78 rem del
-   centro— y dejaba una línea recta y visible atravesando el ave y el degradado. Aquí el
-   documento no se ensancha igual, y no hay ningún canto que se vea.
+     1. el archivo en public/marca/
+     2. .marca .simbolo aquí abajo — descomentar y apuntar al archivo
+     3. <span className="simbolo" /> en Marco.jsx, antes de .palabra
+     4. favicon.svg y enlace.jpg, que llevan la marca dentro y se regeneran aparte
 
-   `clip` y no `hidden`: `hidden` convertiría la raíz en contenedor de desplazamiento y
-   rompería el `position: sticky` de la barra. */
-html { overflow-x: clip; }
+   El hueco está reservado a propósito: sin él, meter el símbolo obliga a recolocar la barra
+   entera. */
+
 .portada { position: relative; }
 
-/* La escena: aquí vive la perspectiva, y el hijo es el que gira dentro de ella. Si la
-   perspectiva se pusiera en el mismo elemento que rota, el giro sería plano — una perspective
-   solo afecta a los descendientes. */
-.cuervo {
-  position: absolute;
-  right: 0;
-  top: 1rem;
-  /* Dentro del ancho del contenido, no sobresaliendo: así no hay nada que recortar y el ave
-     no aparece rebanada por la derecha. */
-  width: clamp(15rem, 31vw, 27rem);
-  perspective: 900px;
-  pointer-events: none;
-  z-index: 0;
-  --giro-x: 0deg;
-  --giro-y: 0deg;
-  --sombra-x: 0px;
-  --sombra-y: 12px;
-}
-
-.cuervo-figura {
-  width: 100%;
-  padding-top: 134%;                 /* proporción del dibujo, 723×970 */
-  background: url("/marca/cuervo-color.webp") center bottom/contain no-repeat;
-  transform: rotateX(var(--giro-x)) rotateY(var(--giro-y));
-  transform-style: preserve-3d;
-  transition: transform .5s cubic-bezier(.16, 1, .3, 1);
-  filter: drop-shadow(var(--sombra-x) var(--sombra-y) 22px
-                      color-mix(in srgb, var(--tinta) 30%, transparent));
-  /* La cola llega justo al borde inferior del grabado, así que sin esto el ave termina en un
-     corte recto. Se disuelve en el papel y parece que sigue más abajo. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
-          mask-image: linear-gradient(to bottom, #000 82%, transparent 100%);
-  animation: cuervo-entra 1s cubic-bezier(.16, 1, .3, 1) both,
-             cuervo-flota 7s ease-in-out 1s infinite;
-}
-
-/* El suelo. Una elipse difuminada bajo las patas: sin ella el ave está pegada al papel y
-   flota; con ella se posa. Va detrás de la figura y se estrecha cuando el ave sube en la
-   flotación, que es lo que hace una sombra de verdad. */
-.cuervo::after {
-  content: "";
-  position: absolute;
-  left: 22%; right: 14%;
-  bottom: 4%;
-  height: 2.6rem;
-  z-index: -1;
-  border-radius: 50%;
-  background: radial-gradient(closest-side,
-    color-mix(in srgb, var(--tinta) 26%, transparent) 0%, transparent 78%);
-  animation: cuervo-sombra 7s ease-in-out 1s infinite;
-}
-@keyframes cuervo-sombra {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50%      { transform: scale(.9); opacity: .72; }
-}
-@media (prefers-reduced-motion: reduce) { .cuervo::after { animation: none; } }
-
-/* Entra planeando: baja un poco, se endereza y se acerca. Un fade suelto no dice nada; esto
-   sugiere que el ave se posa. */
-@keyframes cuervo-entra {
-  from { opacity: 0; transform: translateY(-1.6rem) rotateZ(-4deg) scale(.94); }
-  to   { opacity: 1; transform: translateY(0) rotateZ(0) scale(1); }
-}
-
-/* Y luego respira. Un recorrido de 8 px en siete segundos: se percibe que está vivo sin que
-   nadie llegue a mirarlo moverse. */
-@keyframes cuervo-flota {
-  0%, 100% { translate: 0 0; }
-  50%      { translate: 0 -8px; }
-}
-
-/* En cuanto no hay sitio al lado del titular, el ave pasa a ser marca de agua: se agranda,
-   se apaga y se mete detrás del texto. Antes desaparecía, y la marca del sitio no debería
-   existir solo en pantallas grandes. */
-@media (max-width: 62rem) {
-  .cuervo {
-    right: -6%;
-    top: -1rem;
-    width: 60%;
-    opacity: .13;
-    z-index: -1;
-  }
-  .cuervo-figura { filter: none; }
-  .cuervo::after { display: none; }   /* una marca de agua no proyecta sombra */
-  /* Aquí sí sobresale a propósito, y aquí sí se recorta. */
-  .portada { overflow-x: clip; overflow-y: visible; }
-  .portada > :not(.cuervo) { position: relative; z-index: 1; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cuervo-figura { animation: none; transition: none; }
-}
-
-/* la marca de la barra */
-.marca { perspective: 400px; }
-.marca .logo {
-  width: 2.1rem; height: 2.8rem; border-radius: 0;
+/*
+.marca .simbolo {
+  width: 2.1rem; height: 2.1rem; flex: none;
   background: var(--acento);
-  -webkit-mask: url("/marca/cuervo-marca.png") center/contain no-repeat;
-          mask: url("/marca/cuervo-marca.png") center/contain no-repeat;
-  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+  -webkit-mask: url("/marca/SÍMBOLO") center/contain no-repeat;
+          mask: url("/marca/SÍMBOLO") center/contain no-repeat;
 }
-.marca:hover .logo { transform: rotateY(-18deg) scale(1.06); }
-@media (prefers-reduced-motion: reduce) {
-  .marca .logo, .marca:hover .logo { transform: none; transition: none; }
-}
+*/
+
+.marca .palabra { font-size: 1.15rem; letter-spacing: -.03em; }
+.marca:hover .palabra { color: var(--acento); }
 
 /* ─── conmutador de tema ─── */
 
@@ -346,7 +252,10 @@ html { overflow-x: clip; }
 
 @media (max-width: 26rem) {
   .marco { padding: 0 1rem; }
-  .marca .palabra { display: none; }        /* a este ancho, la marca basta */
+  /* La palabra NO se oculta. Se ocultaba porque a este ancho el símbolo bastaba para
+     reconocer el sitio; sin símbolo, esconderla deja la barra sin nada que diga dónde estás.
+     Se encoge, que es distinto. */
+  .marca .palabra { font-size: .95rem; }
   .barra nav a { padding: .35rem .5rem; font-size: .72rem; }
   /* El mínimo del clamp hacía que «contenedor.» midiera 276 px en 272 disponibles. */
   .titular { font-size: clamp(2.3rem, 11vw, 6.5rem); }
@@ -695,7 +604,7 @@ ul.prosa li { margin-bottom: .45rem; }
     display: grid;
     grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
     grid-template-areas:
-      "propuesta ave"
+      "propuesta term"
       "orden     term"
       "tras      term"
       "cifras    cifras"
@@ -707,29 +616,16 @@ ul.prosa li { margin-bottom: .45rem; }
     column-gap: clamp(2.5rem, 5vw, 6rem);
     align-items: start;
   }
-  .portada > .propuesta  { grid-area: propuesta; align-self: center; }
+  .portada > .propuesta  { grid-area: propuesta; align-self: start; }
   .portada > .orden      { grid-area: orden; max-width: 40rem; }
   .portada > .tras-orden { grid-area: tras; }
   .portada > .terminal   { grid-area: term; max-width: none; margin-top: 0; }
   .portada > .cifras     { grid-area: cifras; }
   .portada > .nota       { grid-area: nota; }
 
-  /* El ave deja de estar absolutamente posicionada y pasa a ocupar su columna. Ya no hay
-     que adivinar un `right` ni un `top` que funcionen en todos los anchos. */
-  .cuervo {
-    grid-area: ave;
-    position: relative;
-    right: auto; top: auto;
-    /* Atada a la ventana y no al 100 % de su columna: llenando la columna, a 1440 el ave
-       medía 45 rem de alto y empujaba la terminal fuera de la pantalla. La altura sale sola
-       de la proporción del dibujo, así que limitar el ancho limita las dos. */
-    width: min(100%, clamp(19rem, 23vw, 32rem));
-    justify-self: end;
-    align-self: center;
-  }
-
-  /* Y el halo se centra sobre su columna en vez de sobre la página. */
-  .portada::before { top: -8rem; height: 58rem; }
+  /* Sin el ave, la columna derecha la ocupa la terminal, que es lo más visual que hay y
+     además es nuestro. Ocupa las tres primeras filas: al lado de la propuesta, no debajo. */
+  .portada > .terminal { grid-row: 1 / span 3; align-self: center; }
 
   /* La promesa puede respirar un poco más cuando tiene su propia columna, pero sin pasar de
      la medida en la que una línea deja de leerse de un vistazo. */
