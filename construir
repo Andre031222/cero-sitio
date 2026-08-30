@@ -30,9 +30,13 @@ azul "1/4 · el front"
 azul "2/4 · el framework, instalado en el repositorio local"
 (cd "$FRAMEWORK/java" && mvn -q -DskipTests install)
 
+# `clean` y no solo `package`: Maven copia los recursos a target/classes pero no borra los que
+# ya no están en las fuentes. Vite renombra su bundle en cada compilación —el hash cambia con el
+# contenido—, así que sin limpiar se acumulaba uno por build: 42 archivos, 21 compilaciones, y el
+# jar salía con 2,6 MB de bundles muertos que no referencia nadie.
 azul "3/4 · el backend"
 (cd "$AQUI/backend" \
-  && mvn -q -DskipTests package \
+  && mvn -q -DskipTests clean package \
   && mvn -q dependency:build-classpath -Dmdep.outputFile=target/classpath.txt)
 
 azul "4/4 · un solo jar"
