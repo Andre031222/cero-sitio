@@ -158,9 +158,18 @@ sin servirlas al navegador.
 
 | Archivo | Dónde | Cómo |
 |---|---|---|
-| `simbolo.webp` | Barra y portada | El isotipo recortado, 920×648, 30 KB. **Un solo archivo para los dos temas** |
+| `simbolo.webp` | Barra y portada | El isotipo recortado, 895×675, 36 KB. **Un solo archivo para los dos temas**, y **mira a la izquierda** |
 | `favicon.svg` | La pestaña | El isotipo sobre cuadrado claro, con el PNG incrustado en base64 |
 | `enlace.jpg` | La tarjeta al compartir | 1200×630, generada renderizando el propio sitio con sus fuentes |
+
+### Mira a la izquierda, a propósito
+
+El isotipo va a la derecha del titular, así que mirando a la derecha le daba la espalda al texto.
+El kit trae las dos orientaciones y la que se usa es **el render propio del kit, no un espejo**:
+espejar habría invertido también la luz, y las facetas dejan de tener sentido.
+
+Por lo mismo va `justify-self: start` en su columna y no `end`: al fondo de la columna quedaba a
+un palmo del texto, mirando a un hueco en vez de mirarlo a él.
 
 ### Cómo se recortó, y por qué así
 
@@ -183,11 +192,16 @@ Se reescala al 200 % con Lanczos y aguanta: es un render de facetas planas, no u
 
 ### El color
 
-La paleta sale del kit: `#2563EB` · `#111827` · `#1F2937` · `#6B7280` · `#F8FAFC`.
+La paleta sale del kit: `#111827` · `#1F2937` · `#6B7280` · `#F8FAFC`.
 
-Comprobados los cinco sobre su fondo, todos pasan AA: el acento da 5,17× sobre blanco y el gris
-apagado 4,83×. En oscuro el acento sube a `#5b8dff` (6,70× sobre negro), porque `#2563EB` sobre
-negro se queda corto.
+**El azul no es el que declara la hoja del kit.** El kit dice `#2563EB`, pero el dibujo del ave
+usa de verdad un azul mucho más vivo —su tono dominante es `#166BFB`— y el declarado se quedaba
+apagado justo al lado del propio logo. El acento es `#0B5CFF`: saturación máxima y, además,
+**más** contraste que el declarado (5,26× contra 5,17× sobre blanco). Salir ganando en las dos
+cosas no suele pasar; cuando pasa, se coge.
+
+En oscuro sube a `#5b8dff` (6,70× sobre negro), porque un azul de ese peso sobre negro se queda
+corto.
 
 `--acento-2` (`#5b91f5` / `#8fbaff`) existe **solo para los degradados**: un degradado de un color
 a sí mismo aclarado se ve sucio. No llega a AA para texto corrido, y por eso aparece únicamente
