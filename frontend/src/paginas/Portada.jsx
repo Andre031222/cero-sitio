@@ -18,6 +18,8 @@ export default function Portada() {
 
   return (
     <section className="portada">
+      <div className="isotipo" aria-hidden="true" />
+
       {/* El bloque de la propuesta va envuelto para que en pantallas anchas sea UNA celda del
           grid, con la terminal al lado. Sin envolver, cada párrafo sería su propia fila y la
           altura de la terminal las estiraría todas. */}

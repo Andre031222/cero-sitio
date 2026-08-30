@@ -152,53 +152,61 @@ por los componentes.
 
 ## La marca
 
-**Hoy la marca es la palabra.** No hay símbolo, a propósito y de forma temporal: el cuervo que
-había salió de un generador de imágenes, y este repositorio acompaña papers. Richar hará el
-suyo.
+El **kit de marca de Richar**: cabeza de cuervo facetada, negra con cuñas azules, mirando a la
+derecha. Las trece láminas originales quedan en `marca-kit/` — fuera de `public/`, para tenerlas
+sin servirlas al navegador.
 
-| Archivo | Dónde | Estado |
+| Archivo | Dónde | Cómo |
 |---|---|---|
-| `favicon.svg` | La pestaña | Provisional: una C tipográfica sobre el acento. Va como ruta y no como `<text>` porque un `<text>` se rinde con la fuente del sistema, que no es la misma en cada máquina — y a 16 px eso se nota |
-| `enlace.jpg` | La tarjeta al compartir | 1200×630, tipografía y cifras, generada renderizando el propio sitio con sus fuentes |
+| `simbolo.webp` | Barra y portada | El isotipo recortado, 920×648, 30 KB. **Un solo archivo para los dos temas** |
+| `favicon.svg` | La pestaña | El isotipo sobre cuadrado claro, con el PNG incrustado en base64 |
+| `enlace.jpg` | La tarjeta al compartir | 1200×630, generada renderizando el propio sitio con sus fuentes |
 
-Las etiquetas `og:` van en `index.html` y no en React: los rastreadores de Slack, WhatsApp o
-Twitter no ejecutan JavaScript. Una etiqueta puesta al montar un componente no la ve nadie.
+### Cómo se recortó, y por qué así
 
-### Cuando llegue el símbolo
+Del **panel claro** del kit, no del oscuro. En el oscuro el fondo y las facetas negras del ave
+son el mismo negro —(7,8,13) contra (8,9,13)—: ahí no hay información que separar, y cualquier
+relleno por inundación se come el pájaro. Se comprobó con márgenes del 3 %, 5 % y 8 %, y los tres
+lo destrozan.
 
-El hueco está reservado. Son cuatro sitios y ninguno más:
+Del claro sí sale, y el resultado **funciona sobre negro** porque la silueta la definen las
+facetas grises de arriba y las cuñas azules, no las negras.
 
-1. El archivo en `frontend/public/marca/`
-2. `.marca .simbolo` en `estilo.css` — está comentado, descomentar y apuntar al archivo
-3. `<span className="simbolo" />` en `Marco.jsx`, antes de `.palabra`
-4. `favicon.svg` y `enlace.jpg`, que llevan la marca dentro y se regeneran aparte
+Dos detalles que hicieron falta:
 
-Que vaya como **máscara CSS** sobre `var(--acento)` y no como imagen a color: un solo archivo
-sirve para el tema claro y para el oscuro, y el símbolo cambia de color con la marca sin
-regenerarlo.
+- **Una cuña blanca encerrada** bajo el pico no la alcanzaba el relleno desde las esquinas: hay
+  que inundarla aparte. Se localiza con `-connected-components`, que da su centroide.
+- **El borde va erosionado un píxel.** Los píxeles semitransparentes del contorno arrastraban el
+  claro del que se recortó, y sobre negro se veía un halo alrededor del ave.
 
-Y una trampa que ya mordió: la barra tenía `.marca .palabra { display: none }` por debajo de
-26 rem, porque a ese ancho el símbolo bastaba. Al quitar el símbolo, la barra se quedó **sin
-nada** en el teléfono. Si vuelve el símbolo y se quiere recuperar esa regla, hay que
-comprobarlo a 320 px antes.
+Se reescala al 200 % con Lanczos y aguanta: es un render de facetas planas, no una fotografía.
 
 ### El color
 
-`--acento` es **cobalto** — `#1a49d6` en claro, `#5b8dff` en oscuro — con un `--acento-2`
-(`#3f86f5` / `#7fb4ff`) que existe solo para los degradados: un degradado de un color a sí
-mismo aclarado se ve sucio.
+La paleta sale del kit: `#2563EB` · `#111827` · `#1F2937` · `#6B7280` · `#F8FAFC`.
 
-Pasó por magenta y por bermellón antes. Los tres pasan AA de sobra, así que la decisión nunca
-fue de contraste. `--acento-2` da 3,54× sobre blanco: solo vale para texto grande, y por eso
-aparece únicamente en degradados sobre el titular, las cifras y reglas decorativas, nunca en
-texto corrido.
+Comprobados los cinco sobre su fondo, todos pasan AA: el acento da 5,17× sobre blanco y el gris
+apagado 4,83×. En oscuro el acento sube a `#5b8dff` (6,70× sobre negro), porque `#2563EB` sobre
+negro se queda corto.
 
-La tinta bajó de azul marino (`#0e1b3d`) a casi negro (`#0f141c`): con un acento azul, una
-tinta azul marino se le confunde y el acento deja de acentuar.
+`--acento-2` (`#5b91f5` / `#8fbaff`) existe **solo para los degradados**: un degradado de un color
+a sí mismo aclarado se ve sucio. No llega a AA para texto corrido, y por eso aparece únicamente
+sobre el titular, las cifras y reglas decorativas.
 
 Los tokens están **tres veces** —`:root`, `prefers-color-scheme` y `[data-tema]`— para que el
-conmutador gane en las dos direcciones, y además quemados en `favicon.svg` y `enlace.jpg`, que
-se regeneran aparte.
+conmutador gane en las dos direcciones, y además quemados en `favicon.svg` y `enlace.jpg`, que se
+regeneran aparte.
+
+### Trampas ya mordidas
+
+- **El recorte horizontal va en `html`, no en la portada.** Recortando en la portada, el corte cae
+  en el borde del marco y deja una línea recta atravesando el isotipo. `clip` y no `hidden`:
+  `hidden` haría de la raíz un contenedor de desplazamiento y rompería el `sticky` de la barra.
+- **La palabra de la barra no se oculta en el móvil.** Hubo una regla que la escondía por debajo
+  de 26 rem porque el símbolo bastaba; al quitar el símbolo temporalmente, la barra del teléfono
+  se quedó sin nada. Ahora encoge.
+- **La marca de agua no sobresale.** Con `right: -6%` desbordaba 4 px a 834 px y dependía del
+  recorte para taparlo. Depender del recorte para eso es frágil.
 
 ## Pendiente
 
