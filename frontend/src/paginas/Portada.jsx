@@ -39,7 +39,6 @@ export default function Portada() {
 
         <div className="botones">
           <Link className="boton principal" to={`${raiz}/empezar`}>{t.empezar}</Link>
-          <a className="boton" href="https://github.com/Andre031222/Corvo">{t.codigo}</a>
         </div>
       </div>
 

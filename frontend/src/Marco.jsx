@@ -45,9 +45,19 @@ export default function Marco({ children }) {
             })}
           </nav>
           <div className="mandos">
+            {/* Icono más código, y no solo el icono. Un globo suelto dice «hay idiomas» pero
+                no dice a cuál te lleva; con el código al lado se sabe antes de pulsar. El
+                texto largo sigue estando para quien no ve el icono, en aria-label. */}
             <Link className="idioma" to={pareja} hrefLang={idioma === 'es' ? 'en' : 'es'}
-                  lang={idioma === 'es' ? 'en' : 'es'} title={t.otroTitulo}>
-              {t.otro}
+                  lang={idioma === 'es' ? 'en' : 'es'} title={t.otroTitulo}
+                  aria-label={t.otroTitulo}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+                   strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M3 12h18" />
+                <path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z" />
+              </svg>
+              <span className="codigo" aria-hidden="true">{t.otroCodigo}</span>
             </Link>
             <Tema />
           </div>

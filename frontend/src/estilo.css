@@ -22,19 +22,21 @@
 :root {
   /* La paleta viene del kit de marca: #111827, #1F2937, #6B7280, #F8FAFC.
 
-     El azul NO es el #2563EB que declara la hoja del kit, sino #0B5CFF. El dibujo del ave
-     usa de verdad un azul mucho más vivo —su tono dominante es #166BFB— y el declarado se
-     quedaba apagado al lado del propio logo. #0B5CFF está a saturación máxima y además da
-     MÁS contraste que el declarado: 5,26x contra 5,17x sobre blanco. Salir ganando en las
-     dos cosas no suele pasar; cuando pasa, se coge. */
+     El azul NO es el #2563EB que declara la hoja del kit: es el que usa de verdad el dibujo
+     del ave. Se sacó del propio archivo contando píxeles — su tono dominante es #166BFB y
+     sus sombras caen en #0739C7. Con esos dos, el titular y el logo son literalmente el
+     mismo azul, que es lo que no pasaba con el declarado.
+
+     #166BFB da 4,64x sobre blanco: pasa AA para texto corrido, aunque justo. Por eso el
+     degradado va hacia la sombra (#0739C7, 8,68x) y no hacia un tono más claro. */
   --papel: #ffffff;
   --panel: #f8fafc;
   --tinta: #111827;
   --apagado: #6b7280;
-  --acento: #0b5cff;
+  --acento: #166bfb;
   /* El segundo acento existe para los degradados. Un degradado de un color a sí mismo
      aclarado se ve sucio; con dos tonos vecinos de verdad el titular tiene profundidad. */
-  --acento-2: #4f8cff;
+  --acento-2: #0739c7;
   --linea: rgba(17, 24, 39, .14);
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --serif: "Source Serif", Georgia, "Times New Roman", serif;
@@ -89,7 +91,20 @@ pre { overflow-x: auto; max-width: 100%; }
 
 .barra { border-bottom: 1px solid var(--linea); position: sticky; top: 0; z-index: 30;
          background: color-mix(in srgb, var(--papel) 92%, transparent); backdrop-filter: blur(12px); }
-.barra .marco { grid-template-columns: auto 1fr; align-items: center; gap: 1.5rem; height: 3.6rem; }
+/* 1fr auto 1fr, y no auto 1fr auto: con las dos columnas de fuera iguales, el menú queda
+   centrado en la BARRA y no entre la marca y los mandos, que miden distinto. */
+.barra .marco { grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1.5rem; height: 3.6rem; }
+.barra nav { justify-self: center; }
+.barra .mandos { justify-self: end; }
+
+/* Centrar solo cuando sobra sitio. Por debajo de esto el menú necesita todo el ancho que
+   quede y `1fr auto 1fr` se lo niega: la columna central se queda con su tamaño natural,
+   no cabe, y desborda 27 px a 390 y 62 a 320. Ahí vuelve a estirarse y a desplazarse
+   dentro de sí mismo. */
+@media (max-width: 62rem) {
+  .barra .marco { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .barra nav { justify-self: stretch; }
+}
 .marca { display: flex; align-items: center; gap: .6rem; text-decoration: none; }
 .marca .palabra { font-family: var(--mono); font-weight: 700; font-size: 1rem; letter-spacing: -.02em; }
 .barra nav { display: flex; gap: .2rem; }
@@ -183,8 +198,15 @@ pre { overflow-x: auto; max-width: 100%; }
    contra (8,9,13)— y ahí no hay información que separar. Del claro sí sale, y funciona
    sobre negro porque la silueta la definen las facetas grises de arriba y el azul.
 
-   El borde va erosionado un píxel: al recortarlo de un fondo claro, los píxeles
-   semitransparentes del contorno arrastraban ese claro y sobre negro se veía un halo. */
+   **El orden del recorte importa y costó rehacerlo.** Primero se amplía la lámina CON el
+   fondo puesto —sin alfa de por medio el escalado es limpio— y solo después se recorta, ya
+   a resolución alta. Al revés, el borde binario del recorte se amplía con todo lo demás y
+   deja una escalera visible.
+
+   Y contra el halo del fondo claro no vale erosionar: eso deja el contorno duro, sin
+   suavizado. Lo que funciona es difuminar el canal alfa y volver a nivelarlo con el punto
+   negro al 50 %: mete el borde un pelo hacia dentro, justo donde estaba el halo, y a la vez
+   deja una rampa en lugar de un escalón. */
 
 .portada { position: relative; }
 
@@ -206,7 +228,7 @@ pre { overflow-x: auto; max-width: 100%; }
 
 /* ─── conmutador de tema ─── */
 
-.barra .marco { grid-template-columns: auto 1fr auto; }
+
 .tema {
   flex: none; width: 2rem; height: 2rem; display: grid; place-items: center;
   border: 1px solid var(--linea); border-radius: 6px; background: transparent;
@@ -449,13 +471,23 @@ ul.prosa li { margin-bottom: .45rem; }
 /* ─── conmutador de idioma ─── */
 .mandos { display: flex; align-items: center; gap: .45rem; }
 .idioma {
-  display: grid; place-items: center; height: 2rem; padding: 0 .6rem;
+  display: inline-flex; align-items: center; gap: .3rem;
+  height: 2rem; padding: 0 .5rem;
   border: 1px solid var(--linea); border-radius: 6px;
-  font-family: var(--mono); font-size: .7rem; font-weight: 600; letter-spacing: .08em;
+  font-family: var(--mono); font-size: .68rem; font-weight: 700; letter-spacing: .08em;
   color: var(--apagado); text-decoration: none; white-space: nowrap;
+  transition: color .15s, border-color .15s;
 }
+.idioma svg { width: 15px; height: 15px; flex: none; }
+/* El código se alineaba arriba como un exponente: la caja de la fuente monoespaciada es
+   más alta que el glifo. line-height:1 la ajusta al texto. */
+.idioma .codigo { line-height: 1; }
 .idioma:hover { color: var(--acento); border-color: var(--acento); }
-@media (max-width: 26rem) { .idioma { padding: 0 .4rem; font-size: .62rem; } }
+/* En pantalla estrecha se queda el globo: el código es lo primero que sobra. */
+@media (max-width: 26rem) {
+  .idioma { padding: 0 .45rem; }
+  .idioma .codigo { display: none; }
+}
 
 /* ─── atajos por escenario ─── */
 .atajos { margin: 0 0 1.5rem; }
@@ -516,7 +548,7 @@ ul.prosa li { margin-bottom: .45rem; }
   right: 0;
   top: 1rem;
   width: clamp(11rem, 20vw, 17rem);
-  aspect-ratio: 895 / 675;
+  aspect-ratio: 1000 / 754;
   background: url("/marca/simbolo.webp") center/contain no-repeat;
   pointer-events: none;
   z-index: 0;
@@ -738,3 +770,54 @@ ul.prosa li { margin-bottom: .45rem; }
 
 /* Un identificador no se parte: «corvo-core» salía como «corvo-» / «core». */
 .pagina td.nowrap { white-space: nowrap; }
+
+/* ─── figuras de fondo ─── */
+
+/* Esquirlas facetadas en los huecos, del mismo lenguaje que el isotipo: triángulos, no
+   círculos ni manchas.
+
+   Van como **máscara** sobre var(--acento) y no como imagen con el color dentro: así siguen
+   a la marca sola. Si mañana el azul cambia otra vez, estas no se quedan atrás — que es
+   justo lo que pasó con el favicon y la tarjeta social, que sí llevan el color quemado y
+   hay que regenerarlos a mano.
+
+   Y en un ::after de la portada, no en el DOM: no son contenido. Nadie tiene que tabularlas
+   ni oírlas leer. */
+.portada::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: var(--acento);
+  opacity: .055;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201000%20700%22%3E%3Cpath%20d%3D%22M0%20700%20L250%20380%20L330%20700%20Z%22%2F%3E%3Cpath%20d%3D%22M120%20700%20L470%20300%20L520%20470%20L300%20700%20Z%22%2F%3E%3Cpath%20d%3D%22M1000%200%20L1000%20260%20L820%2060%20Z%22%2F%3E%3Cpath%20d%3D%22M900%20700%20L1000%20470%20L1000%20700%20Z%22%2F%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201000%20700%22%3E%3Cpath%20d%3D%22M0%20700%20L250%20380%20L330%20700%20Z%22%2F%3E%3Cpath%20d%3D%22M120%20700%20L470%20300%20L520%20470%20L300%20700%20Z%22%2F%3E%3Cpath%20d%3D%22M1000%200%20L1000%20260%20L820%2060%20Z%22%2F%3E%3Cpath%20d%3D%22M900%20700%20L1000%20470%20L1000%20700%20Z%22%2F%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;
+}
+
+/* En el teléfono estorban: no hay huecos que rellenar, solo texto. */
+@media (max-width: 62rem) { .portada::after { display: none; } }
+
+/* Y una retícula tenue de puntos bajo las cifras, que es la otra zona que quedaba desnuda. */
+.cifras {
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--apagado) 22%, transparent) 1px, transparent 1px);
+  background-size: 26px 26px;
+  background-position: 0 100%;
+}
+
+
+/* Las mismas esquirlas en las páginas interiores. Menos y más apagadas: aquí hay prosa que
+   leer, no un titular al que acompañar. */
+.pagina, .descargas { position: relative; }
+.pagina::before, .descargas::before {
+  content: "";
+  position: absolute;
+  inset: -4rem 0 0 0;
+  pointer-events: none;
+  z-index: -1;
+  background: var(--acento);
+  opacity: .04;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201000%20900%22%3E%3Cpath%20d%3D%22M1000%200%20L1000%20220%20L840%2040%20Z%22%2F%3E%3Cpath%20d%3D%22M0%20900%20L190%20640%20L250%20900%20Z%22%2F%3E%3Cpath%20d%3D%22M1000%20900%20L1000%20700%20L860%20900%20Z%22%2F%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201000%20900%22%3E%3Cpath%20d%3D%22M1000%200%20L1000%20220%20L840%2040%20Z%22%2F%3E%3Cpath%20d%3D%22M0%20900%20L190%20640%20L250%20900%20Z%22%2F%3E%3Cpath%20d%3D%22M1000%20900%20L1000%20700%20L860%20900%20Z%22%2F%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;
+}
+@media (max-width: 62rem) { .pagina::before, .descargas::before { display: none; } }
