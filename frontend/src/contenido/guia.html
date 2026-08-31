@@ -19,6 +19,9 @@
         <li><a href="#proxy"><span class="n">11</span> Detrás de un proxy</a></li>
         <li><a href="#frontend"><span class="n">12</span> Con React, Svelte o Vue</a></li>
         <li><a href="#tiempo-real"><span class="n">13</span> Tiempo real</a></li>
+        <li><a href="#idiomas"><span class="n">14</span> Varios idiomas</a></li>
+        <li><a href="#live"><span class="n">15</span> Zonas que se repintan solas</a></li>
+        <li><a href="#salud"><span class="n">16</span> Salud</a></li>
       </ol>
     </nav>
     <main>
@@ -692,6 +695,177 @@ eventos.onmessage = e =&gt; pintar(JSON.parse(e.data));</pre>
             depurar trazas de pila ilegibles. Es la misma capacidad, por otro camino.
           </p>
         </div>
+      </section>
+
+      <section id="idiomas">
+        <div class="titulo-seccion"><span class="indice-num">14</span><h2>Varios idiomas</h2></div>
+
+        <p>
+          Los textos van en <code>.properties</code> del classpath: uno base y uno por idioma.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">src/main/resources</span><span class="etiqueta">Archivos</span></div>
+<pre>mensajes.properties        <span class="cm"># el idioma base</span>
+mensajes.en.properties
+mensajes.qu.properties</pre>
+        </div>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Arranque</span><span class="etiqueta">Java</span></div>
+<pre>Corvo.app()
+     .messages(Messages.from(<span class="st">"mensajes"</span>, <span class="st">"en"</span>, <span class="st">"qu"</span>).base(<span class="st">"es"</span>))
+     .start();</pre>
+        </div>
+
+        <p>
+          Los idiomas hay que nombrarlos. El classpath no se puede listar de forma fiable cuando
+          la aplicación va dentro de un jar, así que descubrirlos solos funcionaría en desarrollo
+          y fallaría justo al desplegar.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">En un controlador</span><span class="etiqueta">Java</span></div>
+<pre><span class="kw">public</span> Object saludar(Context ctx) {
+    <span class="kw">return</span> Result.text(ctx.t(<span class="st">"saludo"</span>, nombre));   <span class="cm">// «Hola, Richar»</span>
+}</pre>
+        </div>
+
+        <p>
+          El idioma sale de <code>Accept-Language</code>, y <b>se respeta el factor de
+          calidad</b>: <code>fr;q=0.2,qu;q=0.9</code> responde en quechua aunque el francés vaya
+          primero. Un idioma regional cae en su idioma —<code>es-PE</code> usa <code>es</code>—.
+          Para fijarlo a mano, <code>ctx.idioma("en")</code>.
+        </p>
+
+        <h3>En las plantillas</h3>
+
+        <p>
+          El mapa <code>t</code> llega solo. <b>No hay que meterlo en el modelo de cada
+          controlador</b>, y esa es la razón de que exista como global: olvidarlo en uno solo
+          dejaría esa página sin traducir y nadie lo vería hasta que se quejara un usuario.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">plantilla.html</span><span class="etiqueta">Plantilla</span></div>
+<pre>&lt;button&gt;{{ t.guardar }}&lt;/button&gt;</pre>
+        </div>
+
+        <p>
+          Si el modelo trae una clave con el mismo nombre que un global, <b>gana el modelo</b>.
+          Al revés, añadir un global nuevo taparía en silencio un dato de una plantilla que ya
+          funcionaba.
+        </p>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Por qué no ResourceBundle</div>
+          <p>
+            <code>ResourceBundle</code> cae al idioma <b>del sistema</b> cuando no encuentra una
+            clave. Eso hace que el mismo despliegue responda distinto según cómo esté configurado
+            el servidor: un fallo que no se reproduce en la máquina de nadie. Aquí la cadena de
+            respaldo está escrita —idioma pedido, idioma base, la propia clave— y es igual en
+            todas partes.
+          </p>
+          <p>
+            Un texto que falta <b>devuelve la clave y no lanza</b>: una página a medio traducir
+            sigue sirviendo. Pero avisa por consola una vez por clave, no en cada petición.
+          </p>
+        </div>
+      </section>
+
+      <section id="live">
+        <div class="titulo-seccion"><span class="indice-num">15</span><h2>Zonas que se repintan solas</h2></div>
+
+        <p>
+          Marca una zona en la plantilla y el servidor la vuelve a pintar cuando quiera, sin que
+          escribas una línea de JavaScript.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">plantilla.html</span><span class="etiqueta">Plantilla</span></div>
+<pre>&lt;div data-live=<span class="st">"carrito"</span>&gt;
+  {{ include <span class="st">"carrito.html"</span> }}
+&lt;/div&gt;
+&lt;script src=<span class="st">"/corvo/live.js"</span>&gt;&lt;/script&gt;</pre>
+        </div>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Desde cualquier punto del servidor</span><span class="etiqueta">Java</span></div>
+<pre>Live live = Live.enabled();
+
+Corvo.app()
+     .views(plantillas)
+     .live(live)          <span class="cm">// necesita views() antes</span>
+     .start();
+
+live.push(<span class="st">"carrito"</span>, <span class="st">"carrito.html"</span>, modelo);</pre>
+        </div>
+
+        <div class="aviso">
+          <div class="etiqueta">Lo que viaja por el cable es HTML, no JSON</div>
+          <p>
+            Ese es todo el motivo de que esto exista. El navegador <b>no tiene que saber pintar
+            nada</b>, así que no hay una segunda copia de tus plantillas escrita en JavaScript
+            que se desincronice de las de verdad. La plantilla es una y vive en el servidor.
+          </p>
+        </div>
+
+        <p>
+          El cliente son cuarenta líneas que sirve el propio framework en
+          <code>/corvo/live.js</code>. Sin paso de compilación, sin <code>node_modules</code>,
+          sin nada que instalar.
+        </p>
+
+        <ul class="prosa">
+          <li><b>Sin nadie mirando, no se rinde.</b> Pintar una plantilla para descubrir después que no había destinatarios es trabajo tirado, y en una tarea que empuja cada segundo se nota.</li>
+          <li><b>Reconecta solo</b>, con espera creciente hasta 15 segundos. Una conexión que se muere en silencio es peor que no tenerla: la página se queda enseñando datos viejos sin decirlo.</li>
+          <li><b>El canal solo empuja.</b> Lo único que el navegador manda son los nombres de las zonas que tiene en la página. No acepta órdenes.</li>
+          <li><code>live.pushHtml(zona, html)</code> manda HTML ya hecho, si lo construyes por tu cuenta.</li>
+        </ul>
+      </section>
+
+      <section id="salud">
+        <div class="titulo-seccion"><span class="indice-num">16</span><h2>Salud</h2></div>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Arranque</span><span class="etiqueta">Java</span></div>
+<pre>Corvo.app()
+     .health(Health.checks()
+         .ready(<span class="st">"bd"</span>, () -&gt; db.ping())
+         .ready(<span class="st">"correo"</span>, () -&gt; mail.reachable()))
+     .start();</pre>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Ruta</th><th>Dice</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-clave">/corvo/vivo</td><td>El proceso responde. Nada más</td></tr>
+              <tr><td class="mono-clave">/corvo/listo</td><td>Además puede atender: todas las comprobaciones pasan. <b>503</b> si alguna falla</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso">
+          <div class="etiqueta">No son lo mismo, y confundirlos hace daño</div>
+          <p>
+            Un proceso puede estar vivo y no poder atender: la base de datos no responde, un
+            servicio del que depende está caído. Si el supervisor <b>reinicia</b> por lo que solo
+            era una base de datos lenta, cambia un problema pasajero por una caída. Y si
+            <b>nunca</b> reinicia, un proceso colgado se queda colgado.
+          </p>
+          <p>
+            Por eso <code>/corvo/vivo</code> no admite comprobaciones: si aceptara una, dejaría
+            de medir lo que dice medir.
+          </p>
+        </div>
+
+        <p>
+          <code>/corvo/listo</code> responde <b>503</b>, no un 200 con un cuerpo que dice «mal»:
+          los supervisores miran el código, no el cuerpo. Una comprobación que lanza cuenta como
+          fallo y su mensaje va dentro — tragarse la excepción dejaría un «no listo» sin
+          explicación justo cuando hace falta.
+        </p>
       </section>
     </main>
   </div>

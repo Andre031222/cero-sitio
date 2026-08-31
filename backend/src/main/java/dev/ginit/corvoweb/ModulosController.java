@@ -41,7 +41,7 @@ public class ModulosController {
                         + "enchufables, multipart, gzip, estáticos con rangos y WebSocket."));
         registrar(new Modulo("corvo-core", "corvo-http", 66, 160,
                 "Rutas, inyección, JSON, validación declarativa, seguridad, métricas, caché, "
-                        + "eventos, tareas y OpenAPI."));
+                        + "eventos, tareas, OpenAPI, idiomas, salud y zonas que se repintan solas."));
         registrar(new Modulo("corvo-view", "corvo-core", 9, 38,
                 "Plantillas compiladas con herencia, bucles e inclusión. El escapado HTML es el "
                         + "comportamiento por defecto, no una opción que se olvida."));

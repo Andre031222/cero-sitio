@@ -19,6 +19,9 @@
         <li><a href="#proxy"><span class="n">11</span> Behind a proxy</a></li>
         <li><a href="#frontend"><span class="n">12</span> With React, Svelte or Vue</a></li>
         <li><a href="#tiempo-real"><span class="n">13</span> Real time</a></li>
+        <li><a href="#idiomas"><span class="n">14</span> Multiple languages</a></li>
+        <li><a href="#live"><span class="n">15</span> Regions that repaint themselves</a></li>
+        <li><a href="#salud"><span class="n">16</span> Health</a></li>
       </ol>
     </nav>
     <main>
@@ -696,6 +699,176 @@ eventos.onmessage = e =&gt; pintar(JSON.parse(e.data));</pre>
             chaining operators or debugging unreadable stack traces. Same capability, another road.
           </p>
         </div>
+      </section>
+      <section id="idiomas">
+        <div class="titulo-seccion"><span class="indice-num">14</span><h2>Multiple languages</h2></div>
+
+        <p>
+          Texts live in <code>.properties</code> on the classpath: one base file and one per language.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">src/main/resources</span><span class="etiqueta">Files</span></div>
+<pre>mensajes.properties        <span class="cm"># the base language</span>
+mensajes.en.properties
+mensajes.qu.properties</pre>
+        </div>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Startup</span><span class="etiqueta">Java</span></div>
+<pre>Corvo.app()
+     .messages(Messages.from(<span class="st">"mensajes"</span>, <span class="st">"en"</span>, <span class="st">"qu"</span>).base(<span class="st">"es"</span>))
+     .start();</pre>
+        </div>
+
+        <p>
+          The languages have to be named. The classpath cannot be listed reliably when the application
+          runs inside a jar, so discovering them automatically would work in development and fail
+          exactly at deploy time.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">In a controller</span><span class="etiqueta">Java</span></div>
+<pre><span class="kw">public</span> Object saludar(Context ctx) {
+    <span class="kw">return</span> Result.text(ctx.t(<span class="st">"saludo"</span>, nombre));   <span class="cm">// «Hello, Richar»</span>
+}</pre>
+        </div>
+
+        <p>
+          The language comes from <code>Accept-Language</code>, and <b>the quality factor is
+          respected</b>: <code>fr;q=0.2,qu;q=0.9</code> answers in Quechua even though French comes
+          first. A regional tag falls back to its language —<code>es-PE</code> uses <code>es</code>—.
+          To pin it by hand, <code>ctx.idioma("en")</code>.
+        </p>
+
+        <h3>In templates</h3>
+
+        <p>
+          The <code>t</code> map arrives on its own. <b>You do not put it in each controller's
+          model</b>, and that is exactly why it exists as a global: forgetting it in one single
+          controller would leave that page untranslated, and nobody would notice until a user
+          complained.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">plantilla.html</span><span class="etiqueta">Template</span></div>
+<pre>&lt;button&gt;{{ t.guardar }}&lt;/button&gt;</pre>
+        </div>
+
+        <p>
+          If the model carries a key with the same name as a global, <b>the model wins</b>. The other
+          way round, adding a new global would silently mask a value in a template that already
+          worked.
+        </p>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Why not ResourceBundle</div>
+          <p>
+            <code>ResourceBundle</code> falls back to the <b>system</b> language when it cannot find a
+            key. That makes the same deployment answer differently depending on how the server is
+            configured: a bug that reproduces on nobody's machine. Here the fallback chain is
+            written down —requested language, base language, the key itself— and is the same
+            everywhere.
+          </p>
+          <p>
+            A missing text <b>returns the key and does not throw</b>: a half-translated page still
+            serves. But it warns on the console once per key, not on every request.
+          </p>
+        </div>
+      </section>
+
+      <section id="live">
+        <div class="titulo-seccion"><span class="indice-num">15</span><h2>Regions that repaint themselves</h2></div>
+
+        <p>
+          Mark a region in the template and the server repaints it whenever it wants, without you
+          writing a line of JavaScript.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">plantilla.html</span><span class="etiqueta">Template</span></div>
+<pre>&lt;div data-live=<span class="st">"carrito"</span>&gt;
+  {{ include <span class="st">"carrito.html"</span> }}
+&lt;/div&gt;
+&lt;script src=<span class="st">"/corvo/live.js"</span>&gt;&lt;/script&gt;</pre>
+        </div>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">From anywhere on the server</span><span class="etiqueta">Java</span></div>
+<pre>Live live = Live.enabled();
+
+Corvo.app()
+     .views(plantillas)
+     .live(live)          <span class="cm">// needs views() first</span>
+     .start();
+
+live.push(<span class="st">"carrito"</span>, <span class="st">"carrito.html"</span>, modelo);</pre>
+        </div>
+
+        <div class="aviso">
+          <div class="etiqueta">What travels down the wire is HTML, not JSON</div>
+          <p>
+            That is the whole reason this exists. The browser <b>does not have to know how to render
+            anything</b>, so there is no second copy of your templates written in JavaScript to
+            drift out of sync with the real ones. There is one template and it lives on the server.
+          </p>
+        </div>
+
+        <p>
+          The client is forty lines served by the framework itself at <code>/corvo/live.js</code>. No
+          build step, no <code>node_modules</code>, nothing to install.
+        </p>
+
+        <ul class="prosa">
+          <li><b>With nobody watching, nothing is rendered.</b> Painting a template only to find out afterwards that there were no recipients is wasted work, and in a task pushing every second it shows.</li>
+          <li><b>It reconnects on its own</b>, backing off up to 15 seconds. A connection that dies quietly is worse than none: the page sits there showing stale data without saying so.</li>
+          <li><b>The channel only pushes.</b> The only thing the browser sends is the names of the regions on its page. It accepts no commands.</li>
+          <li><code>live.pushHtml(region, html)</code> sends ready-made HTML, if you build it yourself.</li>
+        </ul>
+      </section>
+
+      <section id="salud">
+        <div class="titulo-seccion"><span class="indice-num">16</span><h2>Health</h2></div>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Startup</span><span class="etiqueta">Java</span></div>
+<pre>Corvo.app()
+     .health(Health.checks()
+         .ready(<span class="st">"bd"</span>, () -&gt; db.ping())
+         .ready(<span class="st">"correo"</span>, () -&gt; mail.reachable()))
+     .start();</pre>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Path</th><th>Says</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-clave">/corvo/vivo</td><td>The process answers. Nothing more</td></tr>
+              <tr><td class="mono-clave">/corvo/listo</td><td>It can also serve: every check passes. <b>503</b> if any fails</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso">
+          <div class="etiqueta">They are not the same, and confusing them does harm</div>
+          <p>
+            A process can be alive and unable to serve: the database is not answering, a service it
+            depends on is down. If the supervisor <b>restarts</b> over what was only a slow
+            database, it turns a passing problem into an outage. And if it <b>never</b> restarts,
+            a hung process stays hung.
+          </p>
+          <p>
+            That is why <code>/corvo/vivo</code> takes no checks: if it accepted one, it would stop
+            measuring what it claims to measure.
+          </p>
+        </div>
+
+        <p>
+          <code>/corvo/listo</code> answers <b>503</b>, not a 200 with a body saying «bad»:
+          supervisors read the status code, not the body. A check that throws counts as a failure
+          and its message goes inside — swallowing the exception would leave a «not ready» with no
+          explanation exactly when you need one.
+        </p>
       </section>
     </main>
   </div>
