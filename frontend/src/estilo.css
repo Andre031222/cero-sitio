@@ -821,3 +821,11 @@ ul.prosa li { margin-bottom: .45rem; }
           mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201000%20900%22%3E%3Cpath%20d%3D%22M1000%200%20L1000%20220%20L840%2040%20Z%22%2F%3E%3Cpath%20d%3D%22M0%20900%20L190%20640%20L250%20900%20Z%22%2F%3E%3Cpath%20d%3D%22M1000%20900%20L1000%20700%20L860%20900%20Z%22%2F%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;
 }
 @media (max-width: 62rem) { .pagina::before, .descargas::before { display: none; } }
+
+/* El aviso de qué son los jar. Va junto al botón, no al final: quien descarga lo lee antes
+   de intentar `java -jar` y llevarse un error que parece del framework y no lo es. */
+.bajar .que-son {
+  margin: .8rem 0 0; font-size: .88rem; line-height: 1.55; color: var(--apagado);
+  max-width: 46rem;
+}
+.bajar .que-son b { color: var(--tinta); }

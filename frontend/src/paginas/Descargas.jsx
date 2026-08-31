@@ -152,6 +152,14 @@ export default function Descargas() {
                 {t.pesoZip[0]}{resultado.resueltos.length}{t.pesoZip[1]} · {resultado.kb} KB
               </span>
             </a>
+            {/* Un jar de biblioteca descargado suelto invita a probar `java -jar`, que falla
+                con «no main manifest attribute». No es un fallo del jar: corvo-core no es un
+                programa. Decirlo aquí, junto al botón, y no enterrado en el LEEME del zip. */}
+            <p className="que-son">
+              <b>{t.queSon[0]}</b>{t.queSon[1]}<code>java -jar</code>{t.queSon[2]}
+              <code>pom.xml</code>{t.queSon[3]}<code>corvo-launcher</code>{t.queSon[4]}
+            </p>
+
             <ul className="sueltos">
               {resultado.resueltos.map((n) => (
                 <li key={n}>
