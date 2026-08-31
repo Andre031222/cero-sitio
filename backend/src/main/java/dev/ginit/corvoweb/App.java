@@ -29,7 +29,8 @@ public final class App {
                 .port(puerto)
                 .loadConfig()
                 .use(Cors.allowing("http://localhost:5173", "http://127.0.0.1:5173"))
-                .controllers(ModulosController.class, DescargaController.class)
+                .controllers(ModulosController.class, DescargaController.class,
+                             InstaladorController.class)
                 // spa(): una aplicación que enruta en el cliente no tiene un archivo por ruta.
                 // Sin esto, entrar directo en /descargas daría 404.
                 .fallback(StaticFiles.fromClasspath("front").spa()
