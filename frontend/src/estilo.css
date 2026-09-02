@@ -20,39 +20,36 @@
 }
 
 :root {
-  /* La paleta viene del kit de marca: #111827, #1F2937, #6B7280, #F8FAFC.
+  /* La paleta es la del kit de marca: navy #1E3A8A, cobalt #1D4ED8, blue #2563EB,
+     sky #38BDF8, cyan #22D3EE, purple #7C3AED, amber #F59E0B, ink #0B1220.
 
-     El azul NO es el #2563EB que declara la hoja del kit: es el que usa de verdad el dibujo
-     del ave. Se sacó del propio archivo contando píxeles — su tono dominante es #166BFB y
-     sus sombras caen en #0739C7. Con esos dos, el titular y el logo son literalmente el
-     mismo azul, que es lo que no pasaba con el declarado.
+     El acento cambia de tono entre temas y no por gusto: #2563EB da 5,17x sobre blanco
+     —AA de sobra— pero solo 4,06x sobre negro, que no llega para texto corrido. En oscuro
+     entra #38BDF8, que es del mismo kit y da 9,80x.
 
-     #166BFB da 4,64x sobre blanco: pasa AA para texto corrido, aunque justo. Por eso el
-     degradado va hacia la sombra (#0739C7, 8,68x) y no hacia un tono más claro. */
+     `sky` y `amber` no pasan AA sobre blanco (2,14x y 2,15x). No importa: son formas
+     decorativas, nunca texto. Si algún día alguien las usa para escribir, esto lo explica. */
   --papel: #ffffff;
   --panel: #f8fafc;
-  --tinta: #111827;
+  --tinta: #0b1220;
   --apagado: #6b7280;
-  --acento: #166bfb;
-  --ave: url("/marca/ave-claro.webp");
+  --acento: #2563eb;
   /* El segundo acento existe para los degradados. Un degradado de un color a sí mismo
      aclarado se ve sucio; con dos tonos vecinos de verdad el titular tiene profundidad. */
-  --acento-2: #0739c7;
-  --linea: rgba(17, 24, 39, .14);
+  --acento-2: #1d4ed8;
+  --linea: rgba(11, 18, 32, .14);
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --serif: "Source Serif", Georgia, "Times New Roman", serif;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) {
-    --papel: #000000; --panel: #111827; --tinta: #f8fafc;
-    --apagado: #9aa4b8; --acento: #5b8dff; --acento-2: #8fbaff; --linea: rgba(248, 250, 252, .16);
-    --ave: url("/marca/ave-oscuro.webp");
+    --papel: #000000; --panel: #0b1220; --tinta: #f8fafc;
+    --apagado: #9aa4b8; --acento: #38bdf8; --acento-2: #22d3ee; --linea: rgba(248, 250, 252, .16);
   }
 }
 :root[data-tema="oscuro"] {
-  --papel: #000000; --panel: #111827; --tinta: #f8fafc;
-  --apagado: #9aa4b8; --acento: #5b8dff; --acento-2: #8fbaff; --linea: rgba(248, 250, 252, .16);
-    --ave: url("/marca/ave-oscuro.webp");
+  --papel: #000000; --panel: #0b1220; --tinta: #f8fafc;
+    --apagado: #9aa4b8; --acento: #38bdf8; --acento-2: #22d3ee; --linea: rgba(248, 250, 252, .16);
 }
 
 * { box-sizing: border-box; }
@@ -215,8 +212,8 @@ pre { overflow-x: auto; max-width: 100%; }
 
 .marca { display: flex; align-items: center; gap: .55rem; text-decoration: none; }
 .marca .simbolo {
-  flex: none; width: 2.1rem; height: 1.6rem;
-  background: url("/marca/simbolo.webp") center/contain no-repeat;
+  flex: none; width: 2rem; height: 2rem;
+  background: url("/marca/logo-mark-notext.svg") center/contain no-repeat;
   transition: transform .35s cubic-bezier(.16, 1, .3, 1);
 }
 .marca:hover .simbolo { transform: translateX(-2px) scale(1.06); }
@@ -224,7 +221,7 @@ pre { overflow-x: auto; max-width: 100%; }
   font-family: var(--mono); font-weight: 800; font-size: 1.15rem; letter-spacing: -.02em;
 }
 /* La C en el acento, como en el kit. */
-.marca .palabra::first-letter { color: var(--acento); }
+.marca .palabra i { font-style: normal; color: var(--acento); }
 @media (prefers-reduced-motion: reduce) {
   .marca .simbolo, .marca:hover .simbolo { transform: none; transition: none; }
 }
@@ -551,12 +548,12 @@ ul.prosa li { margin-bottom: .45rem; }
   right: 0;
   top: 1rem;
   width: clamp(11rem, 20vw, 17rem);
-  aspect-ratio: 1100 / 1128;
+  aspect-ratio: 1 / 1;
   /* Dos archivos, uno por tema, y no uno solo teñido. El ave es un render con brillos: su
      forma la definen los reflejos, no una silueta, así que no se puede tintar ni usar como
      máscara. En claro va la versión invertida —los brillos pasan a trazo oscuro— y en oscuro
      la original, cuyo fondo negro es exactamente el de la página. */
-  background: var(--ave) center/contain no-repeat;
+  background: url("/marca/logo-mark.svg") center/contain no-repeat;
   pointer-events: none;
   z-index: 0;
   animation: isotipo-entra .9s cubic-bezier(.16, 1, .3, 1) both,
@@ -780,30 +777,50 @@ ul.prosa li { margin-bottom: .45rem; }
 
 /* ─── figuras de fondo ─── */
 
-/* Esquirlas facetadas en los huecos, del mismo lenguaje que el isotipo: triángulos, no
-   círculos ni manchas.
+/* Las formas del kit, no una máscara teñida. Traen su propio volumen y su propio color —el
+   ámbar y el violeta no salen de la paleta del texto—, así que se usan como imagen.
 
-   Van como **máscara** sobre var(--acento) y no como imagen con el color dentro: así siguen
-   a la marca sola. Si mañana el azul cambia otra vez, estas no se quedan atrás — que es
-   justo lo que pasó con el favicon y la tarjeta social, que sí llevan el color quemado y
-   hay que regenerarlos a mano.
+   El kit manda tres o cuatro por sección, rotadas, nunca un enjambre. Aquí son tres y cada
+   una tiene su sitio: no se amontonan ni tocan el texto.
 
-   Y en un ::after de la portada, no en el DOM: no son contenido. Nadie tiene que tabularlas
+   Van en pseudoelementos y no en el DOM porque no son contenido: nadie tiene que tabularlas
    ni oírlas leer. */
+/* Las tres formas van en UN solo pseudoelemento, con tres imágenes de fondo.
+
+   No es capricho: un elemento tiene ::before y ::after y nada más, y ::before ya lo ocupa
+   el halo de color. Al escribir las formas también en ::before se pisaban las dos reglas —
+   el halo gana su `left: 50%; width: 100vw` y el tetraedro acababa en la esquina contraria.
+
+   Las formas traen su propio volumen y su propio color: el ámbar y el violeta no salen de
+   la paleta del texto, así que van como imagen y no como máscara teñida.
+
+   El kit manda tres o cuatro por sección, rotadas, nunca un enjambre. Son tres, a distinta
+   altura y a distinto lado, para que parezcan sueltas y no un grupo. */
 .portada::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: -1;
-  background: var(--acento);
-  opacity: .055;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201000%20700%22%3E%3Cpath%20d%3D%22M0%20700%20L250%20380%20L330%20700%20Z%22%2F%3E%3Cpath%20d%3D%22M120%20700%20L470%20300%20L520%20470%20L300%20700%20Z%22%2F%3E%3Cpath%20d%3D%22M1000%200%20L1000%20260%20L820%2060%20Z%22%2F%3E%3Cpath%20d%3D%22M900%20700%20L1000%20470%20L1000%20700%20Z%22%2F%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;
-          mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201000%20700%22%3E%3Cpath%20d%3D%22M0%20700%20L250%20380%20L330%20700%20Z%22%2F%3E%3Cpath%20d%3D%22M120%20700%20L470%20300%20L520%20470%20L300%20700%20Z%22%2F%3E%3Cpath%20d%3D%22M1000%200%20L1000%20260%20L820%2060%20Z%22%2F%3E%3Cpath%20d%3D%22M900%20700%20L1000%20470%20L1000%20700%20Z%22%2F%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;
+  background-repeat: no-repeat;
+  background-image:
+    url("/marca/shape-tetra-amber.svg"),
+    url("/marca/shape-diamond-blue.svg"),
+    url("/marca/shape-pentagon-purple.svg");
+  background-size: 6rem, 3.2rem, 4rem;
+  background-position:
+    right 1rem top 1rem,
+    right 27rem top 30rem,
+    left 1.5rem top 40rem;
+  opacity: .85;
 }
 
-/* En el teléfono estorban: no hay huecos que rellenar, solo texto. */
-@media (max-width: 62rem) { .portada::after { display: none; } }
+/* En el teléfono no hay huecos que rellenar, solo texto. */
+@media (max-width: 62rem) {
+  /* Solo las formas. El halo se queda: es lo que le quita al móvil la sensación de folio
+     en blanco, y ahí no estorba a nada. */
+  .portada::after { display: none; }
+}
 
 /* Y una retícula tenue de puntos bajo las cifras, que es la otra zona que quedaba desnuda. */
 .cifras {
@@ -813,19 +830,19 @@ ul.prosa li { margin-bottom: .45rem; }
 }
 
 
-/* Las mismas esquirlas en las páginas interiores. Menos y más apagadas: aquí hay prosa que
-   leer, no un titular al que acompañar. */
+/* En las páginas interiores, una sola forma y arriba a la derecha: aquí hay prosa que leer,
+   no un titular al que acompañar. */
 .pagina, .descargas { position: relative; }
 .pagina::before, .descargas::before {
   content: "";
   position: absolute;
-  inset: -4rem 0 0 0;
+  top: -1rem; right: -1rem;
+  width: 5.5rem; height: 5.5rem;
+  background: url("/marca/shape-triangle-cyan.svg") center/contain no-repeat;
+  transform: rotate(-12deg);
+  opacity: .75;
   pointer-events: none;
   z-index: -1;
-  background: var(--acento);
-  opacity: .04;
-  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201000%20900%22%3E%3Cpath%20d%3D%22M1000%200%20L1000%20220%20L840%2040%20Z%22%2F%3E%3Cpath%20d%3D%22M0%20900%20L190%20640%20L250%20900%20Z%22%2F%3E%3Cpath%20d%3D%22M1000%20900%20L1000%20700%20L860%20900%20Z%22%2F%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;
-          mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201000%20900%22%3E%3Cpath%20d%3D%22M1000%200%20L1000%20220%20L840%2040%20Z%22%2F%3E%3Cpath%20d%3D%22M0%20900%20L190%20640%20L250%20900%20Z%22%2F%3E%3Cpath%20d%3D%22M1000%20900%20L1000%20700%20L860%20900%20Z%22%2F%3E%3C%2Fsvg%3E") center/100% 100% no-repeat;
 }
 @media (max-width: 62rem) { .pagina::before, .descargas::before { display: none; } }
 

@@ -34,7 +34,9 @@ export default function Marco({ children }) {
         <div className="marco">
           <Link to={raiz || '/'} className="marca">
             <span className="simbolo" aria-hidden="true" />
-            <span className="palabra">Corvo</span>
+            {/* «Co» en azul y «rvo» en tinta, como manda el kit. Va en dos spans y no con
+                ::first-letter porque eso solo alcanza a una letra. */}
+            <span className="palabra"><i>Co</i>rvo</span>
           </Link>
           <nav>
             {t.menu.map(([sufijo, texto]) => {

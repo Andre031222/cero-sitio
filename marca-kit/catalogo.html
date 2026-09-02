@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Corvo — catálogo de marca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --navy: #1E3A8A;
+    --cobalt: #1D4ED8;
+    --blue: #2563EB;
+    --sky: #38BDF8;
+    --cyan: #22D3EE;
+    --purple: #7C3AED;
+    --amber: #F59E0B;
+    --ink: #0B1220;
+    --muted: #64748B;
+    --line: #E2E8F0;
+    --paper: #F8FAFC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Inter, system-ui, sans-serif; color: var(--ink); background: #fff; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 56px 32px 96px; }
+  h1, h2, .display { font-family: "Space Grotesk", Inter, sans-serif; }
+  h1 { font-size: 56px; letter-spacing: -0.04em; line-height: 0.95; }
+  h1 span { color: var(--blue); }
+  h2 { font-size: 22px; letter-spacing: -0.03em; margin-bottom: 18px; }
+  .lede { margin-top: 14px; color: var(--muted); max-width: 560px; font-size: 16px; line-height: 1.55; }
+  .kicker { font-size: 12px; letter-spacing: 0.22em; font-weight: 600; color: var(--blue); margin-bottom: 10px; }
+  header { display: flex; justify-content: space-between; gap: 40px; align-items: flex-end; padding-bottom: 48px; border-bottom: 1px solid var(--line); }
+  .lockup { display: flex; align-items: center; gap: 16px; }
+  .lockup img { width: 72px; height: auto; }
+  section { padding: 48px 0; border-bottom: 1px solid var(--line); }
+  .grid { display: grid; gap: 16px; }
+  .g6 { grid-template-columns: repeat(6, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px;
+    min-height: 180px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px;
+    position: relative;
+  }
+  .card.dark { background: #0B1220; border-color: #1E293B; }
+  .card.check {
+    background-image:
+      linear-gradient(45deg, #eef2f7 25%, transparent 25%),
+      linear-gradient(-45deg, #eef2f7 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #eef2f7 75%),
+      linear-gradient(-45deg, transparent 75%, #eef2f7 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+    background-color: #fff;
+  }
+  .card img, .card object { max-width: 78%; max-height: 110px; }
+  .card .big { max-height: 160px; max-width: 88%; }
+  .label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .card.dark .label { color: #94A3B8; }
+  .swatch { height: 92px; border-radius: 14px; border: 1px solid var(--line); }
+  .swatch .hex { padding: 10px 12px; font-size: 12px; font-weight: 600; color: #fff; text-shadow: 0 1px 0 rgb(0 0 0 / .25); }
+  .type-row { padding: 8px 0 18px; }
+  .type-row .sample { font-family: "Space Grotesk", sans-serif; letter-spacing: -0.045em; font-weight: 700; }
+  .t1 { font-size: 72px; line-height: 0.9; }
+  .t1 .co { color: var(--blue); }
+  .t2 { font-size: 18px; letter-spacing: 0.28em; color: var(--muted); font-weight: 600; margin-top: 10px; font-family: Inter, sans-serif; }
+  .meta { color: var(--muted); font-size: 13px; margin-top: 8px; }
+  .hero-demo {
+    position: relative; overflow: hidden; border-radius: 24px;
+    background: #fff; border: 1px solid var(--line); min-height: 340px;
+    padding: 48px 48px 56px;
+  }
+  .hero-demo.alt { background: #F1F5FF; }
+  .hero-demo.night { background: #0B1220; color: #fff; }
+  .hero-demo h3 { font-family: "Space Grotesk", sans-serif; font-size: 48px; letter-spacing: -0.045em; }
+  .hero-demo.night h3 .co { color: #60A5FA; }
+  .hero-demo p { max-width: 360px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+  .hero-demo.night p { color: #94A3B8; }
+  .float { position: absolute; pointer-events: none; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; background: #EEF2FF; color: var(--navy); padding: 2px 6px; border-radius: 6px; }
+  pre { background: #0B1220; color: #E2E8F0; padding: 18px 20px; border-radius: 14px; font-size: 12.5px; line-height: 1.55; overflow: auto; }
+  footer { padding-top: 28px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <div class="kicker">CORVO BRAND SYSTEM · OPCIÓN A</div>
+        <h1><span>Co</span>rvo</h1>
+        <p class="lede">Catálogo de formas plegadas, transparentes, para hero, docs, footer, 404 y navbar. Misma familia geométrica que JxMVC, paleta propia.</p>
+      </div>
+      <div class="lockup">
+        <img src="png/logo-a-raster.png" alt="Corvo mark A" />
+      </div>
+    </header>
+
+    <section>
+      <h2>1 · Isotipo</h2>
+      <div class="grid g3">
+        <div class="card check"><img class="big" src="png/logo-a-raster.png" alt="logo A" /><div class="label">logo-a-raster.png</div></div>
+        <div class="card dark check" style="background-color:#0B1220;background-image:linear-gradient(45deg,#132036 25%,transparent 25%),linear-gradient(-45deg,#132036 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#132036 75%),linear-gradient(-45deg,transparent 75%,#132036 75%);background-size:20px 20px;background-position:0 0,0 10px,10px -10px,-10px 0;"><img class="big" src="png/logo-a-raster.png" alt="logo A dark" /><div class="label">sobre oscuro</div></div>
+        <div class="card check"><img class="big" src="svg/logo-mark.svg" alt="logo svg" /><div class="label">logo-mark.svg · vector</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2 · Formas sueltas</h2>
+      <p class="meta" style="margin-bottom:16px">Úsalas como JxMVC: 3 o 4 por sección, rotadas, nunca un enjambre.</p>
+      <div class="grid g4">
+        <div class="card check"><img src="svg/shape-tetra-amber.svg" /><div class="label">tetra-amber</div></div>
+        <div class="card check"><img src="svg/shape-triangle-cyan.svg" /><div class="label">triangle-cyan</div></div>
+        <div class="card check"><img src="svg/shape-triangle-navy.svg" /><div class="label">triangle-navy</div></div>
+        <div class="card check"><img src="svg/shape-diamond-blue.svg" /><div class="label">diamond-blue</div></div>
+        <div class="card check"><img src="svg/shape-pentagon-purple.svg" /><div class="label">pentagon-purple</div></div>
+        <div class="card check"><img src="svg/shape-kite-cobalt.svg" /><div class="label">kite-cobalt</div></div>
+        <div class="card check"><img src="svg/shape-shard-violet.svg" /><div class="label">shard-violet</div></div>
+        <div class="card check"><img src="svg/shape-chevron-sky.svg" /><div class="label">chevron-sky</div></div>
+        <div class="card check"><img src="svg/shape-bar-fold.svg" /><div class="label">bar-fold</div></div>
+        <div class="card check"><img src="svg/shape-corner-origami.svg" /><div class="label">corner-origami</div></div>
+        <div class="card check"><img src="svg/logo-mark-notext.svg" /><div class="label">mark sin texto</div></div>
+        <div class="card check"><img src="svg/favicon.svg" style="max-height:64px" /><div class="label">favicon</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3 · Tipografía</h2>
+      <div class="type-row">
+        <div class="sample t1"><span class="co">Co</span>rvo</div>
+        <div class="t2">SIN CONTENEDOR</div>
+        <p class="meta">Display: Space Grotesk Bold · tracking −0.045em · Co #2563EB · rvo #0B1220<br>
+        UI: Inter · 14–16 / 24–28 · labels 12px / 0.2em</p>
+      </div>
+      <div class="grid g3">
+        <div class="card" style="align-items:flex-start">
+          <img src="png/wordmark.png" style="max-width:100%;max-height:80px" />
+          <div class="label">wordmark.png</div>
+        </div>
+        <div class="card dark">
+          <img src="png/wordmark-on-dark.png" style="max-width:100%;max-height:80px" />
+          <div class="label">wordmark-on-dark.png</div>
+        </div>
+        <div class="card" style="align-items:flex-start">
+          <img src="png/wordmark-stacked.png" style="max-width:100%;max-height:90px" />
+          <div class="label">wordmark-stacked.png</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4 · Paleta</h2>
+      <div class="grid g6">
+        <div class="swatch" style="background:#1E3A8A"><div class="hex">navy<br>#1E3A8A</div></div>
+        <div class="swatch" style="background:#1D4ED8"><div class="hex">cobalt<br>#1D4ED8</div></div>
+        <div class="swatch" style="background:#2563EB"><div class="hex">blue<br>#2563EB</div></div>
+        <div class="swatch" style="background:#38BDF8"><div class="hex">sky<br>#38BDF8</div></div>
+        <div class="swatch" style="background:#7C3AED"><div class="hex">purple<br>#7C3AED</div></div>
+        <div class="swatch" style="background:#F59E0B"><div class="hex">amber<br>#F59E0B</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>5 · Uso en secciones</h2>
+      <div class="grid g2">
+        <div class="hero-demo">
+          <img class="float" src="svg/shape-tetra-amber.svg" style="width:70px;top:18px;right:36px;rotate:16deg">
+          <img class="float" src="svg/shape-pentagon-purple.svg" style="width:58px;top:46%;right:10px">
+          <img class="float" src="svg/shape-diamond-blue.svg" style="width:52px;bottom:24px;right:88px;rotate:24deg">
+          <div class="kicker">HERO</div>
+          <h3><span class="co" style="color:#2563EB">Co</span>rvo</h3>
+          <p>Framework web para Java. Servidor HTTP propio, cero dependencias y java -jar.</p>
+        </div>
+        <div class="hero-demo night">
+          <img class="float" src="svg/shape-triangle-cyan.svg" style="width:80px;top:20px;right:28px;rotate:-12deg;opacity:.9">
+          <img class="float" src="svg/shape-shard-violet.svg" style="width:54px;bottom:28px;right:20px;rotate:20deg">
+          <div class="kicker" style="color:#60A5FA">DOCS / OSCURO</div>
+          <h3><span class="co">Co</span>rvo</h3>
+          <p>Las mismas formas funcionan sobre fondo night porque el PNG/SVG no trae caja blanca.</p>
+        </div>
+      </div>
+      <pre style="margin-top:18px">.deco { position:absolute; pointer-events:none; user-select:none; }
+.deco-amber  { width:88px; top:40px; right:12%; rotate:18deg; }
+.deco-purple { width:72px; top:46%;  right:4%;  rotate:-8deg; }
+.deco-blue   { width:64px; bottom:12%; right:18%; rotate:28deg; }</pre>
+    </section>
+
+    <footer>
+      Corvo 0.4.0 · kit opción A · Space Grotesk + Inter · SVG + PNG transparentes
+    </footer>
+  </div>
+</body>
+</html>

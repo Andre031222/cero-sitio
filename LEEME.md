@@ -152,75 +152,50 @@ por los componentes.
 
 ## La marca
 
-El **kit de marca de Richar**: cabeza de cuervo facetada, negra con cuñas azules, mirando a la
-derecha. Las trece láminas originales quedan en `marca-kit/` — fuera de `public/`, para tenerlas
-sin servirlas al navegador.
+El **kit de marca de Richar**, sistema geométrico de planos plegados. Está entero en
+`marca-kit/` con su catálogo; lo que se sirve vive en `frontend/public/marca/`.
 
-| Archivo | Dónde | Cómo |
-|---|---|---|
-| `simbolo.webp` | Barra y portada | El isotipo recortado, 895×675, 36 KB. **Un solo archivo para los dos temas**, y **mira a la izquierda** |
-| `favicon.svg` | La pestaña | El isotipo sobre cuadrado claro, con el PNG incrustado en base64 |
-| `enlace.jpg` | La tarjeta al compartir | 1200×630, generada renderizando el propio sitio con sus fuentes |
+**Todo en SVG.** Es el cambio importante frente a lo anterior: un vector escala sin perder
+nada, aguanta a 16 px y no hay que recortar fondos ni mantener una versión por tema. Los dos
+intentos previos —la cabeza facetada y el cuervo con alas— eran renders, y cada uno costó su
+tarde de recortes, halos y erosiones.
 
-### Mira a la izquierda, a propósito
-
-El isotipo va a la derecha del titular, así que mirando a la derecha le daba la espalda al texto.
-El kit trae las dos orientaciones y la que se usa es **el render propio del kit, no un espejo**:
-espejar habría invertido también la luz, y las facetas dejan de tener sentido.
-
-Por lo mismo va `justify-self: start` en su columna y no `end`: al fondo de la columna quedaba a
-un palmo del texto, mirando a un hueco en vez de mirarlo a él.
-
-### Cómo se recortó, y por qué así
-
-Del **panel claro** del kit, no del oscuro. En el oscuro el fondo y las facetas negras del ave
-son el mismo negro —(7,8,13) contra (8,9,13)—: ahí no hay información que separar, y cualquier
-relleno por inundación se come el pájaro. Se comprobó con márgenes del 3 %, 5 % y 8 %, y los tres
-lo destrozan.
-
-Del claro sí sale, y el resultado **funciona sobre negro** porque la silueta la definen las
-facetas grises de arriba y las cuñas azules, no las negras.
-
-Dos detalles que hicieron falta:
-
-- **Una cuña blanca encerrada** bajo el pico no la alcanzaba el relleno desde las esquinas: hay
-  que inundarla aparte. Se localiza con `-connected-components`, que da su centroide.
-- **El borde va erosionado un píxel.** Los píxeles semitransparentes del contorno arrastraban el
-  claro del que se recortó, y sobre negro se veía un halo alrededor del ave.
-
-Se reescala al 200 % con Lanczos y aguanta: es un render de facetas planas, no una fotografía.
+| Archivo | Dónde |
+|---|---|
+| `logo-mark-notext.svg` | La barra |
+| `logo-mark.svg` | La portada, con «Cv» dentro |
+| `favicon.svg` | La pestaña — comprobado a 64, 32 y **16 px** |
+| `shape-*.svg` | Las formas sueltas de fondo |
+| `enlace.jpg` | La tarjeta al compartir, generada renderizando el propio sitio |
 
 ### El color
 
-La paleta sale del kit: `#111827` · `#1F2937` · `#6B7280` · `#F8FAFC`.
+La paleta es la del kit: navy `#1E3A8A`, cobalt `#1D4ED8`, blue `#2563EB`, sky `#38BDF8`,
+cyan `#22D3EE`, purple `#7C3AED`, amber `#F59E0B`, ink `#0B1220`.
 
-**El azul no es el que declara la hoja del kit.** El kit dice `#2563EB`, pero el dibujo del ave
-usa de verdad un azul mucho más vivo —su tono dominante es `#166BFB`— y el declarado se quedaba
-apagado justo al lado del propio logo. El acento es `#0B5CFF`: saturación máxima y, además,
-**más** contraste que el declarado (5,26× contra 5,17× sobre blanco). Salir ganando en las dos
-cosas no suele pasar; cuando pasa, se coge.
+**El acento cambia de tono entre temas, y no por gusto.** `#2563EB` da 5,17× sobre blanco
+—AA de sobra— pero solo **4,06× sobre negro**, que no llega para texto corrido. En oscuro
+entra `#38BDF8`, que es del mismo kit y da 9,80×.
 
-En oscuro sube a `#5b8dff` (6,70× sobre negro), porque un azul de ese peso sobre negro se queda
-corto.
+`sky` y `amber` no pasan AA sobre blanco (2,14× y 2,15×). No importa: son formas
+decorativas, nunca texto. Queda escrito por si algún día alguien las usa para escribir.
 
-`--acento-2` (`#5b91f5` / `#8fbaff`) existe **solo para los degradados**: un degradado de un color
-a sí mismo aclarado se ve sucio. No llega a AA para texto corrido, y por eso aparece únicamente
-sobre el titular, las cifras y reglas decorativas.
+El wordmark lleva «Co» en azul y «rvo» en tinta, como manda el kit. Va en dos `<span>` y no
+con `::first-letter`, que solo alcanza a una letra.
 
-Los tokens están **tres veces** —`:root`, `prefers-color-scheme` y `[data-tema]`— para que el
-conmutador gane en las dos direcciones, y además quemados en `favicon.svg` y `enlace.jpg`, que se
-regeneran aparte.
+### Las formas de fondo
 
-### Trampas ya mordidas
+Las tres van en **un solo pseudoelemento**, con tres imágenes de fondo. No es capricho: un
+elemento tiene `::before` y `::after` y nada más, y `::before` ya lo ocupa el halo de color.
+Al escribirlas también en `::before` se pisaban las dos reglas —el halo gana su
+`left: 50%; width: 100vw` y el tetraedro acababa en la esquina contraria—.
 
-- **El recorte horizontal va en `html`, no en la portada.** Recortando en la portada, el corte cae
-  en el borde del marco y deja una línea recta atravesando el isotipo. `clip` y no `hidden`:
-  `hidden` haría de la raíz un contenedor de desplazamiento y rompería el `sticky` de la barra.
-- **La palabra de la barra no se oculta en el móvil.** Hubo una regla que la escondía por debajo
-  de 26 rem porque el símbolo bastaba; al quitar el símbolo temporalmente, la barra del teléfono
-  se quedó sin nada. Ahora encoge.
-- **La marca de agua no sobresale.** Con `right: -6%` desbordaba 4 px a 834 px y dependía del
-  recorte para taparlo. Depender del recorte para eso es frágil.
+Van como imagen y no como máscara teñida porque traen su propio volumen y su propio color:
+el ámbar y el violeta no salen de la paleta del texto.
+
+El kit manda tres o cuatro por sección, rotadas, nunca un enjambre. Son tres, a distinta
+altura y a distinto lado. En el móvil se ocultan —no hay huecos que rellenar, solo texto—
+pero **el halo se queda**: es lo que le quita la sensación de folio en blanco.
 
 ## Pendiente
 
