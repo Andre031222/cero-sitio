@@ -853,3 +853,31 @@ ul.prosa li { margin-bottom: .45rem; }
   max-width: 46rem;
 }
 .bajar .que-son b { color: var(--tinta); }
+
+/* ─── el cuervo, en la sección que cuenta la historia ─── */
+
+/* Aquí sí cabe una imagen con dramatismo: es el apartado que explica de dónde sale el
+   proyecto, no una página de referencia. En el resto del sitio manda el sistema geométrico.
+
+   Dos archivos, uno por tema. La forma de este render la definen los BRILLOS y no una
+   silueta, así que no se puede tintar ni usar como máscara: en claro va la versión invertida
+   —los reflejos pasan a trazo oscuro— y en oscuro la original, cuyo fondo negro es
+   exactamente el de la página. */
+.ave-relato {
+  float: right;
+  width: clamp(9rem, 22%, 15rem);
+  aspect-ratio: 1100 / 1128;
+  margin: 0 0 1rem 2rem;
+  background: var(--ave-relato) center/contain no-repeat;
+  shape-outside: circle(50%);
+}
+:root { --ave-relato: url("/marca/ave-claro.webp"); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) { --ave-relato: url("/marca/ave-oscuro.webp"); }
+}
+:root[data-tema="oscuro"] { --ave-relato: url("/marca/ave-oscuro.webp"); }
+
+/* En el teléfono la prosa manda: el texto no se parte alrededor de una imagen a 390 px. */
+@media (max-width: 48rem) {
+  .ave-relato { float: none; margin: 0 auto 1.5rem; width: 60%; }
+}

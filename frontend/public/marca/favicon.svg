@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+<!--
+  viewBox recortado a la caja del dibujo, no al lienzo original.
+
+  El arte ocupa 46x44 de los 64x64 que declaraba el archivo, y todo el sobrante caía a la
+  derecha y abajo: en la pestaña se veía un icono pequeño y descentrado, con la mitad del
+  espacio vacío. Recortando el viewBox el mismo dibujo llena la casilla.
+
+  El arte mide 46x44 y empieza en (12,12), medido renderizando el SVG sobre un fondo que no
+  aparece en el dibujo y recortando: a ojo no se ve, y el primer intento salió mal por dar el
+  origen por hecho en (0,0).
+
+  Se cuadra a 48 con una unidad de aire porque la pestaña reserva una casilla cuadrada: con
+  un viewBox no cuadrado el navegador lo encaja dentro y vuelve a sobrar margen, que es justo
+  lo que se quería quitar.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="11 10 48 48" width="48" height="48" fill="none">
 
   <defs>
     <linearGradient id="gNavy" x1="0" y1="0" x2="1" y2="1">
@@ -37,7 +52,9 @@
     </linearGradient>
   </defs>
 
-  <rect width="64" height="64" rx="14" fill="#0B1220"/>
+  <!-- Sin cuadro de fondo: el icono se posa sobre la pestaña del navegador, y esa pestaña
+       cambia de color con el tema del sistema. Un fondo fijo aquí sería una caja oscura
+       recortada sobre una barra clara. -->
   <polygon points="14,18 34,12 50,22 42,34 20,30" fill="url(#gCobalt)"/>
   <polygon points="20,30 42,34 46,50 16,48" fill="#2563EB"/>
   <polygon points="16,48 32,44 28,56 12,52" fill="url(#gOrange)"/>

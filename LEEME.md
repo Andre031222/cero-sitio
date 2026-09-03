@@ -164,7 +164,7 @@ tarde de recortes, halos y erosiones.
 |---|---|
 | `logo-mark-notext.svg` | La barra |
 | `logo-mark.svg` | La portada, con «Cv» dentro |
-| `favicon.svg` | La pestaña — comprobado a 64, 32 y **16 px** |
+| `favicon.svg` | La pestaña — sin fondo y con el `viewBox` recortado al dibujo |
 | `shape-*.svg` | Las formas sueltas de fondo |
 | `enlace.jpg` | La tarjeta al compartir, generada renderizando el propio sitio |
 
@@ -182,6 +182,32 @@ decorativas, nunca texto. Queda escrito por si algún día alguien las usa para 
 
 El wordmark lleva «Co» en azul y «rvo» en tinta, como manda el kit. Va en dos `<span>` y no
 con `::first-letter`, que solo alcanza a una letra.
+
+### El favicon
+
+**Sin cuadro de fondo:** el icono se posa sobre la pestaña, y esa pestaña cambia de color con
+el tema del sistema. Un fondo fijo sería una caja oscura recortada sobre una barra clara.
+
+Y con el **`viewBox` recortado al dibujo**. El arte mide 46×44 y empieza en (12,12) de un
+lienzo de 64×64: declarándolo entero, el icono salía pequeño y descentrado, con casi un tercio
+del espacio vacío. Recortado ocupa el **95 %** de la casilla en vez del 71 %.
+
+Se cuadra a 48 con una unidad de aire porque la pestaña reserva una casilla cuadrada: con un
+`viewBox` no cuadrado el navegador lo encaja dentro y vuelve a sobrar margen.
+
+La caja hay que **medirla**, renderizando el SVG sobre un color que no aparezca en el dibujo y
+recortando. A ojo no se ve, y el primer intento salió mal por dar el origen por hecho en (0,0):
+el icono acabó ampliado y cortado por la mitad.
+
+### El cuervo del relato
+
+El render con alas vive en la sección «Por qué existe» de Acerca de, y solo ahí. Es el
+apartado que cuenta de dónde sale el proyecto, no una página de referencia — en el resto del
+sitio manda el sistema geométrico.
+
+Dos archivos, uno por tema: la forma de ese render la definen los **brillos** y no una
+silueta, así que no se puede tintar ni usar como máscara. En claro va la versión invertida y
+en oscuro la original.
 
 ### Las formas de fondo
 
