@@ -1,6 +1,6 @@
   <header class="cabecera-pagina">
     <h1 class="titulo-pagina">Migrar</h1>
-    <p class="entradilla">Llevar una aplicación de LuxCore 0.2.x o 0.3.x a Corvo 0.4.0. El guion hace casi todo; hay tres cosas que no puede hacer y que se notan después de desplegar.</p>
+    <p class="entradilla">Llevar una aplicación a Cero 0.5.0, venga de LuxCore 0.2.x/0.3.x o de Corvo 0.4.0. El guion hace casi todo; hay tres cosas que no puede hacer y que se notan después de desplegar.</p>
   </header>
 
   <div class="cuerpo">
@@ -45,10 +45,10 @@
       <section id="antes">
         <div class="titulo-seccion"><span class="indice-num">02</span><h2>Antes de tocar nada</h2></div>
 
-        <h3>1 · Instala Corvo 0.4.0</h3>
+        <h3>1 · Instala Cero 0.5.0</h3>
         <div class="codigo">
-          <div class="barra"><span class="etiqueta">En el repositorio de Corvo</span><span class="etiqueta">sh</span></div>
-<pre>./corvo install          <span class="cm"># compila, prueba e instala en ~/.m2</span></pre>
+          <div class="barra"><span class="etiqueta">En el repositorio de Cero</span><span class="etiqueta">sh</span></div>
+<pre>./cero install          <span class="cm"># compila, prueba e instala en ~/.m2</span></pre>
         </div>
 
         <h3>2 · Deja limpio el árbol de git de la aplicación</h3>
@@ -68,10 +68,10 @@ git status               <span class="cm"># no debe quedar nada sin guardar</spa
         <div class="aviso">
           <div class="etiqueta">Esto va antes de arrancar la aplicación</div>
           <p>
-            Si tu aplicación usa <code>Migrations</code> de <code>corvo-data</code>, para y lee.
+            Si tu aplicación usa <code>Migrations</code> de <code>cero-data</code>, para y lee.
             El framework anota en una tabla qué migraciones ya se aplicaron. Se llamaba
-            <code>lux_migraciones</code> y ahora se llama <code>corvo_migraciones</code>. Si
-            arrancas sin renombrarla, <b>Corvo no la encuentra, da por hecho que no se aplicó
+            <code>lux_migraciones</code> y ahora se llama <code>cero_migraciones</code>. Si
+            arrancas sin renombrarla, <b>Cero no la encuentra, da por hecho que no se aplicó
             ninguna y las vuelve a correr todas</b>.
           </p>
           <p>Eso no falla al compilar. Falla contra tu base de datos.</p>
@@ -79,7 +79,7 @@ git status               <span class="cm"># no debe quedar nada sin guardar</spa
 
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Antes de arrancar</span><span class="etiqueta">SQL</span></div>
-<pre>ALTER TABLE lux_migraciones RENAME TO corvo_migraciones;</pre>
+<pre>ALTER TABLE lux_migraciones RENAME TO cero_migraciones;</pre>
         </div>
 
         <p>
@@ -89,7 +89,7 @@ git status               <span class="cm"># no debe quedar nada sin guardar</spa
 
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Solo si usas JdbcSessions</span><span class="etiqueta">SQL</span></div>
-<pre>ALTER TABLE lux_sesiones RENAME TO corvo_sesiones;</pre>
+<pre>ALTER TABLE lux_sesiones RENAME TO cero_sesiones;</pre>
         </div>
 
         <p>
@@ -102,9 +102,9 @@ git status               <span class="cm"># no debe quedar nada sin guardar</spa
         <div class="titulo-seccion"><span class="indice-num">03</span><h2>Migrar</h2></div>
 
         <div class="codigo">
-          <div class="barra"><span class="etiqueta">En el repositorio de Corvo</span><span class="etiqueta">sh</span></div>
-<pre>./corvo migrar ../mi-app --probar    <span class="cm"># enseña qué cambiaría, sin tocar nada</span>
-./corvo migrar ../mi-app             <span class="cm"># lo aplica</span></pre>
+          <div class="barra"><span class="etiqueta">En el repositorio de Cero</span><span class="etiqueta">sh</span></div>
+<pre>./cero migrar ../mi-app --probar    <span class="cm"># enseña qué cambiaría, sin tocar nada</span>
+./cero migrar ../mi-app             <span class="cm"># lo aplica</span></pre>
         </div>
 
         <h3>Qué cambia el guion</h3>
@@ -112,15 +112,15 @@ git status               <span class="cm"># no debe quedar nada sin guardar</spa
           <table>
             <thead><tr><th></th><th>Antes</th><th>Después</th></tr></thead>
             <tbody>
-              <tr><td>Paquetes</td><td class="mono-clave">import lux.core.Route</td><td class="mono-clave">import corvo.core.Route</td></tr>
-              <tr><td>Clase de arranque</td><td class="mono-clave">Lux.run(8080, …)</td><td class="mono-clave">Corvo.run(8080, …)</td></tr>
-              <tr><td>Servlet</td><td class="mono-clave">LuxServlet</td><td class="mono-clave">CorvoServlet</td></tr>
-              <tr><td>groupId</td><td class="mono-clave">lux</td><td class="mono-clave">dev.ginit.corvo</td></tr>
-              <tr><td>Artefactos</td><td class="mono-clave">lux-core, lux-data…</td><td class="mono-clave">corvo-core, corvo-data…</td></tr>
-              <tr><td>Versión</td><td class="mono-clave">0.2.x / 0.3.x</td><td class="mono-clave">0.4.0</td></tr>
-              <tr><td>Propiedad del pom</td><td class="mono-clave">${lux.version}</td><td class="mono-clave">${corvo.version}</td></tr>
-              <tr><td>Claves de config</td><td class="mono-clave">lux.oauth.google.id</td><td class="mono-clave">corvo.oauth.google.id</td></tr>
-              <tr><td>Variables de entorno</td><td class="mono-clave">LUX_SERVER_PORT</td><td class="mono-clave">CORVO_SERVER_PORT</td></tr>
+              <tr><td>Paquetes</td><td class="mono-clave">import lux.core.Route</td><td class="mono-clave">import cero.core.Route</td></tr>
+              <tr><td>Clase de arranque</td><td class="mono-clave">Lux.run(8080, …)</td><td class="mono-clave">Cero.run(8080, …)</td></tr>
+              <tr><td>Servlet</td><td class="mono-clave">LuxServlet</td><td class="mono-clave">CeroServlet</td></tr>
+              <tr><td>groupId</td><td class="mono-clave">lux</td><td class="mono-clave">dev.ginit.cero</td></tr>
+              <tr><td>Artefactos</td><td class="mono-clave">lux-core, lux-data…</td><td class="mono-clave">cero-core, cero-data…</td></tr>
+              <tr><td>Versión</td><td class="mono-clave">0.2.x / 0.3.x</td><td class="mono-clave">0.5.0</td></tr>
+              <tr><td>Propiedad del pom</td><td class="mono-clave">${lux.version}</td><td class="mono-clave">${cero.version}</td></tr>
+              <tr><td>Claves de config</td><td class="mono-clave">lux.oauth.google.id</td><td class="mono-clave">cero.oauth.google.id</td></tr>
+              <tr><td>Variables de entorno</td><td class="mono-clave">LUX_SERVER_PORT</td><td class="mono-clave">CERO_SERVER_PORT</td></tr>
             </tbody>
           </table>
         </div>
@@ -151,7 +151,7 @@ mvn test                 <span class="cm"># y que siga pasando</span></pre>
 
         <h3>La cookie de sesión cambió de nombre</h3>
         <p>
-          <code>LUXSESSION</code> pasa a ser <code>CORVOSESSION</code>. El navegador de cada
+          <code>LUXSESSION</code> pasa a ser <code>CEROSESSION</code>. El navegador de cada
           usuario sigue mandando la vieja, que la aplicación nueva ya no reconoce.
         </p>
         <div class="aviso">
@@ -168,12 +168,12 @@ mvn test                 <span class="cm"># y que siga pasando</span></pre>
           <table>
             <thead><tr><th>Antes</th><th>Después</th></tr></thead>
             <tbody>
-              <tr><td class="mono-clave">lux_requests_total</td><td class="mono-clave">corvo_requests_total</td></tr>
-              <tr><td class="mono-clave">lux_request_errors_total</td><td class="mono-clave">corvo_request_errors_total</td></tr>
-              <tr><td class="mono-clave">lux_request_duration_ms</td><td class="mono-clave">corvo_request_duration_ms</td></tr>
-              <tr><td class="mono-clave">lux_uptime_ms</td><td class="mono-clave">corvo_uptime_ms</td></tr>
-              <tr><td class="mono-clave">/lux/metrics</td><td class="mono-clave">/corvo/metrics</td></tr>
-              <tr><td class="mono-clave">/lux/metrics/prometheus</td><td class="mono-clave">/corvo/metrics/prometheus</td></tr>
+              <tr><td class="mono-clave">lux_requests_total</td><td class="mono-clave">cero_requests_total</td></tr>
+              <tr><td class="mono-clave">lux_request_errors_total</td><td class="mono-clave">cero_request_errors_total</td></tr>
+              <tr><td class="mono-clave">lux_request_duration_ms</td><td class="mono-clave">cero_request_duration_ms</td></tr>
+              <tr><td class="mono-clave">lux_uptime_ms</td><td class="mono-clave">cero_uptime_ms</td></tr>
+              <tr><td class="mono-clave">/lux/metrics</td><td class="mono-clave">/cero/metrics</td></tr>
+              <tr><td class="mono-clave">/lux/metrics/prometheus</td><td class="mono-clave">/cero/metrics/prometheus</td></tr>
             </tbody>
           </table>
         </div>
@@ -203,7 +203,7 @@ mvn test                 <span class="cm"># y que siga pasando</span></pre>
       <section id="sin-capa">
         <div class="titulo-seccion"><span class="indice-num">05</span><h2>Sin capa de compatibilidad</h2></div>
         <p>
-          Era la opción evidente: que Corvo entendiera los dos nombres durante una temporada. Se
+          Era la opción evidente: que Cero entendiera los dos nombres durante una temporada. Se
           descartó a propósito.
         </p>
         <p>
@@ -228,20 +228,20 @@ mvn test                 <span class="cm"># y que siga pasando</span></pre>
         <p>Si ya habías renombrado las tablas y quieres volver atrás del todo:</p>
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Volver atrás</span><span class="etiqueta">SQL</span></div>
-<pre>ALTER TABLE corvo_migraciones RENAME TO lux_migraciones;
-ALTER TABLE corvo_sesiones RENAME TO lux_sesiones;</pre>
+<pre>ALTER TABLE cero_migraciones RENAME TO lux_migraciones;
+ALTER TABLE cero_sesiones RENAME TO lux_sesiones;</pre>
         </div>
       </section>
 
       <section id="repaso">
         <div class="titulo-seccion"><span class="indice-num">07</span><h2>Repaso</h2></div>
         <ul class="prosa">
-          <li><code>./corvo install</code> — Corvo 0.4.0 en <code>~/.m2</code></li>
+          <li><code>./cero install</code> — Cero 0.5.0 en <code>~/.m2</code></li>
           <li>El árbol de git de la aplicación, limpio</li>
-          <li><code>ALTER TABLE lux_migraciones RENAME TO corvo_migraciones;</code></li>
-          <li><code>ALTER TABLE lux_sesiones RENAME TO corvo_sesiones;</code> (si aplica)</li>
-          <li><code>./corvo migrar ../mi-app --probar</code></li>
-          <li><code>./corvo migrar ../mi-app</code></li>
+          <li><code>ALTER TABLE lux_migraciones RENAME TO cero_migraciones;</code></li>
+          <li><code>ALTER TABLE lux_sesiones RENAME TO cero_sesiones;</code> (si aplica)</li>
+          <li><code>./cero migrar ../mi-app --probar</code></li>
+          <li><code>./cero migrar ../mi-app</code></li>
           <li><code>git diff</code> y <code>mvn test</code></li>
           <li>Configuración del servidor: <code>systemd</code>, <code>docker-compose</code>, los <code>.properties</code> de producción</li>
           <li>Prometheus y los paneles de Grafana</li>

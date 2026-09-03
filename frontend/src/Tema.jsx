@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const CLAVE = 'corvo.tema'
+const CLAVE = 'cero.tema'
 
 /**
  * Conmutador de tema.

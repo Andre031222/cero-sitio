@@ -3,9 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/marca/favicon.svg" />
+    <!-- PNG y no SVG: el isotipo del kit es raster, y a 32 px llena la casilla. Dos tamaños
+         porque el navegador elige, y uno de 256 para cuando alguien lo ancla al escritorio. -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/marca/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/marca/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="256x256" href="/marca/logo-primary-256.png" />
 
-    <title>Corvo — framework web para Java</title>
+    <title>Cero — framework web para Java</title>
     <meta name="description" content="Framework web para Java 21. Un servidor HTTP propio, un hilo virtual por conexión y cero dependencias. java -jar y está corriendo." />
 
     <!-- El color que pinta la barra del navegador en el móvil. Dos valores: con uno solo, el
@@ -17,11 +21,11 @@
          o Twitter no ejecutan JavaScript: leen el HTML que llega y se van. Una etiqueta puesta
          al montar el componente no la ve nadie. -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Corvo" />
-    <meta property="og:title" content="Corvo — sin contenedor." />
+    <meta property="og:site_name" content="Cero" />
+    <meta property="og:title" content="Cero — sin contenedor." />
     <meta property="og:description" content="Framework web para Java 21. Un servidor HTTP propio, un hilo virtual por conexión y cero dependencias." />
-    <meta property="og:url" content="https://corvo.ginit.dev/" />
-    <meta property="og:image" content="https://corvo.ginit.dev/marca/enlace.jpg" />
+    <meta property="og:url" content="https://cero.ginit.dev/" />
+    <meta property="og:image" content="https://cero.ginit.dev/marca/enlace.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="es_ES" />

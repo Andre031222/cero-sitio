@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// El build va directo a los recursos del backend: de ahí lo sirve Corvo, y sale un solo jar
+// El build va directo a los recursos del backend: de ahí lo sirve Cero, y sale un solo jar
 // con las dos cosas dentro. Sin nginx delante para juntarlas ni dos despliegues que se
 // puedan desincronizar.
 
@@ -11,7 +11,7 @@ import react from '@vitejs/plugin-react'
 // descargas dice «no se pudo leer el catálogo» como si fuera culpa suya.
 //
 // En producción sigue siendo el 8080; esto es solo para el `npm run dev`.
-const API = process.env.CORVO_API ?? 'http://127.0.0.1:8181'
+const API = process.env.CERO_API ?? 'http://127.0.0.1:8181'
 
 export default defineConfig({
   plugins: [react()],

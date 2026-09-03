@@ -14,19 +14,19 @@ import { useEffect, useRef, useState } from 'react'
  */
 
 const GUION = [
-  { orden: 'curl -fsSL https://corvo.ginit.dev/instalar | sh', salida: [
-      'descargando corvo-0.4.0.tar.gz … 452 KB',
+  { orden: 'curl -fsSL https://cero.ginit.dev/instalar | sh', salida: [
+      'descargando cero-0.5.0.tar.gz … 452 KB',
       'comprobando huella sha256 … correcta',
-      'compilando … 1 314 pruebas en verde',
-      'orden corvo lista en ~/.local/bin',
+      'compilando … 1 584 pruebas en verde',
+      'orden cero lista en ~/.local/bin',
   ]},
-  { orden: 'corvo new mi-app', salida: [
+  { orden: 'cero new mi-app', salida: [
       'creando mi-app/ …',
       'pom.xml · App.java · TareaController.java · plantillas/',
-      'listo. cd mi-app && corvo run',
+      'listo. cd mi-app && cero run',
   ]},
-  { orden: 'cd mi-app && corvo run', salida: [
-      'corvo · http://0.0.0.0:8080 · 4 rutas · 106 ms',
+  { orden: 'cd mi-app && cero run', salida: [
+      'cero · http://0.0.0.0:8080 · 4 rutas · 106 ms',
   ]},
 ]
 

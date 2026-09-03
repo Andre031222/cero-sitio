@@ -106,7 +106,7 @@ export default function Descargas() {
             <label
               key={m.nombre}
               className={`modulo${marcado ? ' marcado' : ''}${arrastrado(m.nombre) ? ' arrastrado' : ''}`
-                + (['corvo-core', 'corvo-http'].includes(m.nombre) ? ' habitual' : '')}
+                + (['cero-core', 'cero-http'].includes(m.nombre) ? ' habitual' : '')}
             >
               <input type="checkbox" checked={marcado} onChange={() => alternar(m.nombre)} />
               <div>
@@ -153,11 +153,11 @@ export default function Descargas() {
               </span>
             </a>
             {/* Un jar de biblioteca descargado suelto invita a probar `java -jar`, que falla
-                con «no main manifest attribute». No es un fallo del jar: corvo-core no es un
+                con «no main manifest attribute». No es un fallo del jar: cero-core no es un
                 programa. Decirlo aquí, junto al botón, y no enterrado en el LEEME del zip. */}
             <p className="que-son">
               <b>{t.queSon[0]}</b>{t.queSon[1]}<code>java -jar</code>{t.queSon[2]}
-              <code>pom.xml</code>{t.queSon[3]}<code>corvo-launcher</code>{t.queSon[4]}
+              <code>pom.xml</code>{t.queSon[3]}<code>cero-launcher</code>{t.queSon[4]}
             </p>
 
             <ul className="sueltos">

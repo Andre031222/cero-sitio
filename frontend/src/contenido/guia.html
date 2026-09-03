@@ -22,6 +22,7 @@
         <li><a href="#idiomas"><span class="n">14</span> Varios idiomas</a></li>
         <li><a href="#live"><span class="n">15</span> Zonas que se repintan solas</a></li>
         <li><a href="#salud"><span class="n">16</span> Salud</a></li>
+        <li><a href="#entradas"><span class="n">17</span> Entradas de fuera</a></li>
       </ol>
     </nav>
     <main>
@@ -60,7 +61,7 @@
           <div class="barra"><span class="etiqueta">Lambdas</span><span class="etiqueta">Java</span></div>
 <pre>.routes(r -&gt; r
     .get(<span class="st">"/salud"</span>, ctx -&gt; <span class="st">"ok"</span>)
-    .get(<span class="st">"/version"</span>, ctx -&gt; Map.of(<span class="st">"version"</span>, <span class="st">"0.4.0"</span>))
+    .get(<span class="st">"/version"</span>, ctx -&gt; Map.of(<span class="st">"version"</span>, <span class="st">"0.5.0"</span>))
     .post(<span class="st">"/eco"</span>, ctx -&gt; ctx.bodyText()))</pre>
         </div>
       </section>
@@ -94,7 +95,7 @@
             <thead><tr><th>Tipo</th><th>Qué recibe</th></tr></thead>
             <tbody>
               <tr><td class="mono-clave">Context</td><td>Todo el contexto de la petición</td></tr>
-              <tr><td class="mono-clave">Request / Response</td><td>Los objetos crudos de corvo-http</td></tr>
+              <tr><td class="mono-clave">Request / Response</td><td>Los objetos crudos de cero-http</td></tr>
               <tr><td class="mono-clave">Session</td><td>La sesión, creándola si no existe</td></tr>
               <tr><td class="mono-clave">Principal</td><td>Quien haya autenticado el <code>Authenticator</code></td></tr>
               <tr><td class="mono-clave">Part</td><td>Un archivo del multipart, por nombre del parámetro</td></tr>
@@ -172,7 +173,7 @@ Result.download(datos, <span class="st">"informe.pdf"</span>, <span class="st">"
 }
 
 <span class="cm">// o a mano, útil para sustituir en pruebas</span>
-Corvo.app().service(Reloj.class, () -&gt; Instant.now())</pre>
+Cero.app().service(Reloj.class, () -&gt; Instant.now())</pre>
         </div>
 
         <ul class="prosa">
@@ -278,7 +279,7 @@ Map&lt;String,String&gt; p = Validation.problems(tarea);</pre>
         <div class="titulo-seccion"><span class="indice-num">07</span><h2>Clase base opcional</h2></div>
 
         <p class="medida">
-          Un controlador de Corvo no hereda de nada: es una clase normal con anotaciones, y el
+          Un controlador de Cero no hereda de nada: es una clase normal con anotaciones, y el
           <code>Context</code> llega por parámetro cuando hace falta. Si un controlador lo usa en
           casi todos sus métodos, puedes heredar de <code>Controller</code> y ahorrártelo.
         </p>
@@ -322,7 +323,7 @@ Map&lt;String,String&gt; p = Validation.problems(tarea);</pre>
           <div class="etiqueta">Por qué no guarda la petición en un campo</div>
           <p>
             Del controlador hay <b>una sola instancia</b>, compartida por todas las peticiones, y
-            Corvo atiende cada conexión en su propio hilo virtual. Un campo con la petición
+            Cero atiende cada conexión en su propio hilo virtual. Un campo con la petición
             dentro sería una carrera: dos peticiones a la vez se lo pisarían y una acabaría
             respondiendo con los datos de la otra. Por eso las ayudas leen de un portador por hilo.
             Hay una prueba que lanza 200 peticiones simultáneas y comprueba que cada respuesta
@@ -391,19 +392,32 @@ sesion.invalidate();                     <span class="cm">// al salir</span></pr
 
 <span class="an">@Get</span>(<span class="st">"/auth/google"</span>)
 <span class="kw">public</span> Result entrar(Context ctx) {
-    <span class="kw">var</span> salida = google.comenzar();
-    ctx.session().set(<span class="st">"oauth.estado"</span>, salida.estado());
-    <span class="kw">return</span> Result.redirectExternal(salida.url());
+    <span class="kw">return</span> Result.redirectExternal(google.autorizar(ctx).url());
 }
 
 <span class="an">@Get</span>(<span class="st">"/auth/google/vuelta"</span>)
 <span class="kw">public</span> Result vuelta(Context ctx) {
-    <span class="kw">var</span> identidad = google.completar(ctx.query(<span class="st">"code"</span>), ctx.query(<span class="st">"state"</span>),
-                                     ctx.session().get(<span class="st">"oauth.estado"</span>, String.class));
+    <span class="kw">var</span> identidad = google.intercambiar(ctx);
     ctx.session().regenerateId();
     ctx.session().set(<span class="st">"usuario"</span>, identidad.correo());
     <span class="kw">return</span> Result.redirect(<span class="st">"/panel"</span>);
 }</pre>
+        </div>
+
+        <div class="aviso">
+          <div class="etiqueta">El estado no es decoración</div>
+          <p>
+            <code>autorizar(ctx)</code> guarda en la sesión el verificador de PKCE y un estado al
+            azar; <code>intercambiar(ctx)</code> los recupera, compara el estado con el que trae
+            el proveedor <b>en tiempo constante</b> y lo borra antes de canjear el código.
+          </p>
+          <p>
+            Sin esa comprobación existe un ataque concreto: alguien inicia el flujo con
+            <b>su</b> cuenta, se queda con el código y hace que la víctima visite la URL de
+            vuelta. La víctima acaba dentro de la sesión del atacante y todo lo que guarde ahí
+            —una dirección, un documento, una tarjeta— queda en una cuenta ajena. Por eso el paso
+            está dentro del framework y no en el ejemplo que cada uno copia.
+          </p>
         </div>
 
         <p class="medida">
@@ -414,7 +428,7 @@ sesion.invalidate();                     <span class="cm">// al salir</span></pr
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Sesiones compartidas</span><span class="etiqueta">Java</span></div>
 <pre>ServerOptions.builder()
-    .sessionStore(JdbcSessions.of(<span class="st">"lux_sesiones"</span>).createTable())
+    .sessionStore(JdbcSessions.of(<span class="st">"cero_sesiones"</span>).createTable())
     .sessionMaxLifetime(Duration.ofHours(<span class="st">12</span>))   <span class="cm">// tope de vida, no solo inactividad</span>
     .build();</pre>
         </div>
@@ -470,11 +484,11 @@ eventos.publish(<span class="kw">new</span> NoticiaPublicada(id));
           <div class="barra"><span class="etiqueta">Observabilidad</span><span class="etiqueta">Java</span></div>
 <pre>Metrics metricas = Metrics.enabled().ignore(<span class="st">"/estaticos"</span>);
 
-Corvo.app()
+Cero.app()
    .service(metricas)
    .use(metricas)
    .use(AccessLog.combined())
-   .routes(r -&gt; r.get(<span class="st">"/corvo/metrics"</span>, metricas.endpoint()))
+   .routes(r -&gt; r.get(<span class="st">"/cero/metrics"</span>, metricas.endpoint()))
    .start();</pre>
         </div>
 
@@ -494,7 +508,7 @@ Corvo.app()
         <div class="titulo-seccion"><span class="indice-num">11</span><h2>Detrás de un proxy</h2></div>
 
         <p class="medida">
-          Corvo habla <b>HTTP/1.1</b>. Para HTTP/2, HTTP/3 y certificados automáticos se le pone
+          Cero habla <b>HTTP/1.1</b>. Para HTTP/2, HTTP/3 y certificados automáticos se le pone
           delante nginx o Caddy, que además absorbe las conexiones lentas. Es la forma
           recomendada de desplegarlo.
         </p>
@@ -538,7 +552,7 @@ StaticFiles.fromClasspath(<span class="st">"estaticos"</span>)
         <div class="titulo-seccion"><span class="indice-num">12</span><h2>Con React, Svelte o Vue</h2></div>
 
         <p class="medida">
-          Corvo no te obliga a usar su motor de plantillas. Puede servir <b>JSON y nada más</b> y
+          Cero no te obliga a usar su motor de plantillas. Puede servir <b>JSON y nada más</b> y
           dejar que el frontend lo pinte, que es lo normal hoy. Las dos formas conviven en la misma
           aplicación: unas rutas devuelven vistas y otras JSON.
         </p>
@@ -547,13 +561,13 @@ StaticFiles.fromClasspath(<span class="st">"estaticos"</span>)
 
         <p class="medida">
           El frontend en su servidor —<code>5173</code> para Vite, <code>3000</code> para Next— y
-          Corvo en el suyo. Como son orígenes distintos, hay que abrir CORS para ese puerto y
+          Cero en el suyo. Como son orígenes distintos, hay que abrir CORS para ese puerto y
           solo para ese:
         </p>
 
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Desarrollo</span><span class="etiqueta">Java</span></div>
-<pre>Corvo.app()
+<pre>Cero.app()
    .use(Cors.allowing(<span class="st">"http://localhost:5173"</span>))
    .controllers(ApiController.class)
    .start();</pre>
@@ -568,7 +582,7 @@ StaticFiles.fromClasspath(<span class="st">"estaticos"</span>)
 
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Un jar con todo</span><span class="etiqueta">Java</span></div>
-<pre>Corvo.app()
+<pre>Cero.app()
    .controllers(ApiController.class)          <span class="cm">// /api/... devuelve JSON</span>
    .fallback(StaticFiles.fromClasspath(<span class="st">"front"</span>).spa()
                         .cacheControl(<span class="st">"public, max-age=31536000, immutable"</span>))
@@ -603,7 +617,7 @@ StaticFiles.fromClasspath(<span class="st">"estaticos"</span>)
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Estructura</span><span class="etiqueta">Texto</span></div>
 <pre>mi-proyecto/
-├── backend/            <span class="cm"># Corvo — Maven, Java 21</span>
+├── backend/            <span class="cm"># Cero — Maven, Java 21</span>
 │   ├── pom.xml
 │   └── src/main/
 │       ├── java/...
@@ -658,7 +672,7 @@ eventos.onmessage = e =&gt; pintar(JSON.parse(e.data));</pre>
           <div class="etiqueta">Por qué el bucle no es un problema</div>
           <p>
             Ese <code>while</code> deja el hilo dentro mientras el panel esté abierto. Con hilos
-            del sistema sería inviable —cien paneles, cien hilos bloqueados—, pero Corvo atiende
+            del sistema sería inviable —cien paneles, cien hilos bloqueados—, pero Cero atiende
             cada conexión en su <b>propio hilo virtual</b>: cien paneles son cien hilos virtuales,
             que cuestan unos cientos de bytes cada uno. Es la razón por la que aquí se puede
             escribir código que bloquea sin pagar por ello.
@@ -685,10 +699,33 @@ eventos.onmessage = e =&gt; pintar(JSON.parse(e.data));</pre>
 }))</pre>
         </div>
 
+        <div class="aviso">
+          <div class="etiqueta">Solo el mismo origen, y no es opcional</div>
+          <p>
+            Un WebSocket <b>lleva las cookies del sitio</b> y la política del mismo origen del
+            navegador no lo protege: sin comprobar nada, cualquier web que visite un usuario
+            puede abrir un canal contra tu aplicación <i>con la sesión de ese usuario</i> y leer
+            lo que salga por él. Es CSRF, pero con respuesta.
+          </p>
+          <p>
+            Cero compara <code>Origin</code> con <code>Host</code> en el apretón de manos y
+            responde <b>403</b> si no coinciden. Un cliente que no es un navegador no manda
+            <code>Origin</code> y pasa: esa cabecera la pone el navegador y el JavaScript de la
+            página no puede cambiarla, así que su ausencia significa que no hay ninguna página de
+            por medio.
+          </p>
+          <p>
+            Si el frontend vive en otro dominio, o si un proxy inverso reescribe <code>Host</code>
+            con la dirección interna, declara los orígenes:
+            <code>WebSockets.accept(peticion, respuesta, manejador, Set.of("https://app.pe"))</code>.
+            El 403 nombra los dos valores que comparó, para que eso no se depure a ciegas.
+          </p>
+        </div>
+
         <div class="aviso nota">
           <div class="etiqueta">Sobre «programación reactiva»</div>
           <p>
-            Corvo <b>no</b> tiene <i>Flux</i>, <i>Mono</i> ni nada parecido, y es una decisión.
+            Cero <b>no</b> tiene <i>Flux</i>, <i>Mono</i> ni nada parecido, y es una decisión.
             Ese estilo existe para no bloquear hilos del sistema, que son caros. Con los hilos
             virtuales de Java 21 dejan de serlo: puedes escribir código normal, de arriba abajo,
             que bloquea — y el rendimiento es el mismo sin el coste de encadenar operadores ni de
@@ -713,7 +750,7 @@ mensajes.qu.properties</pre>
 
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Arranque</span><span class="etiqueta">Java</span></div>
-<pre>Corvo.app()
+<pre>Cero.app()
      .messages(Messages.from(<span class="st">"mensajes"</span>, <span class="st">"en"</span>, <span class="st">"qu"</span>).base(<span class="st">"es"</span>))
      .start();</pre>
         </div>
@@ -786,14 +823,14 @@ mensajes.qu.properties</pre>
 <pre>&lt;div data-live=<span class="st">"carrito"</span>&gt;
   {{ include <span class="st">"carrito.html"</span> }}
 &lt;/div&gt;
-&lt;script src=<span class="st">"/corvo/live.js"</span>&gt;&lt;/script&gt;</pre>
+&lt;script src=<span class="st">"/cero/live.js"</span>&gt;&lt;/script&gt;</pre>
         </div>
 
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Desde cualquier punto del servidor</span><span class="etiqueta">Java</span></div>
 <pre>Live live = Live.enabled();
 
-Corvo.app()
+Cero.app()
      .views(plantillas)
      .live(live)          <span class="cm">// necesita views() antes</span>
      .start();
@@ -812,7 +849,7 @@ live.push(<span class="st">"carrito"</span>, <span class="st">"carrito.html"</sp
 
         <p>
           El cliente son cuarenta líneas que sirve el propio framework en
-          <code>/corvo/live.js</code>. Sin paso de compilación, sin <code>node_modules</code>,
+          <code>/cero/live.js</code>. Sin paso de compilación, sin <code>node_modules</code>,
           sin nada que instalar.
         </p>
 
@@ -822,6 +859,40 @@ live.push(<span class="st">"carrito"</span>, <span class="st">"carrito.html"</sp
           <li><b>El canal solo empuja.</b> Lo único que el navegador manda son los nombres de las zonas que tiene en la página. No acepta órdenes.</li>
           <li><code>live.pushHtml(zona, html)</code> manda HTML ya hecho, si lo construyes por tu cuenta.</li>
         </ul>
+
+        <h3>Quién puede escuchar una zona</h3>
+
+        <p class="medida">
+          El nombre de la zona lo manda el navegador, porque el servidor no sabe qué hay pintado
+          en esa página. Mientras la zona lleve lo mismo para todos —un marcador, una cotización,
+          el estado de una cola— eso es justo lo que quieres. <b>En cuanto lleve datos de una
+          sola persona, hace falta decir quién puede oírla</b>: un nombre como
+          <code>pedidos-42</code> se adivina.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Zonas privadas</span><span class="etiqueta">Java</span></div>
+<pre>Live live = Live.enabled().autorizar((peticion, zona) -&gt; {
+    <span class="kw">if</span> (!zona.startsWith(<span class="st">"pedidos-"</span>)) {
+        <span class="kw">return true</span>;                      <span class="cm">// zonas públicas, para todo el mundo</span>
+    }
+    <span class="kw">var</span> sesion = peticion.session(<span class="kw">false</span>);
+    <span class="kw">return</span> sesion != <span class="kw">null</span>
+        &amp;&amp; zona.equals(<span class="st">"pedidos-"</span> + sesion.get(<span class="st">"usuario"</span>));
+});</pre>
+        </div>
+
+        <p class="medida">
+          El guardia se consulta una vez por zona y por conexión. Una zona rechazada no se da de
+          alta y <b>el socket sigue abierto</b> con las demás: perder una zona no tiene por qué
+          romper la página entera.
+        </p>
+
+        <ul class="prosa">
+          <li><b>Solo el mismo origen.</b> El apretón de manos compara <code>Origin</code> con <code>Host</code>. Sin eso, otra web abriría este canal con la cookie de sesión de quien la visite. Si el frontend vive en otro dominio, o un proxy reescribe <code>Host</code>, decláralo con <code>live.origenes("https://panel.ginit.dev")</code>.</li>
+          <li><b>Topes por conexión.</b> Hasta 32 zonas y 64 caracteres por nombre. Una página real tiene tres o cuatro; el tope está para que nadie llene la memoria del servidor inventando nombres.</li>
+          <li><b>El mapa vuelve a cero.</b> Cuando se va el último oyente, la zona desaparece del servidor en vez de quedarse como un conjunto vacío para siempre.</li>
+        </ul>
       </section>
 
       <section id="salud">
@@ -829,7 +900,7 @@ live.push(<span class="st">"carrito"</span>, <span class="st">"carrito.html"</sp
 
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Arranque</span><span class="etiqueta">Java</span></div>
-<pre>Corvo.app()
+<pre>Cero.app()
      .health(Health.checks()
          .ready(<span class="st">"bd"</span>, () -&gt; db.ping())
          .ready(<span class="st">"correo"</span>, () -&gt; mail.reachable()))
@@ -840,8 +911,8 @@ live.push(<span class="st">"carrito"</span>, <span class="st">"carrito.html"</sp
           <table>
             <thead><tr><th>Ruta</th><th>Dice</th></tr></thead>
             <tbody>
-              <tr><td class="mono-clave">/corvo/vivo</td><td>El proceso responde. Nada más</td></tr>
-              <tr><td class="mono-clave">/corvo/listo</td><td>Además puede atender: todas las comprobaciones pasan. <b>503</b> si alguna falla</td></tr>
+              <tr><td class="mono-clave">/cero/vivo</td><td>El proceso responde. Nada más</td></tr>
+              <tr><td class="mono-clave">/cero/listo</td><td>Además puede atender: todas las comprobaciones pasan. <b>503</b> si alguna falla</td></tr>
             </tbody>
           </table>
         </div>
@@ -855,16 +926,119 @@ live.push(<span class="st">"carrito"</span>, <span class="st">"carrito.html"</sp
             <b>nunca</b> reinicia, un proceso colgado se queda colgado.
           </p>
           <p>
-            Por eso <code>/corvo/vivo</code> no admite comprobaciones: si aceptara una, dejaría
+            Por eso <code>/cero/vivo</code> no admite comprobaciones: si aceptara una, dejaría
             de medir lo que dice medir.
           </p>
         </div>
 
         <p>
-          <code>/corvo/listo</code> responde <b>503</b>, no un 200 con un cuerpo que dice «mal»:
+          <code>/cero/listo</code> responde <b>503</b>, no un 200 con un cuerpo que dice «mal»:
           los supervisores miran el código, no el cuerpo. Una comprobación que lanza cuenta como
           fallo y su mensaje va dentro — tragarse la excepción dejaría un «no listo» sin
           explicación justo cuando hace falta.
+        </p>
+
+        <h3>Si la ruta se sirve a internet</h3>
+
+        <p class="medida">
+          Ese detalle es exactamente lo que quieres en una red interna y exactamente lo que no
+          quieres a la vista de cualquiera: el mensaje de un fallo de conexión lleva dentro el
+          host y el puerto de tu base de datos. Con <code>publico()</code> queda el código y el
+          estado, nada más.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Expuesto</span><span class="etiqueta">Java</span></div>
+<pre>Cero.app()
+     .health(Health.checks().publico()
+         .ready(<span class="st">"bd"</span>, () -&gt; db.ping()))
+     .start();
+
+<span class="cm">// 503 con {"estado":"no listo"} — sin nombres ni mensajes</span></pre>
+        </div>
+
+        <p class="medida">
+          Lo mejor sigue siendo no publicarla: si el supervisor vive en la misma máquina, un
+          <code>deny</code> en el proxy para <code>/cero/listo</code> te deja el detalle entero
+          y no se lo da a nadie más.
+        </p>
+      </section>
+
+      <section id="entradas">
+        <div class="titulo-seccion"><span class="indice-num">17</span><h2>Entradas de fuera</h2></div>
+
+        <p class="medida">
+          Casi nunca hace falta nada: <b>las plantillas escapan por defecto</b>. Un
+          <code>{{ comentario }}</code> con <code>&lt;script&gt;</code> dentro sale como texto
+          visible, no como guion. Para no escapar hay que pedirlo a propósito, con
+          <code>{{ &amp; contenido }}</code>, y ahí empieza tu responsabilidad.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Plantilla</span><span class="etiqueta">Plantilla</span></div>
+<pre>{{ comentario }}      <span class="cm">// escapado, es lo normal</span>
+{{ &amp; comentario }}    <span class="cm">// crudo: solo si ya lo limpiaste</span></pre>
+        </div>
+
+        <h3>Cuando el usuario tiene que poder escribir en negrita</h3>
+
+        <p class="medida">
+          Un comentario, una descripción, un texto de un editor enriquecido: quieres conservar
+          <code>&lt;b&gt;</code> y <code>&lt;a&gt;</code> y quitar todo lo demás. Eso es
+          <code>Sanitize</code>.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Controlador</span><span class="etiqueta">Java</span></div>
+<pre>String limpio = Sanitize.html(ctx.form(<span class="st">"comentario"</span>));
+String resumen = Sanitize.text(limpio);            <span class="cm">// sin ninguna etiqueta</span>
+String archivo = Sanitize.filename(parte.filename());</pre>
+        </div>
+
+        <div class="aviso">
+          <div class="etiqueta">Nada de la entrada llega a la salida tal cual</div>
+          <p>
+            Es lo que separa esto de un filtro. La versión anterior <b>quitaba</b> lo peligroso
+            con expresiones regulares y dejaba pasar el resto; eso es una lista negra, y una
+            lista negra de HTML siempre tiene un agujero más. El que la tumbó fue
+            <code>&lt;svg/onload=alert(1)&gt;</code>: el patrón que borraba los manejadores
+            exigía un espacio antes de <code>on…</code>, y una barra no lo es, así que la
+            etiqueta salía intacta.
+          </p>
+          <p>
+            Ahora se lee la entrada, se reconoce lo que hay y <b>se vuelve a escribir</b> la
+            salida desde cero. Un atributo que no está en la lista no se examina para ver si es
+            peligroso: no se emite. Por eso <code>onload</code> sobra tanto si va tras un espacio
+            como tras una barra, tras un salto de línea o entre comillas.
+          </p>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Entra</th><th>Sale</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-clave">&lt;p&gt;hola&lt;/p&gt;</td><td class="mono-clave">&lt;p&gt;hola&lt;/p&gt;</td></tr>
+              <tr><td class="mono-clave">&lt;svg/onload=alert(1)&gt;</td><td>nada</td></tr>
+              <tr><td class="mono-clave">&lt;script&gt;alert(1)&lt;/script&gt;</td><td>nada, contenido incluido</td></tr>
+              <tr><td class="mono-clave">&lt;desconocida&gt;texto&lt;/desconocida&gt;</td><td class="mono-clave">texto</td></tr>
+              <tr><td class="mono-clave">&lt;a href="jav&amp;#97;script:x"&gt;t&lt;/a&gt;</td><td class="mono-clave">&lt;a&gt;t&lt;/a&gt;</td></tr>
+              <tr><td class="mono-clave">&lt;p&gt;sin cerrar</td><td class="mono-clave">&lt;p&gt;sin cerrar&lt;/p&gt;</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ul class="prosa">
+          <li><b>Las direcciones se juzgan como las leerá el navegador.</b> Primero se deshacen las entidades y se quitan los caracteres de control: <code>jav&amp;#97;script:</code> y <code>java&amp;#9;script:</code> son <code>javascript:</code> en cuanto el navegador los lee, y los dos se caen. Pasan <code>http</code>, <code>https</code>, <code>mailto</code>, <code>tel</code> y cualquier ruta relativa.</li>
+          <li><b>Los enlaces salen con <code>rel="nofollow noopener noreferrer"</code>.</b> Un enlace que viene de fuera no presta la reputación del sitio ni entrega el <code>window.opener</code> de nadie.</li>
+          <li><b>La salida siempre cierra.</b> Lo que quede abierto se cierra al final y un cierre huérfano se descarta: una entrada rota no puede comerse el resto de la página.</li>
+          <li><code>Sanitize.text(…)</code> no deja ninguna etiqueta. Es lo que quieres para un resumen, un asunto de correo o un índice de búsqueda.</li>
+          <li><code>Sanitize.filename(…)</code> se queda con la última parte de la ruta: <code>../../etc/passwd</code> es <code>passwd</code>.</li>
+        </ul>
+
+        <p class="medida">
+          Y para el resto de la entrada —longitudes, formatos, rangos— está
+          <a href="#validacion">la validación</a>, que es donde debe estar: lo que no cumple no
+          llega al controlador.
         </p>
       </section>
     </main>

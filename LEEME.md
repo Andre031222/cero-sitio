@@ -1,21 +1,21 @@
-# El sitio de Corvo
+# El sitio de Cero
 
-`corvo.ginit.dev` — la web oficial del framework, **servida por el propio framework**.
+`cero.ginit.dev` — la web oficial del framework, **servida por el propio framework**.
 
-Backend en Corvo (Java 21), frontend en React con Vite, y los dos dentro del mismo jar. No hay
+Backend en Cero (Java 21), frontend en React con Vite, y los dos dentro del mismo jar. No hay
 nginx delante para juntarlos ni dos despliegues que puedan desincronizarse.
 
-Que el sitio corra sobre Corvo no es una pose: es la primera aplicación que sufre cualquier
+Que el sitio corra sobre Cero no es una pose: es la primera aplicación que sufre cualquier
 regresión del framework, antes que las de nadie más.
 
 ## Estructura
 
 ```
-51.Soft_Corvo-Web/
-├── backend/                     # Corvo — la API y quien sirve el front
-│   ├── pom.xml                  # depende de dev.ginit.corvo:corvo-core
+51.Soft_Cero-Web/
+├── backend/                     # Cero — la API y quien sirve el front
+│   ├── pom.xml                  # depende de dev.ginit.cero:cero-core
 │   └── src/main/
-│       ├── java/dev/ginit/corvoweb/
+│       ├── java/dev/ginit/ceroweb/
 │       │   ├── App.java             # arranque: CORS en desarrollo, spa() para el front
 │       │   └── ModulosController.java   # /api/modulos y /api/seleccion
 │       └── resources/front/     # ← aquí escribe Vite. Generado, no se edita
@@ -45,7 +45,7 @@ Dos procesos: el backend en el **8181** y Vite en el 5173, que hace de proxy de 
 cd backend
 mvn -q dependency:build-classpath -Dmdep.outputFile=target/cp.txt
 mvn -q -DskipTests package
-java -cp "target/classes:$(cat target/cp.txt)" dev.ginit.corvoweb.App 8181
+java -cp "target/classes:$(cat target/cp.txt)" dev.ginit.ceroweb.App 8181
 
 # terminal 2 — el front, con recarga en caliente
 cd frontend
@@ -58,7 +58,7 @@ un contenedor de Docker atado a `127.0.0.1`— y el modo en que falla es de los 
 recibe un **200 con HTML de otra aplicación**, `r.json()` revienta y la página de descargas dice
 «no se pudo leer el catálogo» como si el fallo fuera suyo. En producción sigue siendo el 8080.
 
-Para apuntar a otro sitio: `CORVO_API=http://127.0.0.1:9000 npm run dev`.
+Para apuntar a otro sitio: `CERO_API=http://127.0.0.1:9000 npm run dev`.
 
 El backend abre CORS **solo** para `localhost:5173` y `127.0.0.1:5173`.
 
@@ -66,23 +66,23 @@ El backend abre CORS **solo** para `localhost:5173` y `127.0.0.1:5173`.
 
 ```bash
 ./construir            # front → framework → backend → un jar
-java -jar corvo-sitio.jar 8080
+java -jar cero-sitio.jar 8080
 ```
 
 1,3 MB con todo dentro: el frontend compilado, la API, el framework y los seis jar que la página
 ofrece descargar. Desplegar es copiar un archivo.
 
-Lo empaqueta `corvo-launcher`, la herramienta del propio framework — un plugin de terceros aquí
+Lo empaqueta `cero-launcher`, la herramienta del propio framework — un plugin de terceros aquí
 desmentiría el argumento del proyecto.
 
 El orden dentro del guion importa y no es reversible: **primero el front, después el backend**.
 Vite escribe dentro de los recursos del backend, así que al revés se empaqueta la compilación
 anterior del front y nadie avisa.
 
-Si el framework no está en `../45.Soft_LuxCore`:
+Si el framework no está en `../45.Framework_Cero`:
 
 ```bash
-CORVO_FRAMEWORK=/ruta/al/framework ./construir
+CERO_FRAMEWORK=/ruta/al/framework ./construir
 ```
 
 ## Elegir módulos
@@ -91,14 +91,14 @@ La página de descargas resuelve en el servidor, no en el navegador.
 
 Quien llega ahí no pregunta «qué módulos hay» sino «qué necesito y cuánto pesa». Así que
 `/api/seleccion` recibe lo que marcaste, **añade lo que arrastra cada módulo**, suma el peso real
-y devuelve el `pom.xml` ya sin lo redundante: si entra `corvo-core`, declarar `corvo-http` sobra
+y devuelve el `pom.xml` ya sin lo redundante: si entra `cero-core`, declarar `cero-http` sobra
 porque Maven lo trae solo.
 
 ```bash
 curl -s -X POST localhost:8080/api/seleccion \
      -H 'Content-Type: application/json' \
-     -d '{"modulos":["corvo-view"]}'
-# resueltos: corvo-http + corvo-core + corvo-view · 273 KB · 110 clases
+     -d '{"modulos":["cero-view"]}'
+# resueltos: cero-http + cero-core + cero-view · 273 KB · 110 clases
 ```
 
 Un módulo mal escrito devuelve **422 diciendo cuál**, en vez de desaparecer del resultado en
@@ -113,10 +113,10 @@ No solo el `pom.xml`: la página descarga los artefactos.
 
 | Ruta | Qué da |
 |---|---|
-| `GET /api/jar?modulo=corvo-core` | Un jar suelto |
-| `GET /api/zip?modulos=corvo-view,corvo-data` | Un zip con la selección **ya resuelta** y un `LEEME.txt` |
+| `GET /api/jar?modulo=cero-core` | Un jar suelto |
+| `GET /api/zip?modulos=cero-view,cero-data` | Un zip con la selección **ya resuelta** y un `LEEME.txt` |
 
-Pedir `corvo-view` trae dentro `corvo-core` y `corvo-http`, que es lo que necesita. El `LEEME.txt`
+Pedir `cero-view` trae dentro `cero-core` y `cero-http`, que es lo que necesita. El `LEEME.txt`
 lleva las órdenes `mvn install:install-file` y el trozo de `pom.xml`: quien abra el zip dentro de
 un mes no se acuerda de qué eligió, y lo que hay son seis jar sin contexto.
 
@@ -131,7 +131,7 @@ El nombre del módulo se valida contra el catálogo **antes** de construir una r
 Esto obligó a tapar un agujero del framework: `Result` no sabía devolver binario, y el atajo
 obvio —mandarlo como `String`— lo rompe en silencio, porque el cuerpo se escribe en UTF-8 y todo
 byte sobre `0x7F` sale convertido en otra cosa. De ahí salen `Result.bytes` y `Result.download`,
-en Corvo 0.4.0.
+en Cero 0.5.0.
 
 ## El contenido
 
@@ -225,5 +225,5 @@ pero **el halo se queda**: es lo que le quita la sensación de folio en blanco.
 
 ## Pendiente
 
-- El dominio `corvo.ginit.dev` con su vhost, su certificado y el 301 desde `luxcore.ginit.dev`.
+- El dominio `cero.ginit.dev` con su vhost, su certificado y el 301 desde `luxcore.ginit.dev`.
   **Ojo:** hoy ese subdominio existe por un comodín DNS y sirve AgroYachay con su certificado.

@@ -1,6 +1,6 @@
   <header class="cabecera-pagina">
     <h1 class="titulo-pagina">About</h1>
-    <p class="entradilla">Who makes Corvo, why it exists, the licence it ships under and how to cite it.</p>
+    <p class="entradilla">Who makes Cero, why it exists, the licence it ships under and how to cite it.</p>
   </header>
 
   <div class="cuerpo">
@@ -18,7 +18,7 @@
         <div class="titulo-seccion"><span class="indice-num">01</span><h2>Who makes it</h2></div>
 
         <p>
-          Corvo is the work of two authors at the <b>Universidad Nacional del Altiplano</b>, in Puno,
+          Cero is the work of two authors at the <b>Universidad Nacional del Altiplano</b>, in Puno,
           Peru.
         </p>
 
@@ -58,7 +58,7 @@
         <div class="ave-relato" aria-hidden="true"></div>
 
         <p>
-          Corvo comes out of a concrete student annoyance: <b>to stand up a web application in Java
+          Cero comes out of a concrete student annoyance: <b>to stand up a web application in Java
           you had to set up a Tomcat</b>. Package a WAR, deploy it into a container, wrestle with
           <code>web.xml</code>, and wait for the server to boot every time you changed a line. For
           a class assignment, for a quick test, for anything small, all of that is overhead.
@@ -66,7 +66,7 @@
 
         <p>
           The question was simple: <i>what if the server came inside?</i> So one was written.
-          <b>4,410 lines of HTTP/1.1 server</b> on top of the Java standard library: request
+          <b>4,481 lines of HTTP/1.1 server</b> on top of the Java standard library: request
           parsing, headers, chunked bodies, reloadable TLS, multipart, gzip, static files with
           ranges, WebSocket and SSE. One virtual thread per connection, which is what lets a model
           this direct hold up.
@@ -81,25 +81,38 @@
           <table>
             <thead><tr><th></th><th class="cifra">Classes</th><th class="cifra">Lines</th></tr></thead>
             <tbody>
-              <tr><td>Its own HTTP server</td><td class="cifra">39</td><td class="cifra">4,410</td></tr>
-              <tr><td>Core: routing, injection, validation, security</td><td class="cifra">70</td><td class="cifra">6,709</td></tr>
+              <tr><td>Its own HTTP server</td><td class="cifra">39</td><td class="cifra">4,481</td></tr>
+              <tr><td>Core: routing, injection, validation, security</td><td class="cifra">70</td><td class="cifra">7,297</td></tr>
               <tr><td>Templates, data, adapter and packager</td><td class="cifra">30</td><td class="cifra">3,509</td></tr>
-              <tr class="total"><td>The whole framework</td><td class="cifra">139</td><td class="cifra">14,628</td></tr>
+              <tr class="total"><td>The whole framework</td><td class="cifra">139</td><td class="cifra">15,287</td></tr>
             </tbody>
           </table>
         </div>
 
         <h3>And the name</h3>
         <p>
-          Until 0.4.0 the framework was called <b>LuxCore</b>. The name clashed with a PHP framework
-          in the same environment and the two were constantly confused. <b>Corvo</b> means raven
-          —the mark the project already carried— and keeps the «cor» of LuxCore, which in Latin is
-          heart, the same root as <i>core</i>.
+          This framework has been called three things, and the first two were chosen by
+          elimination. <b>LuxCore</b> clashed with a PHP framework in the same environment and the
+          two were constantly confused. <b>Corvo</b> —raven— fixed the confusion and kept the
+          «cor» of LuxCore, which in Latin is heart, the same root as <i>core</i>: a correct name,
+          but one that said nothing about the framework.
         </p>
         <p>
-          Coming from LuxCore, the guide is at <a href="/en/migrar">Migrating</a>. And there is no
-          rush: Maven artifacts are immutable, so the applications you do not migrate keep working
-          exactly as they did.
+          <b>Cero</b> does say something. It is Spanish for zero: zero runtime dependencies, zero
+          configuration to boot, zero servlet container, zero frontend build step if you do not
+          want one. It is not a metaphor that needs explaining — it is the list of things this
+          framework does not make you have. The name and the first line of the README now say the
+          same thing.
+        </p>
+        <p>
+          It is written <b>Cero</b>, capitalised, even mid-sentence: it is an ordinary Spanish word
+          and lowercase it vanishes into the text. Artifacts and commands stay lowercase, as
+          always: <code>cero-core</code>, <code>cero new</code>.
+        </p>
+        <p>
+          Coming from LuxCore or from Corvo, the guide is at <a href="/en/migrar">Migrating</a> and
+          the same script accepts both. And there is no rush: Maven artifacts are immutable, so the
+          applications you do not migrate keep working exactly as they did.
         </p>
       </section>
 
@@ -107,14 +120,14 @@
         <div class="titulo-seccion"><span class="indice-num">03</span><h2>What state it is in</h2></div>
 
         <p>
-          Corvo is at <b>0.4.0</b>, and it is worth saying plainly what that means.
+          Cero is at <b>0.5.0</b>, and it is worth saying plainly what that means.
         </p>
 
         <div class="envoltura">
           <table>
             <thead><tr><th></th><th>State</th></tr></thead>
             <tbody>
-              <tr><td>Test suite</td><td><b>1,314</b> green, on macOS and on Linux, against real PostgreSQL and MySQL</td></tr>
+              <tr><td>Test suite</td><td><b>1,584</b> green, on macOS and on Linux, against real PostgreSQL and MySQL</td></tr>
               <tr><td>Continuous integration</td><td>JDK 21 and 25, on every change</td></tr>
               <tr><td>Runtime dependencies</td><td><b>Zero</b></td></tr>
               <tr><td>Applications in production</td><td>Six, all ours</td></tr>
@@ -143,7 +156,7 @@
         <div class="titulo-seccion"><span class="indice-num">04</span><h2>Licence and citation</h2></div>
 
         <p>
-          Corvo ships under the <b>MIT licence</b>. You can use it, modify it and redistribute it,
+          Cero ships under the <b>MIT licence</b>. You can use it, modify it and redistribute it,
           including in commercial projects, keeping the copyright notice.
         </p>
 
@@ -151,11 +164,11 @@
 
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Citation</span><span class="etiqueta">BibTeX</span></div>
-<pre>@software{vilcasolorzano2026corvo,
-  title  = {Corvo: núcleo de framework web poliglota sin dependencias},
+<pre>@software{vilcasolorzano2026cero,
+  title  = {Cero: núcleo de framework web poliglota sin dependencias},
   author = {Vilca-Solorzano, Richar Andre and Laura-Murillo, Ramiro Pedro},
   year   = {2026},
-  url    = {https://github.com/Andre031222/Corvo}
+  url    = {https://github.com/Andre031222/Cero}
 }</pre>
         </div>
       </section>

@@ -1,47 +1,43 @@
-# Corvo — kit de marca (opción A)
+# Cero — kit de marca
 
-Sistema geométrico de planos plegados para usar en toda la web.
-Todos los SVG y PNG van con fondo transparente.
+**Principal:** negro + cian eléctrico  
+**Variante clara:** ice (gris + azul + ámbar)
 
 ## Tipografía
-- Display / wordmark: **Space Grotesk Bold**
-- UI / body: **Inter**
-- Letter-spacing wordmark: -0.04em
-- "Co" en #2563EB · "rvo" en #0B1220 (claro) o #F8FAFC (oscuro)
+- Display: Space Grotesk Bold · tracking −0.04em
+- UI: Inter
+- Wordmark principal: `Ce` #22D3EE · `ro` #0A0A0B
+- Wordmark ice: `Ce` #2563EB · `ro` #1E293B
 
-## Paleta
-| Token        | Hex     | Uso                         |
-|--------------|---------|-----------------------------|
-| navy         | #1E3A8A | plano izquierdo             |
-| cobalt       | #1D4ED8 | pliegue principal           |
-| blue         | #2563EB | acentos, botones, "Co"      |
-| sky          | #38BDF8 | shard superior              |
-| cyan         | #22D3EE | shard inferior              |
-| purple       | #7C3AED | pliegue violeta             |
-| amber        | #F59E0B | tetraedro (pico)            |
-| ink          | #0B1220 | texto                       |
+## Paleta principal
+| Token   | Hex     | Uso              |
+|---------|---------|------------------|
+| ink     | #0A0A0B | pliegues / texto |
+| cyan    | #22D3EE | acento / Ce      |
+| cyan-hi | #67E8F9 | highlights       |
+| slate   | #1F2937 | pliegues medios  |
+| paper   | #FAFAFA | fondos claros    |
 
-## Archivos
-- `svg/logo-mark.svg` — isotipo con Cv
-- `svg/logo-mark-notext.svg` — solo geometría
-- `svg/logo-icon.svg` — app icon / favicon grande
-- `svg/wordmark.svg` + `wordmark-lockup.svg` + `wordmark-stacked.svg`
-- `svg/shape-*.svg` — formas sueltas para hero, footer, docs, 404
-- `png/` — mismos assets raster + logo A original recortado
+## Paleta ice (docs / light)
+| Token | Hex     |
+|-------|---------|
+| ice   | #94A3B8 |
+| blue  | #2563EB |
+| amber | #F59E0B |
+| slate | #1E293B |
 
-## Cómo usar las formas en la web
-```html
-<img class="deco deco--amber" src="/brand/shape-tetra-amber.svg" alt="">
-<img class="deco deco--purple" src="/brand/shape-pentagon-purple.svg" alt="">
-<img class="deco deco--blue" src="/brand/shape-diamond-blue.svg" alt="">
-```
+## Archivos clave
+- `png/logo-primary.png` — isotipo negro+cian transparente
+- `png/logo-light.png` — isotipo ice transparente
+- `png/logo-primary-{32,64,128,256,512}.png`
+- `png/wordmark*.png` + `svg/wordmark*.svg`
+- `png/shape-*.png` + `svg/shape-*.svg` — decoraciones
+- `catalogo.html` — hoja de sistema
 
+## Uso de formas
 ```css
 .deco { position: absolute; pointer-events: none; user-select: none; }
-.deco--amber  { width: 88px;  top: 40px;   right: 12%; rotate: 18deg;  opacity: .95; }
-.deco--purple { width: 72px;  top: 46%;    right: 4%;  rotate: -8deg; }
-.deco--blue   { width: 64px;  bottom: 12%; right: 18%; rotate: 28deg; }
-.deco--cyan   { width: 96px;  bottom: -20px; left: 8%; rotate: -16deg; opacity: .8; }
+.deco-cyan   { width: 72px; top: 36px; right: 10%; rotate: 14deg; }
+.deco-char   { width: 64px; bottom: 18%; right: 6%; rotate: -10deg; }
+.deco-amber  { width: 56px; bottom: 8%; left: 12%; rotate: 22deg; }
 ```
-
-Colócalas como JxMVC: 3–4 formas por sección, nunca un enjambre.

@@ -13,7 +13,7 @@ import { useEffect } from 'react'
  */
 export default function Contenido({ html, titulo }) {
   useEffect(() => {
-    document.title = `${titulo} · Corvo`
+    document.title = `${titulo} · Cero`
     window.scrollTo(0, 0)
   }, [titulo])
 

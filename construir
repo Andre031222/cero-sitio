@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
-# Deja el sitio entero en un jar: `java -jar corvo-sitio.jar 8080` y ya está.
+# Deja el sitio entero en un jar: `java -jar cero-sitio.jar 8080` y ya está.
 #
 # Dentro van el frontend compilado, la API, el framework y los jar que la página ofrece
 # descargar. Desplegar es copiar un archivo; no hace falta nginx delante para juntar nada ni
 # un classpath que mantener a mano en el servidor.
 #
-# Lo empaqueta corvo-launcher, la herramienta del propio framework. Un plugin de terceros aquí
+# Lo empaqueta cero-launcher, la herramienta del propio framework. Un plugin de terceros aquí
 # desmentiría el argumento del proyecto.
 set -euo pipefail
 
 AQUI="$(cd "$(dirname "$0")" && pwd)"
-FRAMEWORK="${CORVO_FRAMEWORK:-$AQUI/../45.Soft_LuxCore}"
-SALIDA="$AQUI/corvo-sitio.jar"
+FRAMEWORK="${CERO_FRAMEWORK:-$AQUI/../45.Framework_Cero}"
+SALIDA="$AQUI/cero-sitio.jar"
 
 azul() { printf '\033[34m%s\033[0m\n' "$*"; }
 malo() { printf '\033[31m%s\033[0m\n' "$*" >&2; }
 
 [ -d "$FRAMEWORK/java" ] || {
   malo "no encuentro el framework en $FRAMEWORK"
-  malo "dime dónde está:  CORVO_FRAMEWORK=/ruta/al/framework ./construir"
+  malo "dime dónde está:  CERO_FRAMEWORK=/ruta/al/framework ./construir"
   exit 1
 }
 
@@ -40,8 +40,8 @@ azul "3/4 · el backend"
   && mvn -q dependency:build-classpath -Dmdep.outputFile=target/classpath.txt)
 
 azul "4/4 · un solo jar"
-java -cp "$FRAMEWORK/java/corvo-launcher/target/classes" corvo.launcher.Packager \
-     --main dev.ginit.corvoweb.App --out "$SALIDA" \
+java -cp "$FRAMEWORK/java/cero-launcher/target/classes" cero.launcher.Packager \
+     --main dev.ginit.ceroweb.App --out "$SALIDA" \
      "$AQUI/backend/target/classes" \
      $(tr ':' '\n' < "$AQUI/backend/target/classpath.txt")
 
