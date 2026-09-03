@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 96" width="280" height="96" fill="none">
-
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 96" fill="none">
   <text x="0" y="72" font-family="Space Grotesk, Inter, Montserrat, sans-serif" font-size="72" font-weight="700" letter-spacing="-2.4">
-    <tspan fill="#2563EB">Co</tspan><tspan fill="#0B1220">rvo</tspan>
+    <tspan fill="#22D3EE">Ce</tspan><tspan fill="#0A0A0B">ro</tspan>
   </text>
-
 </svg>

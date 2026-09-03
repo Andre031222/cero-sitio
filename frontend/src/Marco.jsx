@@ -15,7 +15,7 @@ export default function Marco({ children }) {
   // buscador ofrezca la versión correcta y que un lector de pantalla pronuncie bien.
   useEffect(() => {
     document.documentElement.lang = t.lang
-    const base = 'https://corvo.ginit.dev'
+    const base = 'https://cero.ginit.dev'
     const rutaEs = idioma === 'es' ? pathname : pareja
     const rutaEn = idioma === 'en' ? pathname : pareja
     const puestos = [['es', rutaEs], ['en', rutaEn], ['x-default', rutaEs]]
@@ -34,9 +34,10 @@ export default function Marco({ children }) {
         <div className="marco">
           <Link to={raiz || '/'} className="marca">
             <span className="simbolo" aria-hidden="true" />
-            {/* «Co» en azul y «rvo» en tinta, como manda el kit. Va en dos spans y no con
-                ::first-letter porque eso solo alcanza a una letra. */}
-            <span className="palabra"><i>Co</i>rvo</span>
+            {/* «Ce» en azul y «ro» en tinta, como manda el kit. Va en dos spans y no con
+                ::first-letter porque eso solo alcanza a una letra. Ojo: partido así, la palabra
+                no existe como cadena y ningún grep la encuentra al renombrar. */}
+            <span className="palabra"><i>Ce</i>ro</span>
           </Link>
           <nav>
             {t.menu.map(([sufijo, texto]) => {

@@ -10,9 +10,9 @@ node_modules/
 backend/src/main/resources/front/
 
 # El jar de despliegue: lo arma `./construir` y pesa 1,3 MB. Es un artefacto, no fuente.
-corvo-sitio.jar
+cero-sitio.jar
 
-# El paquete que baja el instalador: lo arma `./corvo paquete` en el repo del framework.
+# El paquete que baja el instalador: lo arma `./cero paquete` en el repo del framework.
 # Medio mega de fuente comprimida no se versiona; se regenera.
-backend/src/main/resources/instalador/corvo-*.tar.gz
-backend/src/main/resources/instalador/corvo-*.tar.gz.sha256
+backend/src/main/resources/instalador/cero-*.tar.gz
+backend/src/main/resources/instalador/cero-*.tar.gz.sha256

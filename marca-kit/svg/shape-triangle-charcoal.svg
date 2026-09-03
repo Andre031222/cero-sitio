@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+
+  <defs>
+    <linearGradient id="gCyan" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#67E8F9"/><stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="gChar" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#374151"/><stop offset="100%" stop-color="#0A0A0B"/>
+    </linearGradient>
+    <linearGradient id="gIce" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E2E8F0"/><stop offset="100%" stop-color="#64748B"/>
+    </linearGradient>
+    <linearGradient id="gBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#60A5FA"/><stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="gAmber" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FCD34D"/><stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+
+
+  <g transform="translate(18,10)">
+    <polygon points="82,6 158,168 82,138" fill="#4B5563"/>
+    <polygon points="82,6 8,168 82,138" fill="url(#gChar)"/>
+    <polygon points="8,168 158,168 82,138" fill="#111827"/>
+  </g>
+</svg>

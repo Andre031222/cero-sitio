@@ -12,8 +12,8 @@ export default function Portada() {
 
   useEffect(() => {
     document.title = idioma === 'en'
-      ? 'Corvo — web framework for Java'
-      : 'Corvo — framework web para Java'
+      ? 'Cero — web framework for Java'
+      : 'Cero — framework web para Java'
   }, [idioma])
 
   return (
@@ -27,7 +27,7 @@ export default function Portada() {
         <p className="antetitulo">
           <span className="nuevo">{t.nuevo}</span>
           {t.ante}
-          <span className="desde">v0.4.0</span>
+          <span className="desde">v0.5.0</span>
         </p>
 
         <h1 className="titular">{t.titular[0]}<br /><span>{t.titular[1]}</span></h1>
@@ -42,10 +42,10 @@ export default function Portada() {
         </div>
       </div>
 
-      <Orden>curl -fsSL https://corvo.ginit.dev/instalar | sh</Orden>
+      <Orden>curl -fsSL https://cero.ginit.dev/instalar | sh</Orden>
       <p className="tras-orden">
-        {t.windows[0]}<code>irm https://corvo.ginit.dev/instalar.ps1 | iex</code>
-        {t.windows[1]}<code>corvo new mi-app</code>.
+        {t.windows[0]}<code>irm https://cero.ginit.dev/instalar.ps1 | iex</code>
+        {t.windows[1]}<code>cero new mi-app</code>.
       </p>
 
       <Terminal />

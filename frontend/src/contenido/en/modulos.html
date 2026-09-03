@@ -1,6 +1,6 @@
   <header class="cabecera-pagina">
     <h1 class="titulo-pagina">Modules</h1>
-    <p class="entradilla">Six pieces you take separately. If all you need is to answer HTTP, corvo-http is enough and it is 94 KB.</p>
+    <p class="entradilla">Six pieces you take separately. If all you need is to answer HTTP, cero-http is enough and it is 94 KB.</p>
   </header>
 
   <div class="cuerpo">
@@ -20,7 +20,7 @@
 
         <p>
           Each module is taken separately. If all you need is to answer HTTP,
-          <code>corvo-http</code> is enough and it is 94 KB.
+          <code>cero-http</code> is enough and it is 94 KB.
         </p>
 
         <div class="envoltura">
@@ -30,31 +30,31 @@
             </thead>
             <tbody>
               <tr>
-                <td><span class="mono">corvo-http</span><span class="detalle">HTTP/1.1 server, reloadable TLS, pluggable sessions, multipart, gzip, static files with ranges, WebSocket</span></td>
-                <td>—</td><td class="cifra">39</td><td class="cifra">4410</td><td class="cifra">272</td><td class="cifra">94 KB</td>
+                <td><span class="mono">cero-http</span><span class="detalle">HTTP/1.1 server, reloadable TLS, pluggable sessions, multipart, gzip, static files with ranges, WebSocket</span></td>
+                <td>—</td><td class="cifra">39</td><td class="cifra">4481</td><td class="cifra">315</td><td class="cifra">95 KB</td>
               </tr>
               <tr>
-                <td><span class="mono">corvo-core</span><span class="detalle">Routing, injection, JSON, validation, security, metrics, cache, events, tasks, OpenAPI, languages, health and self-repainting regions</span></td>
-                <td class="mono nowrap">corvo-http</td><td class="cifra">70</td><td class="cifra">6709</td><td class="cifra">548</td><td class="cifra">163 KB</td>
+                <td><span class="mono">cero-core</span><span class="detalle">Routing, injection, JSON, validation, security, metrics, cache, events, tasks, OpenAPI, languages, health and self-repainting regions</span></td>
+                <td class="mono nowrap">cero-http</td><td class="cifra">70</td><td class="cifra">7297</td><td class="cifra">772</td><td class="cifra">186 KB</td>
               </tr>
               <tr>
-                <td><span class="mono">corvo-view</span><span class="detalle">Templates with inheritance, loops and escaping by default</span></td>
-                <td class="mono nowrap">corvo-core</td><td class="cifra">9</td><td class="cifra">1001</td><td class="cifra">93</td><td class="cifra">38 KB</td>
+                <td><span class="mono">cero-view</span><span class="detalle">Templates with inheritance, loops and escaping by default</span></td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">9</td><td class="cifra">1001</td><td class="cifra">93</td><td class="cifra">39 KB</td>
               </tr>
               <tr>
-                <td><span class="mono">corvo-data</span><span class="detalle">JDBC, pool, transactions, repositories and table-backed sessions</span></td>
-                <td class="mono nowrap">corvo-core</td><td class="cifra">16</td><td class="cifra">1745</td><td class="cifra">224</td><td class="cifra">48 KB</td>
+                <td><span class="mono">cero-data</span><span class="detalle">JDBC, pool, transactions, repositories and table-backed sessions</span></td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">16</td><td class="cifra">1745</td><td class="cifra">224</td><td class="cifra">48 KB</td>
               </tr>
               <tr>
-                <td><span class="mono">corvo-adapter-servlet</span><span class="detalle">Deploy a Corvo application inside Tomcat 10.1+</span></td>
-                <td class="mono nowrap">corvo-core</td><td class="cifra">4</td><td class="cifra">604</td><td class="cifra">35</td><td class="cifra">13 KB</td>
+                <td><span class="mono">cero-adapter-servlet</span><span class="detalle">Deploy a Cero application inside Tomcat 10.1+</span></td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">4</td><td class="cifra">604</td><td class="cifra">35</td><td class="cifra">13 KB</td>
               </tr>
               <tr>
-                <td><span class="mono">corvo-launcher</span><span class="detalle">Packs the application and the framework into one jar you run with java -jar</span></td>
+                <td><span class="mono">cero-launcher</span><span class="detalle">Packs the application and the framework into one jar you run with java -jar</span></td>
                 <td class="mono nowrap">—</td><td class="cifra">1</td><td class="cifra">159</td><td class="cifra">10</td><td class="cifra">9 KB</td>
               </tr>
               <tr class="total">
-                <td>All six</td><td>—</td><td class="cifra">139</td><td class="cifra">14,628</td><td class="cifra">1,182</td><td class="cifra">365 KB</td>
+                <td>All six</td><td>—</td><td class="cifra">139</td><td class="cifra">15,287</td><td class="cifra">1,449</td><td class="cifra">390 KB</td>
               </tr>
             </tbody>
           </table>
@@ -66,11 +66,11 @@
         </p>
       </section>
 <section id="servidor">
-        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Server · corvo-http</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Server · cero-http</h2></div>
 
         <p>
           HTTP/1.1 with one virtual thread per connection. It can be used on its own, without
-          <code>corvo-core</code>, if all you want is to answer requests.
+          <code>cero-core</code>, if all you want is to answer requests.
         </p>
 
         <div class="codigo">
@@ -118,7 +118,7 @@ StaticFiles.fromClasspath(<span class="st">"estaticos"</span>, <span class="st">
         </p>
       </section>
 <section id="vistas">
-        <div class="titulo-seccion"><span class="indice-num">03</span><h2>Views · corvo-view</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">03</span><h2>Views · cero-view</h2></div>
 
         <p>
           Compiled and cached templates, with inheritance. HTML escaping is the default behaviour:
@@ -192,7 +192,7 @@ Templates.from(Path.of(<span class="st">"plantillas"</span>))          <span cla
         </div>
       </section>
 <section id="datos">
-        <div class="titulo-seccion"><span class="indice-num">04</span><h2>Data · corvo-data</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">04</span><h2>Data · cero-data</h2></div>
 
         <p>
           Plain JDBC, no ORM. Everything goes through prepared statements; table and column names
@@ -325,7 +325,7 @@ tareas.count()           tareas.existsById(<span class="st">7L</span>)</pre>
         <p>
           <code>loadConfig()</code> reads <code>application.properties</code> from the classpath
           and the current directory, and on top of that applies environment variables prefixed
-          with <code>CORVO_</code> and system properties prefixed with <code>corvo.</code>
+          with <code>CERO_</code> and system properties prefixed with <code>cero.</code>
         </p>
 
         <div class="codigo">
@@ -335,7 +335,7 @@ server.maxConnections=5000
 server.gzipMinBytes=512
 
 db.url=jdbc:postgresql://localhost/tareas
-db.usuario=corvo
+db.usuario=cero
 db.pool=10</pre>
         </div>
 
@@ -353,7 +353,7 @@ Datos datos = config.bind(Datos.class, <span class="st">"db"</span>);</pre>
 
         <p>
           The <code>server.*</code> keys configure the server without writing code:
-          <code>CORVO_SERVER_PORT=9000</code> in the environment changes the port.
+          <code>CERO_SERVER_PORT=9000</code> in the environment changes the port.
         </p>
       </section>
     </main>
