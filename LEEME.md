@@ -2,7 +2,7 @@
 
 `cero.ginit.dev` — la web oficial del framework, **servida por el propio framework**.
 
-Backend en Cero (Java 21), frontend en React con Vite, y los dos dentro del mismo jar. No hay
+Backend en Cero (Java 25), frontend en React con Vite, y los dos dentro del mismo jar. No hay
 nginx delante para juntarlos ni dos despliegues que puedan desincronizarse.
 
 Que el sitio corra sobre Cero no es una pose: es la primera aplicación que sufre cualquier
