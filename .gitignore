@@ -16,3 +16,11 @@ cero-sitio.jar
 # Medio mega de fuente comprimida no se versiona; se regenera.
 backend/src/main/resources/instalador/cero-*.tar.gz
 backend/src/main/resources/instalador/cero-*.tar.gz.sha256
+
+# Credenciales, por si algún día este sitio necesita entrar con Google como hace
+# cero-web. Va antes de que haga falta: un secreto solo se filtra una vez.
+client_secret*.json
+*.pem
+*.key
+.env
+.env.*
