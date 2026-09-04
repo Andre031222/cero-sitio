@@ -10,7 +10,7 @@
 set -euo pipefail
 
 VERSION="${VERSION:-0.5.0}"
-KB="${KB:-390}"; MS="${MS:-106}"; DEPS="${DEPS:-0}"; PRUEBAS="${PRUEBAS:-1584}"
+KB="${KB:-372}"; MS="${MS:-106}"; DEPS="${DEPS:-0}"; PRUEBAS="${PRUEBAS:-1624}"
 
 AQUI="$(cd "$(dirname "$0")/../.." && pwd)"
 MARCA="$AQUI/frontend/public/marca"
