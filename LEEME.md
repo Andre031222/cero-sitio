@@ -227,3 +227,8 @@ pero **el halo se queda**: es lo que le quita la sensación de folio en blanco.
 
 - El dominio `cero.ginit.dev` con su vhost, su certificado y el 301 desde `luxcore.ginit.dev`.
   **Ojo:** hoy ese subdominio existe por un comodín DNS y sirve AgroYachay con su certificado.
+
+## Licencia
+
+Apache 2.0 — ver [LICENSE](LICENSE) y [NOTICE](NOTICE), igual que
+[el framework](https://github.com/Andre031222/Cero).

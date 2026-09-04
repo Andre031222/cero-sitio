@@ -1,0 +1,12 @@
+Sitio de Cero — cero.ginit.dev
+Copyright (c) 2026 Richar Andre Vilca-Solorzano
+y Ramiro Pedro Laura-Murillo
+
+Distribuido bajo la licencia Apache 2.0. Ver LICENSE.
+
+Este sitio corre sobre Cero, el framework que documenta:
+https://github.com/Andre031222/Cero
+
+El backend no declara más dependencia externa que el propio Cero. El frontend
+usa React y Vite, que se descargan en tiempo de build y no se redistribuyen
+como parte de este repositorio; sus licencias son de sus autores.
