@@ -132,8 +132,13 @@ pre { overflow-x: auto; max-width: 100%; }
   margin: 4.5rem 0 0; padding-bottom: 3rem; }
 .cifra { border-left: 1px solid var(--linea); padding: 0 1.25rem; }
 .cifra:first-child { padding-left: 0; border-left: 0; }
-.cifra b { display: block; font-family: var(--mono); font-size: 2.6rem; font-weight: 800; letter-spacing: -.04em; }
+/* Acotado a `.cifras`: `.cifra` también marca las celdas numéricas de las tablas de
+   referencia y de módulos, y ahí un <b> —que solo señala quién gana esa métrica— salía a
+   2,6 rem, reventaba la fila y empujaba la última columna fuera de la tabla. */
+.cifras .cifra b { display: block; font-family: var(--mono); font-size: 2.6rem; font-weight: 800; letter-spacing: -.04em; }
 .cifra span { font-family: var(--mono); font-size: .8rem; color: var(--apagado); }
+/* En una tabla, el <b> marca quién gana esa métrica: color y peso, no tamaño. */
+td.cifra b, th.cifra b { color: var(--acento); font-weight: 700; }
 .cifra em { display: block; font-style: normal; font-family: var(--mono); font-size: .66rem;
   letter-spacing: .15em; text-transform: uppercase; color: var(--apagado); margin-top: .5rem; }
 
@@ -602,27 +607,11 @@ ul.prosa li { margin-bottom: .45rem; }
 /* Todo lo de aquí abajo se apoya en var(--acento) y var(--acento-2). Cambiar la marca sigue
    siendo cambiar esas dos líneas: ninguna regla trae su propio color escrito a mano. */
 
-/* Un halo detrás del ave. Va en la portada y no en la figura para que el color quede debajo
-   del texto también, y la esquina superior derecha deje de ser un vacío blanco. */
-/* El halo sale de `.marco` y ocupa el ancho de la ventana: si se queda dentro, su borde
-   cae donde acaba el contenido y se ve el canto del degradado. Los radiales mueren en
-   transparente por su cuenta, así que no hace falta recortarlo en ningún lado. */
-.portada::before {
-  content: "";
-  position: absolute;
-  top: -7rem;
-  left: 50%;
-  width: 100vw;
-  margin-left: -50vw;
-  height: 52rem;
-  pointer-events: none;
-  z-index: -2;
-  background:
-    radial-gradient(46% 58% at 74% 26%,
-      color-mix(in srgb, var(--acento) 17%, transparent) 0%, transparent 70%),
-    radial-gradient(40% 50% at 14% 6%,
-      color-mix(in srgb, var(--acento-2) 12%, transparent) 0%, transparent 72%);
-}
+/* Aquí había un halo: dos radiales del ancho de la ventana detrás de la portada. Fuera en
+   los dos temas. Difuminaba el fondo sin separar nada —el titular y el isotipo ya se
+   sostienen solos— y en el tema oscuro el borde del degradado se veía como una mancha.
+   El color de la portada lo ponen ahora el titular en degradado y las formas del kit, que
+   tienen contorno y no dejan canto. */
 
 /* El titular en degradado. Es el elemento más grande de la página; teñirlo de un solo plano
    era desaprovecharlo. background-clip:text necesita color transparente, y el fallback es el
@@ -637,7 +626,7 @@ ul.prosa li { margin-bottom: .45rem; }
 
 /* Las cifras: el número en color y una regla superior teñida. Antes eran tres números negros
    sobre blanco con una raya gris, que es exactamente lo que nadie mira. */
-.cifra b {
+.cifras .cifra b {
   background: linear-gradient(160deg, var(--acento) 0%, var(--acento-2) 100%);
   -webkit-background-clip: text;
           background-clip: text;
@@ -825,8 +814,7 @@ ul.prosa li { margin-bottom: .45rem; }
 
 /* En el teléfono no hay huecos que rellenar, solo texto. */
 @media (max-width: 62rem) {
-  /* Solo las formas. El halo se queda: es lo que le quita al móvil la sensación de folio
-     en blanco, y ahí no estorba a nada. */
+  /* Fuera las formas: en el teléfono no hay huecos que rellenar, solo texto. */
   .portada::after { display: none; }
 }
 
