@@ -99,8 +99,8 @@ if ($falta) {
     Borra
     Write-Host ("  {0}X   falta: {1}{2}" -f $Rojo, ($falta -join ' '), $Fin)
     Escribe ''
-    Escribe "  Cero necesita un ${Fuerte}JDK 21${Fin} o superior y ${Fuerte}Maven${Fin}."
-    Escribe "  ${Tenue}winget install EclipseAdoptium.Temurin.21.JDK${Fin}"
+    Escribe "  Cero necesita un ${Fuerte}JDK 25${Fin} o superior y ${Fuerte}Maven${Fin}."
+    Escribe "  ${Tenue}winget install EclipseAdoptium.Temurin.25.JDK${Fin}"
     Escribe "  ${Tenue}winget install Apache.Maven${Fin}"
     Escribe ''
     Escribe "  ${Tenue}Cierra y abre PowerShell despues de instalarlos, para que entren en el PATH.${Fin}"
@@ -110,7 +110,7 @@ if ($falta) {
 $javaV = 0
 $linea = (& java -version 2>&1 | Select-Object -First 1)
 if ("$linea" -match '"(\d+)') { $javaV = [int]$Matches[1] }
-if ($javaV -lt 21) { Muere "Cero necesita Java 21 o superior - hilos virtuales. Tienes $javaV." }
+if ($javaV -lt 25) { Muere "Cero necesita Java 25 o superior - hilos virtuales. Tienes $javaV." }
 Bien 'entorno' "Java $javaV - Windows $([Environment]::OSVersion.Version.Major) - $env:PROCESSOR_ARCHITECTURE"
 
 # ─── 2 · qué versión ────────────────────────────────────────────────────────────────────

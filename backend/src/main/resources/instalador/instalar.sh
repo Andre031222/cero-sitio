@@ -6,7 +6,7 @@
 # Baja el paquete, comprueba su huella, lo compila, deja los artefactos en ~/.m2 y la orden
 # `cero` en el PATH. No pide contraseña y no escribe fuera de $HOME.
 #
-#   --con-pruebas   corre las 1 584 pruebas durante la instalación (~90 s más)
+#   --con-pruebas   corre las 1 624 pruebas durante la instalación (~90 s más)
 #   --sin-color     salida plana, para registros y CI
 set -eu
 
@@ -111,17 +111,17 @@ for orden in curl tar java mvn; do
 done
 if [ -n "$falta" ]; then
   mal "falta:$falta"
-  p "\n  Cero necesita un ${FUERTE}JDK 21${FIN} o superior y ${FUERTE}Maven${FIN}.\n"
+  p "\n  Cero necesita un ${FUERTE}JDK 25${FIN} o superior y ${FUERTE}Maven${FIN}.\n"
   case "$(uname -s)" in
-    Darwin) p "  ${TENUE}brew install openjdk@21 maven${FIN}\n" ;;
-    Linux)  p "  ${TENUE}sudo apt install openjdk-21-jdk maven${FIN}   ${TENUE}(o el gestor de tu distribución)${FIN}\n" ;;
+    Darwin) p "  ${TENUE}brew install openjdk@25 maven${FIN}\n" ;;
+    Linux)  p "  ${TENUE}sudo apt install openjdk-25-jdk maven${FIN}   ${TENUE}(o el gestor de tu distribución)${FIN}\n" ;;
   esac
   exit 1
 fi
 
 JAVA_V=$(java -version 2>&1 | head -1 | sed -E 's/.*"([0-9]+).*/\1/')
-if [ "${JAVA_V:-0}" -lt 21 ] 2>/dev/null; then
-  muere "Cero necesita Java 21 o superior — hilos virtuales. Tienes $JAVA_V."
+if [ "${JAVA_V:-0}" -lt 25 ] 2>/dev/null; then
+  muere "Cero necesita Java 25 o superior — hilos virtuales. Tienes $JAVA_V."
 fi
 bien "entorno" "Java $JAVA_V · $(mvn -v 2>/dev/null | head -1 | cut -d' ' -f1-3) · $(uname -s) $(uname -m)"
 
