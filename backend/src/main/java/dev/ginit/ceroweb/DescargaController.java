@@ -26,7 +26,7 @@ import java.util.zip.ZipOutputStream;
 @Route("/api")
 public class DescargaController {
 
-    static final String VERSION = "0.5.0";
+    static final String VERSION = Version.ACTUAL;
 
     /**
      * El jar de un módulo.

@@ -27,7 +27,7 @@ export default function Portada() {
         <p className="antetitulo">
           <span className="nuevo">{t.nuevo}</span>
           {t.ante}
-          <span className="desde">v0.5.0</span>
+          <span className="desde">v0.6.0</span>
         </p>
 
         <h1 className="titular">{t.titular[0]}<br /><span>{t.titular[1]}</span></h1>

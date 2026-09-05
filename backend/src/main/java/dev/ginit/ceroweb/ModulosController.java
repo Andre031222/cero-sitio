@@ -143,7 +143,7 @@ public class ModulosController {
             sb.append("<dependency>\n")
               .append("    <groupId>dev.ginit.cero</groupId>\n")
               .append("    <artifactId>").append(nombre).append("</artifactId>\n")
-              .append("    <version>0.5.0</version>\n")
+              .append("    <version>").append(Version.ACTUAL).append("</version>\n")
               .append("</dependency>\n");
         }
         return sb.toString().trim();
