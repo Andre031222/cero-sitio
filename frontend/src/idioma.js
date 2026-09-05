@@ -42,7 +42,7 @@ export const TEXTOS = {
                 '. ', ' y está corriendo — sin Tomcat, sin ', ', sin despliegue.'],
       empezar: 'Empezar', codigo: 'Código',
       windows: ['En Windows, ', '. Requiere Maven y un JDK 25. Después: '],
-      cifras: [['407','KB','Desplegado'],['106','ms','Arranque'],['0','deps','En ejecución'],['1826','','Pruebas']],
+      cifras: [['407','KB','Desplegado'],['106','ms','Arranque'],['0','deps','En ejecución'],['1830','','Pruebas']],
       nota: 'Esta página la sirve el propio Cero: la API en Java y el front en React, dentro del mismo jar. Si el framework falla, falla aquí antes que en las aplicaciones de nadie.',
     },
     descargas: {
@@ -90,7 +90,7 @@ export const TEXTOS = {
                 '. ', ' and it is running — no Tomcat, no ', ', no deployment.'],
       empezar: 'Get started', codigo: 'Source',
       windows: ['On Windows, ', '. Requires Maven and a JDK 25. Then: '],
-      cifras: [['407','KB','Deployed'],['106','ms','Boot'],['0','deps','At runtime'],['1826','','Tests']],
+      cifras: [['407','KB','Deployed'],['106','ms','Boot'],['0','deps','At runtime'],['1830','','Tests']],
       nota: 'This page is served by Cero itself: the API in Java and the front end in React, inside the same jar. If the framework breaks, it breaks here before it breaks anyone else\u2019s application.',
     },
     descargas: {
