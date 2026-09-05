@@ -9,7 +9,7 @@
 #   ./marca-kit/guiones/tarjeta-enlace.sh
 set -euo pipefail
 
-VERSION="${VERSION:-0.5.0}"
+VERSION="${VERSION:-0.6.0}"
 KB="${KB:-407}"; MS="${MS:-106}"; DEPS="${DEPS:-0}"; PRUEBAS="${PRUEBAS:-1835}"
 
 AQUI="$(cd "$(dirname "$0")/../.." && pwd)"

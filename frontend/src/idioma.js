@@ -32,7 +32,7 @@ export const TEXTOS = {
     otro: 'English', otroCodigo: 'EN',
     otroTitulo: 'Read this page in English',
     sede: 'Universidad Nacional del Altiplano · Puno, Perú',
-    licencia: 'Cero 0.5.0 · Licencia Apache 2.0',
+    licencia: 'Cero 0.6.0 · Licencia Apache 2.0',
     servido: 'Servido por Cero, sin contenedor',
     noEncontrada: ['No encontrada', 'Esa página no existe. Prueba desde', 'el inicio'],
     portada: {
@@ -80,7 +80,7 @@ export const TEXTOS = {
     otro: 'Español', otroCodigo: 'ES',
     otroTitulo: 'Leer esta página en español',
     sede: 'Universidad Nacional del Altiplano · Puno, Peru',
-    licencia: 'Cero 0.5.0 · Apache 2.0 licence',
+    licencia: 'Cero 0.6.0 · Apache 2.0 licence',
     servido: 'Served by Cero, with no container',
     noEncontrada: ['Not found', 'That page does not exist. Try from', 'the home page'],
     portada: {
