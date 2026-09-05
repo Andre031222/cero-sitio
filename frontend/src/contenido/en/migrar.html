@@ -1,6 +1,6 @@
   <header class="cabecera-pagina">
     <h1 class="titulo-pagina">Migrating</h1>
-    <p class="entradilla">Taking an application from LuxCore 0.2.x or 0.3.x to Cero 0.5.0. The script does nearly everything; there are three things it cannot do, and all three show up after you deploy.</p>
+    <p class="entradilla">Taking an application from LuxCore 0.2.x or 0.3.x to Cero 0.6.0. The script does nearly everything; there are three things it cannot do, and all three show up after you deploy.</p>
   </header>
 
   <div class="cuerpo">
@@ -45,7 +45,7 @@
       <section id="antes">
         <div class="titulo-seccion"><span class="indice-num">02</span><h2>Before you touch anything</h2></div>
 
-        <h3>1 · Install Cero 0.5.0</h3>
+        <h3>1 · Install Cero 0.6.0</h3>
         <div class="codigo">
           <div class="barra"><span class="etiqueta">In the Cero repository</span><span class="etiqueta">sh</span></div>
 <pre>./cero install          <span class="cm"># builds, tests and installs into ~/.m2</span></pre>
@@ -117,7 +117,7 @@ git status               <span class="cm"># nothing may be left uncommitted</spa
               <tr><td>Servlet</td><td class="mono-clave">LuxServlet</td><td class="mono-clave">CeroServlet</td></tr>
               <tr><td>groupId</td><td class="mono-clave">lux</td><td class="mono-clave">dev.ginit.cero</td></tr>
               <tr><td>Artifacts</td><td class="mono-clave">lux-core, lux-data…</td><td class="mono-clave">cero-core, cero-data…</td></tr>
-              <tr><td>Version</td><td class="mono-clave">0.2.x / 0.3.x</td><td class="mono-clave">0.5.0</td></tr>
+              <tr><td>Version</td><td class="mono-clave">0.2.x / 0.3.x</td><td class="mono-clave">0.6.0</td></tr>
               <tr><td>pom property</td><td class="mono-clave">${lux.version}</td><td class="mono-clave">${cero.version}</td></tr>
               <tr><td>Config keys</td><td class="mono-clave">lux.oauth.google.id</td><td class="mono-clave">cero.oauth.google.id</td></tr>
               <tr><td>Environment variables</td><td class="mono-clave">LUX_SERVER_PORT</td><td class="mono-clave">CERO_SERVER_PORT</td></tr>
@@ -236,7 +236,7 @@ ALTER TABLE cero_sesiones RENAME TO lux_sesiones;</pre>
       <section id="repaso">
         <div class="titulo-seccion"><span class="indice-num">07</span><h2>Checklist</h2></div>
         <ul class="prosa">
-          <li><code>./cero install</code> — Cero 0.5.0 en <code>~/.m2</code></li>
+          <li><code>./cero install</code> — Cero 0.6.0 en <code>~/.m2</code></li>
           <li>The application's git tree, clean</li>
           <li><code>ALTER TABLE lux_migraciones RENAME TO cero_migraciones;</code></li>
           <li><code>ALTER TABLE lux_sesiones RENAME TO cero_sesiones;</code> (if it applies)</li>

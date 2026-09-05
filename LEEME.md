@@ -131,7 +131,7 @@ El nombre del módulo se valida contra el catálogo **antes** de construir una r
 Esto obligó a tapar un agujero del framework: `Result` no sabía devolver binario, y el atajo
 obvio —mandarlo como `String`— lo rompe en silencio, porque el cuerpo se escribe en UTF-8 y todo
 byte sobre `0x7F` sale convertido en otra cosa. De ahí salen `Result.bytes` y `Result.download`,
-en Cero 0.5.0.
+en Cero 0.6.0.
 
 ## El contenido
 
