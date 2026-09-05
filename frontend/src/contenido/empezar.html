@@ -15,10 +15,38 @@
         <div class="titulo-seccion"><span class="indice-num">01</span><h2>Instalación</h2></div>
 
         <p>
-          Cero no está publicado en Maven Central todavía, así que hay un instalador. Baja el
-          paquete, comprueba su huella, lo compila, deja los artefactos en tu repositorio local de
-          Maven y te pone la orden <code>cero</code> a mano. No pide contraseña y no escribe fuera
-          de tu carpeta personal.
+          Cero está en Maven Central desde la 0.6.0. Tres líneas en tu <code>pom.xml</code> y ya
+          está: no hay que clonar el repositorio ni compilar nada. Toma solo lo que uses.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">pom.xml</span><span class="etiqueta">XML</span></div>
+<pre>&lt;dependency&gt;
+    &lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;
+    &lt;artifactId&gt;<span class="st">cero-core</span>&lt;/artifactId&gt;   <span class="cm">&lt;!-- arrastra cero-http --&gt;</span>
+    &lt;version&gt;<span class="st">0.6.0</span>&lt;/version&gt;
+&lt;/dependency&gt;
+
+<span class="cm">&lt;!-- opcionales --&gt;</span>
+&lt;dependency&gt;&lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">cero-view</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">0.6.0</span>&lt;/version&gt;&lt;/dependency&gt;
+&lt;dependency&gt;&lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">cero-data</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">0.6.0</span>&lt;/version&gt;&lt;/dependency&gt;
+
+<span class="cm">&lt;!-- el driver JDBC lo pone tu aplicación --&gt;</span>
+&lt;dependency&gt;&lt;groupId&gt;<span class="st">org.postgresql</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">postgresql</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">42.7.3</span>&lt;/version&gt;&lt;/dependency&gt;</pre>
+        </div>
+
+        <p style="margin-top:1.5rem" id="nota">
+          Requisitos: <code>Maven</code> y un <code>JDK 25</code> o superior. Nada más — Cero no
+          arrastra ninguna dependencia externa, así que eso es todo lo que entra en tu proyecto.
+        </p>
+
+        <h3>El instalador</h3>
+
+        <p>
+          Sigue estando, y ahora sirve para otra cosa: te deja la orden <code>cero</code> a mano,
+          que es la que crea proyectos ya montados. Baja el paquete, comprueba su huella, lo
+          compila y deja los artefactos en tu repositorio local de Maven. No pide contraseña y no
+          escribe fuera de tu carpeta personal.
         </p>
 
         <div class="codigo">
@@ -45,28 +73,6 @@
 <span class="kw">cd</span> Cero
 ./cero install          <span class="cm"># compila, prueba e instala en ~/.m2</span>
 ./cero new mi-app       <span class="cm"># un proyecto nuevo, listo para arrancar</span></pre>
-        </div>
-<p style="margin-top:1.5rem" id="nota">
-          Requisitos: <code>git</code>, <code>Maven</code> y un <code>JDK 25</code> o superior. Nada
-          más — Cero no tiene dependencias externas.
-        </p>
-
-        <p>Después, en tu <code>pom.xml</code>, toma solo lo que uses:</p>
-
-        <div class="codigo">
-          <div class="barra"><span class="etiqueta">pom.xml</span><span class="etiqueta">XML</span></div>
-<pre>&lt;dependency&gt;
-    &lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;
-    &lt;artifactId&gt;<span class="st">cero-core</span>&lt;/artifactId&gt;   <span class="cm">&lt;!-- arrastra cero-http --&gt;</span>
-    &lt;version&gt;<span class="st">0.6.0</span>&lt;/version&gt;
-&lt;/dependency&gt;
-
-<span class="cm">&lt;!-- opcionales --&gt;</span>
-&lt;dependency&gt;&lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">cero-view</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">0.6.0</span>&lt;/version&gt;&lt;/dependency&gt;
-&lt;dependency&gt;&lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">cero-data</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">0.6.0</span>&lt;/version&gt;&lt;/dependency&gt;
-
-<span class="cm">&lt;!-- el driver JDBC lo pone tu aplicación --&gt;</span>
-&lt;dependency&gt;&lt;groupId&gt;<span class="st">org.postgresql</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">postgresql</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">42.7.3</span>&lt;/version&gt;&lt;/dependency&gt;</pre>
         </div>
 
         <div class="aviso nota">
