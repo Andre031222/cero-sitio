@@ -28,8 +28,8 @@ import java.nio.charset.StandardCharsets;
 @Route("/")
 public class InstaladorController {
 
-    static final String VERSION = "0.5.0";
-    private static final String PAQUETE = "cero-" + VERSION + ".tar.gz";
+    static final String VERSION = Version.ACTUAL;
+    private static final String PAQUETE = Version.PAQUETE;
 
     /** La versión que el guion pregunta antes de nada. Sin salto de línea de más. */
     @Get("/version")
@@ -47,12 +47,12 @@ public class InstaladorController {
         return guion("/instalador/instalar.ps1", "text/plain; charset=utf-8");
     }
 
-    @Get("/estaticos/cero-0.5.0.tar.gz")
+    @Get(Version.RUTA_PAQUETE)
     public Object paquete() {
         return Result.download(leerBytes("/instalador/" + PAQUETE), PAQUETE, "application/gzip");
     }
 
-    @Get("/estaticos/cero-0.5.0.tar.gz.sha256")
+    @Get(Version.RUTA_PAQUETE + ".sha256")
     public Object huella() {
         return Result.text(new String(leerBytes("/instalador/" + PAQUETE + ".sha256"),
                 StandardCharsets.UTF_8));

@@ -27,6 +27,21 @@ malo() { printf '\033[31m%s\033[0m\n' "$*" >&2; }
 azul "1/4 · el front"
 (cd "$AQUI/frontend" && npm install --silent && npm run build)
 
+# El paquete que baja el instalador vive en el framework y hay que traerlo. Se hacía a mano, y
+# por eso se quedó atrás en una subida de versión: el sitio anunciaba 0.5.0 y servía un 503
+# porque el archivo no viajaba dentro del jar. Ahora se copia solo, y si no está se para aquí
+# en vez de desplegar un instalador roto.
+azul "1.5/4 · el paquete que baja el instalador"
+PAQUETE=$(ls "$FRAMEWORK"/java/cero-web/src/main/resources/estaticos/cero-*.tar.gz 2>/dev/null | head -1)
+[ -n "$PAQUETE" ] || {
+  malo "no encuentro el paquete en el framework."
+  malo "ármalo primero:  (cd $FRAMEWORK && ./cero dist)"
+  exit 1
+}
+rm -f "$AQUI"/backend/src/main/resources/instalador/cero-*.tar.gz*
+cp "$PAQUETE" "$PAQUETE.sha256" "$AQUI/backend/src/main/resources/instalador/"
+printf '   %s · %s\n' "$(basename "$PAQUETE")" "$(du -h "$PAQUETE" | cut -f1)"
+
 azul "2/4 · el framework, instalado en el repositorio local"
 (cd "$FRAMEWORK/java" && mvn -q -DskipTests install)
 
