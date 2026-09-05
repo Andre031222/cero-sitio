@@ -36,10 +36,10 @@ public class ModulosController {
     private static final Map<String, Modulo> CATALOGO = new LinkedHashMap<>();
 
     static {
-        registrar(new Modulo("cero-http", null, 39, 95,
-                "Servidor HTTP/1.1 con un hilo virtual por conexión. TLS recargable, sesiones "
+        registrar(new Modulo("cero-http", null, 43, 129,
+                "Servidor HTTP/1.1 y HTTP/2 con un hilo virtual por conexión. TLS recargable, sesiones "
                         + "enchufables, multipart, gzip, estáticos con rangos y WebSocket."));
-        registrar(new Modulo("cero-core", "cero-http", 71, 189,
+        registrar(new Modulo("cero-core", "cero-http", 71, 190,
                 "Rutas, inyección, JSON, validación declarativa, seguridad, métricas, caché, "
                         + "eventos, tareas, OpenAPI, idiomas, trazado W3C, salud y zonas que se repintan solas."));
         registrar(new Modulo("cero-view", "cero-core", 9, 38,
@@ -47,7 +47,7 @@ public class ModulosController {
                         + "comportamiento por defecto, no una opción que se olvida."));
         registrar(new Modulo("cero-data", "cero-core", 16, 48,
                 "JDBC directo sin ORM: pool, transacciones, repositorios y sesiones en tabla."));
-        registrar(new Modulo("cero-adapter-servlet", "cero-core", 4, 12,
+        registrar(new Modulo("cero-adapter-servlet", "cero-core", 4, 13,
                 "Desplegar la misma aplicación dentro de Tomcat 10.1+, para migrar sin salto."));
         registrar(new Modulo("cero-launcher", null, 1, 9,
                 "Empaqueta aplicación y framework en un jar ejecutable con java -jar."));
