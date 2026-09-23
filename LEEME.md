@@ -11,7 +11,7 @@ regresión del framework, antes que las de nadie más.
 ## Estructura
 
 ```
-51.Soft_Cero-Web/
+82.Soft_Cero-Web/
 ├── backend/                     # Cero — la API y quien sirve el front
 │   ├── pom.xml                  # depende de dev.ginit.cero:cero-core
 │   └── src/main/
@@ -79,11 +79,30 @@ El orden dentro del guion importa y no es reversible: **primero el front, despu�
 Vite escribe dentro de los recursos del backend, así que al revés se empaqueta la compilación
 anterior del front y nadie avisa.
 
-Si el framework no está en `../45.Framework_Cero`:
+Si el framework no está en `../76.Framework_Cero`:
 
 ```bash
 CERO_FRAMEWORK=/ruta/al/framework ./construir
 ```
+
+## Subir de versión
+
+Son **dos** fuentes, una por lenguaje, y no hay una común:
+
+| Archivo | Qué gobierna |
+|---|---|
+| `backend/src/main/java/dev/ginit/ceroweb/Version.java` | la API: el nombre del paquete y su ruta de descarga |
+| `frontend/src/version.js` | el front entero: pie, antetítulo y la terminal de la portada |
+
+Estaba repartido por cinco archivos del front y al subir de 0.5.0 a 0.6.0 se quedaron atrás.
+Ahora el front lo lee de un sitio; el backend, del suyo.
+
+Aparte quedan los textos de `frontend/src/contenido/*.html` —ejemplos de `pom.xml`, la guía de
+migrar y el estado en Acerca de—, que se tocan a mano porque no todos hablan de la versión
+actual: «en Maven Central desde la 0.6.0» es historia y no se sube.
+
+`./construir` se para si el paquete que trae el framework no es el de `Version.ACTUAL`: es lo
+que antes desplegaba un instalador pidiendo un archivo que no existía.
 
 ## Elegir módulos
 

@@ -6,6 +6,8 @@
  * justo el error que se paga cuando el sitio crece.
  */
 
+import { VERSION } from './version.js'
+
 export const IDIOMAS = ['es', 'en']
 
 /** El idioma que toca según la ruta. */
@@ -27,12 +29,12 @@ export const TEXTOS = {
   es: {
     lang: 'es',
     menu: [['', 'Inicio'], ['/empezar', 'Empezar'], ['/guia', 'Guía'],
-           ['/modulos', 'Módulos'], ['/referencia', 'Referencia'], ['/migrar', 'Migrar'],
+           ['/modulos', 'Módulos'], ['/referencia', 'Referencia'],
            ['/descargas', 'Descargas'], ['/acerca', 'Acerca de']],
     otro: 'English', otroCodigo: 'EN',
     otroTitulo: 'Read this page in English',
     sede: 'Universidad Nacional del Altiplano · Puno, Perú',
-    licencia: 'Cero 0.6.0 · Licencia Apache 2.0',
+    licencia: `Cero ${VERSION} · Licencia Apache 2.0`,
     servido: 'Servido por Cero, sin contenedor',
     noEncontrada: ['No encontrada', 'Esa página no existe. Prueba desde', 'el inicio'],
     portada: {
@@ -75,12 +77,12 @@ export const TEXTOS = {
   en: {
     lang: 'en',
     menu: [['', 'Home'], ['/empezar', 'Get started'], ['/guia', 'Guide'],
-           ['/modulos', 'Modules'], ['/referencia', 'Reference'], ['/migrar', 'Migrating'],
+           ['/modulos', 'Modules'], ['/referencia', 'Reference'],
            ['/descargas', 'Downloads'], ['/acerca', 'About']],
     otro: 'Español', otroCodigo: 'ES',
     otroTitulo: 'Leer esta página en español',
     sede: 'Universidad Nacional del Altiplano · Puno, Peru',
-    licencia: 'Cero 0.6.0 · Apache 2.0 licence',
+    licencia: `Cero ${VERSION} · Apache 2.0 licence`,
     servido: 'Served by Cero, with no container',
     noEncontrada: ['Not found', 'That page does not exist. Try from', 'the home page'],
     portada: {

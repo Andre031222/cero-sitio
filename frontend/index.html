@@ -9,6 +9,12 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/marca/favicon-16.png" />
     <link rel="apple-touch-icon" sizes="256x256" href="/marca/logo-primary-256.png" />
 
+    <!-- Solo JetBrains Mono. Es la que pinta el primer viewport casi entero —barra, antetítulo,
+         titular y botones— y la que más canta si entra tarde. Source Serif es el cuerpo, llega
+         más abajo y tiene `font-display: swap`: precargarla también duplicaría el ancho de banda
+         que compite con el bundle sin adelantar nada que se vea. -->
+    <link rel="preload" href="/fuentes/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+
     <title>Cero — framework web para Java</title>
     <meta name="description" content="Framework web para Java 25. Un servidor HTTP propio, un hilo virtual por conexión y cero dependencias. java -jar y está corriendo." />
 

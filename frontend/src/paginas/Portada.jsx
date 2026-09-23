@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import Orden from '../Orden.jsx'
 import Terminal from '../Terminal.jsx'
 import { idiomaDe, TEXTOS, raizDe } from '../idioma.js'
+import { VERSION } from '../version.js'
 
 export default function Portada() {
   const { pathname } = useLocation()
@@ -27,7 +28,7 @@ export default function Portada() {
         <p className="antetitulo">
           <span className="nuevo">{t.nuevo}</span>
           {t.ante}
-          <span className="desde">v0.6.0</span>
+          <span className="desde">v{VERSION}</span>
         </p>
 
         <h1 className="titular">{t.titular[0]}<br /><span>{t.titular[1]}</span></h1>

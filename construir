@@ -10,7 +10,7 @@
 set -euo pipefail
 
 AQUI="$(cd "$(dirname "$0")" && pwd)"
-FRAMEWORK="${CERO_FRAMEWORK:-$AQUI/../45.Framework_Cero}"
+FRAMEWORK="${CERO_FRAMEWORK:-$AQUI/../76.Framework_Cero}"
 SALIDA="$AQUI/cero-sitio.jar"
 
 azul() { printf '\033[34m%s\033[0m\n' "$*"; }
@@ -36,6 +36,13 @@ PAQUETE=$(ls "$FRAMEWORK"/java/cero-web/src/main/resources/estaticos/cero-*.tar.
 [ -n "$PAQUETE" ] || {
   malo "no encuentro el paquete en el framework."
   malo "ármalo primero:  (cd $FRAMEWORK && ./cero dist)"
+  exit 1
+}
+# La versión la declara Version.java y la ruta de descarga la lleva dentro: un paquete de otra
+# versión se copia igual y el instalador pide un archivo que no está.
+VERSION=$(sed -n 's/.*ACTUAL = "\(.*\)".*/\1/p' "$AQUI/backend/src/main/java/dev/ginit/ceroweb/Version.java")
+[ "$(basename "$PAQUETE")" = "cero-$VERSION.tar.gz" ] || {
+  malo "el sitio anuncia $VERSION y el framework trae $(basename "$PAQUETE")"
   exit 1
 }
 rm -f "$AQUI"/backend/src/main/resources/instalador/cero-*.tar.gz*

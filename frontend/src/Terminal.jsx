@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { VERSION } from './version.js'
 
 /**
  * Una terminal que escribe sola los cuatro pasos de la instalación.
@@ -15,7 +16,7 @@ import { useEffect, useRef, useState } from 'react'
 
 const GUION = [
   { orden: 'curl -fsSL https://cero.ginit.dev/instalar | sh', salida: [
-      'descargando cero-0.6.0.tar.gz … 736 KB',
+      `descargando cero-${VERSION}.tar.gz … 736 KB`,
       'comprobando huella sha256 … correcta',
       'compilando … 1 835 pruebas en verde',
       'orden cero lista en ~/.local/bin',

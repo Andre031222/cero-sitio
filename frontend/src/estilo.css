@@ -111,6 +111,10 @@ pre { overflow-x: auto; max-width: 100%; }
 .barra nav a {
   font-family: var(--mono); font-size: .78rem; letter-spacing: .04em;
   padding: .35rem .7rem; border-radius: 5px; text-decoration: none; color: var(--apagado);
+  transition: color .14s, background .14s;
+  /* El menú se desplaza dentro de sí mismo, así que aquí no hay nada que ganar partiendo
+     una palabra: «Acerca de» salía en dos líneas y estiraba la barra entera. */
+  white-space: nowrap;
 }
 .barra nav a:hover { color: var(--tinta); }
 .barra nav a.activo { color: var(--acento); background: color-mix(in srgb, var(--acento) 9%, transparent); }
@@ -285,6 +289,12 @@ td.cifra b, th.cifra b { color: var(--acento); font-weight: 700; }
 
 @media (max-width: 40rem) {
   .botones .boton { flex: 1 1 auto; }
+  /* En dos columnas, la tercera cifra vuelve a la izquierda y arrastraba el filete y la
+     sangría de las de en medio: una raya suelta a mitad de la rejilla. El aire lo pone el
+     hueco de la rejilla y el filete se queda solo donde separa de verdad. */
+  .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 0; }
+  .cifra { padding: 0 1rem; }
+  .cifras .cifra:nth-child(odd) { padding-left: 0; border-left: 0; }
 }
 
 /* ─── que nada desborde a lo ancho ─── */
@@ -305,7 +315,10 @@ td.cifra b, th.cifra b { color: var(--acento); font-weight: 700; }
 .barra .marco { gap: .75rem; }
 
 @media (max-width: 26rem) {
-  .marco { padding: 0 1rem; }
+  /* A 360 px el 96 % dejaba 7 px de margen ANTES del relleno: el canal lateral salía a 23 px
+     y distinto del de cualquier otra pantalla. Aquí manda el relleno y nada más. */
+  .marco { width: 100%; padding: 0 1rem; }
+  .pie { padding-left: 1rem; padding-right: 1rem; }
   /* La palabra NO se oculta. Se ocultaba porque a este ancho el símbolo bastaba para
      reconocer el sitio; sin símbolo, esconderla deja la barra sin nada que diga dónde estás.
      Se encoge, que es distinto. */
@@ -314,6 +327,18 @@ td.cifra b, th.cifra b { color: var(--acento); font-weight: 700; }
   /* El mínimo del clamp hacía que «contenedor.» midiera 276 px en 272 disponibles. */
   .titular { font-size: clamp(2.3rem, 11vw, 6.5rem); }
 }
+
+/* ─── foco de teclado ─── */
+
+/* Dos capas y no una: el anillo del acento sobre un contorno del papel, para que se vea
+   igual sobre el botón relleno que sobre el fondo. `:focus-visible` y no `:focus`: con
+   `:focus` el anillo salta también al pulsar con el ratón. */
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.boton.principal:focus-visible { outline-color: var(--tinta); }
 
 /* ─── páginas de contenido ─── */
 
@@ -388,9 +413,12 @@ tr.total td { border-top: 2px solid var(--tinta); font-weight: 600; }
 .cm { color: var(--apagado); }
 .an { color: var(--acento); }
 .kw { color: var(--tinta); font-weight: 600; }
-.st { color: #2f8f5b; }
+/* El verde de las cadenas: #2f8f5b se quedaba en 4,04x sobre papel y 3,34x dentro de la
+   pastilla, por debajo de AA para texto normal —y el código lo es, a 13 px. #26734a es el
+   mismo tono más cerrado y da 5,78 / 5,52 / 4,62. En oscuro #56c98a ya daba 9,02x. */
+.st { color: #26734a; }
 :root[data-tema="oscuro"] .st, :root:not([data-tema="claro"]) .st { color: #56c98a; }
-@media (prefers-color-scheme: light) { :root:not([data-tema="oscuro"]) .st { color: #2f8f5b; } }
+@media (prefers-color-scheme: light) { :root:not([data-tema="oscuro"]) .st { color: #26734a; } }
 
 .aviso { border-left: 3px solid var(--acento); background: color-mix(in srgb, var(--acento) 5%, transparent);
   padding: 1rem 1.2rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
@@ -408,7 +436,7 @@ tr.total td { border-top: 2px solid var(--tinta); font-weight: 600; }
 
 .pastilla { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
   padding: .18rem .5rem; border-radius: 3px; white-space: nowrap; }
-.pastilla.ok { background: color-mix(in srgb, #2f8f5b 16%, transparent); color: #2f8f5b; }
+.pastilla.ok { background: color-mix(in srgb, #26734a 16%, transparent); color: #26734a; }
 .pastilla.parcial { background: var(--panel); color: var(--apagado); }
 .pastilla.pend { background: color-mix(in srgb, var(--acento) 14%, transparent); color: var(--acento); }
 
@@ -850,30 +878,27 @@ ul.prosa li { margin-bottom: .45rem; }
 }
 .bajar .que-son b { color: var(--tinta); }
 
-/* ─── el cuervo, en la sección que cuenta la historia ─── */
 
-/* Aquí sí cabe una imagen con dramatismo: es el apartado que explica de dónde sale el
-   proyecto, no una página de referencia. En el resto del sitio manda el sistema geométrico.
 
-   Dos archivos, uno por tema. La forma de este render la definen los BRILLOS y no una
-   silueta, así que no se puede tintar ni usar como máscara: en claro va la versión invertida
-   —los reflejos pasan a trazo oscuro— y en oscuro la original, cuyo fondo negro es
-   exactamente el de la página. */
-.ave-relato {
-  float: right;
-  width: clamp(9rem, 22%, 15rem);
-  aspect-ratio: 1100 / 1128;
-  margin: 0 0 1rem 2rem;
-  background: var(--ave-relato) center/contain no-repeat;
-  shape-outside: circle(50%);
-}
-:root { --ave-relato: url("/marca/ave-claro.webp"); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-tema="claro"]) { --ave-relato: url("/marca/ave-oscuro.webp"); }
-}
-:root[data-tema="oscuro"] { --ave-relato: url("/marca/ave-oscuro.webp"); }
+/* ─── menos movimiento ─── */
 
-/* En el teléfono la prosa manda: el texto no se parte alrededor de una imagen a 390 px. */
-@media (max-width: 48rem) {
-  .ave-relato { float: none; margin: 0 auto 1.5rem; width: 60%; }
+/* Una sola red que lo recoge todo. Las reglas de arriba desactivan a mano lo que había
+   cuando se escribieron —el isotipo, el símbolo de la marca, los botones— y eso deja fuera
+   todo lo que se añada después: hay transiciones en el conmutador de tema, en el de idioma,
+   en las fichas, en los módulos y en los jar sueltos, y ninguna estaba cubierta.
+
+   Duración casi nula en vez de `none` a propósito: con `animation: none` una animación con
+   `fill-mode: both` pierde su estado final y el elemento vuelve al de partida —que para el
+   isotipo es opacidad 0—. Con .01 ms termina en el primer fotograma y se queda en el final,
+   que es la información que importaba.
+
+   La terminal no entra aquí: su tecleo es JavaScript, y lo resuelve `Terminal.jsx`
+   consultando la misma preferencia y pintando el resultado completo de golpe. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

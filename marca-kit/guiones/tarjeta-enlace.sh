@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Dibuja frontend/public/marca/enlace.jpg — la tarjeta que sale al compartir el enlace.
 #
-# Existe como guion y no como archivo suelto por una razón concreta: la anterior se quedó
-# diciendo «CORVO · v0.4.0» con las cifras viejas durante todo un renombrado, y nadie la vio
-# porque esa imagen no se mira nunca desde dentro del sitio, solo desde Slack o WhatsApp.
+# Existe como guion y no como archivo suelto por una razón concreta: se quedó anunciando una
+# versión vieja durante semanas y nadie la vio, porque esa imagen no se mira nunca desde dentro
+# del sitio, solo desde Slack o WhatsApp.
 # Cuando cambien la versión o las cifras, se corre esto y ya.
 #
 #   ./marca-kit/guiones/tarjeta-enlace.sh

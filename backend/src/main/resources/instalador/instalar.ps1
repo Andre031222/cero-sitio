@@ -192,7 +192,7 @@ Escribe ''
 Escribe "  ${Verde}${Fuerte}Cero $version instalado${Fin}"
 Escribe ''
 if ($script:PathTocado) {
-    Escribe "  ${Acento}Abre una terminal nueva${Fin} para que el PATH se entere de la orden ${Fuerte}lux${Fin}."
+    Escribe "  ${Acento}Abre una terminal nueva${Fin} para que el PATH se entere de la orden ${Fuerte}cero${Fin}."
     Escribe ''
 }
 Escribe "  ${Tenue}Crear un proyecto y arrancarlo:${Fin}"

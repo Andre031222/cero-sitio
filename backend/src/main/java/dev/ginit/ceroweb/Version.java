@@ -13,7 +13,7 @@ package dev.ginit.ceroweb;
  */
 final class Version {
 
-    static final String ACTUAL = "0.6.0";
+    static final String ACTUAL = "0.7.0";
 
     /** El paquete que baja el instalador. */
     static final String PAQUETE = "cero-" + ACTUAL + ".tar.gz";
