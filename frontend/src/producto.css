@@ -1,0 +1,226 @@
+/* Páginas de producto: */
+
+/* ── La escena dentro del marco ────────────────────────────────────────── `.marco` tiene relleno lateral… */
+.producto { margin-inline: calc(var(--gutter) * -1); }
+@media (max-width: 26rem) {
+  .producto { margin-inline: -1rem; }
+}
+
+/* `estilo.css` le da a `.pagina section` un padding-top propio que se sumaba al de la escena. */
+.producto .escena { padding-block: var(--e7); scroll-margin-top: 5rem; }
+.producto .escena--apretada { padding-block: var(--e5); }
+.producto .escena:first-child { padding-top: var(--e5); }
+
+/* Fondo a sangre sin desbordar. */
+.producto .escena--panel {
+  box-shadow: 0 0 0 100vmax var(--panel);
+  clip-path: inset(0 -100vmax);
+}
+
+/* Un filete de acento entre escenas de distinto fondo: */
+.producto .escena--panel::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--acento), var(--acento-2) 38%, transparent 88%);
+}
+
+/* ── Cabecera de página ────────────────────────────────────────────────── El titular y su entradilla. */
+.producto .heroe { margin: 0; text-wrap: balance; }
+.producto .sub {
+  margin: var(--e3) 0 0;
+  max-width: 40rem;
+}
+.producto .antetexto {
+  display: block;
+  margin: 0 0 var(--e2);
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  font-weight: 700;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  color: var(--acento);
+}
+
+/* ── Índice de escenas ─────────────────────────────────────────────────── En una página por escenas el… */
+.producto nav.indice {
+  position: static;
+  max-height: none;
+  margin-top: var(--e4);
+  padding-top: var(--e3);
+  border-top: 1px solid var(--linea);
+}
+.producto nav.indice ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e1) var(--e3);
+}
+.producto nav.indice a {
+  padding: 0;
+  border-left: 0;
+  font-size: var(--t-nota);
+}
+.producto nav.indice a .n { color: var(--acento); opacity: 1; }
+
+/* ── Paso numerado ─────────────────────────────────────────────────────── La cifra al lado del título y… */
+.producto .paso {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e2);
+  margin: 0 0 var(--e3);
+}
+.producto .paso .n {
+  flex: none;
+  font-family: var(--mono);
+  font-size: var(--t-titulo);
+  font-weight: 800;
+  letter-spacing: var(--track-titulo);
+  font-variant-numeric: tabular-nums;
+  color: var(--acento);
+}
+.producto .paso h2,
+.producto .paso h3 { margin: 0; text-wrap: balance; }
+
+/* Lo que cuelga de un paso se sangra hasta la altura del título en cuanto hay sitio: */
+@media (min-width: 48rem) {
+  .producto .paso__cuerpo { padding-left: calc(var(--t-titulo) + var(--e2)); }
+}
+
+/* ── Dato grande ───────────────────────────────────────────────────────── Una cifra por pantalla, con su pie. */
+.producto .datos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: var(--e4) var(--e3);
+  margin: var(--e4) 0 0;
+}
+.producto .dato p { margin: 0; max-width: none; }
+.producto .dato .cifra-grande {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--t-escena);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: var(--track-escena);
+  font-variant-numeric: tabular-nums;
+  /* El degradado es el mismo que el de las cifras de la portada: */
+  color: var(--acento);
+  background: linear-gradient(160deg, var(--acento) 0%, var(--acento-2) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.producto .dato .pie {
+  display: block;
+  margin-top: var(--e1);
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  letter-spacing: .06em;
+  color: var(--apagado);
+  text-wrap: balance;
+}
+
+/* ── Cita destacada ────────────────────────────────────────────────────── Va en serif y en peso normal: */
+.producto .cita {
+  margin: var(--e4) 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.28;
+  text-wrap: balance;
+}
+.producto .cita::before {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-bottom: var(--e3);
+  background: linear-gradient(90deg, var(--acento), var(--acento-2));
+}
+.producto .cita p { margin: 0; max-width: none; font-size: inherit; }
+.producto .cita cite {
+  display: block;
+  margin-top: var(--e2);
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  font-style: normal;
+  letter-spacing: .06em;
+  color: var(--apagado);
+}
+
+/* ── Bloques de código dentro de una escena ────────────────────────────── El código es el protagonista de… */
+.producto .codigo {
+  margin: var(--e3) 0 0;
+  border-radius: 8px;
+}
+.producto .escena--panel .codigo { background: var(--panel-2); }
+.producto .codigo pre { padding: var(--e2) var(--e3) var(--e3); }
+.producto .codigo .barra { padding: .55rem var(--e3); }
+
+/* ── Tablas ────────────────────────────────────────────────────────────── Siguen siendo tablas y siguen… */
+.producto .envoltura {
+  margin: var(--e3) 0 0;
+  /* Un canto desvanecido a la derecha dice que la tabla sigue y se puede arrastrar; sin él, a 360 px parece… */
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 1.5rem), transparent 100%);
+          mask-image: linear-gradient(to right, #000 calc(100% - 1.5rem), transparent 100%);
+}
+/* Sin desbordamiento no hay nada que anunciar, y la máscara solo estaría comiéndose la última columna. */
+@media (min-width: 46rem) {
+  .producto .envoltura { -webkit-mask-image: none; mask-image: none; }
+}
+.producto .envoltura table { font-size: var(--t-menor); }
+.producto .envoltura th { padding-bottom: .7rem; }
+.producto .envoltura td { padding-block: .8rem; }
+
+/* ── Ficha formal ──────────────────────────────────────────────────────── Autoría, licencia y cita. */
+.producto .formal {
+  border: 1px solid var(--linea);
+  border-radius: 10px;
+  padding: var(--e3);
+  background: var(--papel);
+}
+.producto .formal > :last-child { margin-bottom: 0; }
+.producto .formal .codigo { background: var(--panel); }
+.producto .escena--panel .formal { background: var(--papel); }
+.producto .escena--panel .formal .codigo { background: var(--panel); }
+@media (min-width: 46rem) {
+  .producto .formal { padding: var(--e4); }
+}
+
+/* ── Descargas ─────────────────────────────────────────────────────────── La rejilla de módulos ya existe… */
+.producto .modulo { padding: var(--e3) var(--e3) calc(var(--e3) + .2rem); }
+.producto .modulo .cabeza .mono { font-size: 1.05rem; letter-spacing: -.01em; }
+.producto .modulo .peso { font-size: .82rem; }
+.producto .modulo p { font-size: var(--t-menor); }
+
+.producto .atajos { margin: var(--e3) 0 0; }
+.producto .atajo { font-size: .82rem; padding: .55rem 1rem; }
+
+/* El resumen: */
+.producto .resumen { margin: 0; max-width: none; }
+.producto .total {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: var(--e3);
+  border-top: 0;
+  padding-top: 0;
+}
+.producto .total b {
+  font-size: var(--t-escena);
+  line-height: 1;
+  letter-spacing: var(--track-escena);
+  color: var(--acento);
+}
+.producto .total span { font-size: var(--t-menor); }
+.producto .total em { font-size: var(--t-nota); letter-spacing: .06em; margin-top: var(--e1); }
+
+.producto .bajar { margin-top: var(--e4); }
+.producto .bajar .boton { padding: var(--e2) var(--e3); }
+
+/* El botón de copiar es interfaz: */
+.producto .barra-codigo button { font-size: .72rem; color: var(--tinta); padding: .4rem .7rem; }
+
+/* ── Ajustes finos que `estilo.css` no prevé dentro de una escena ─────── */
+.producto .guia { margin: 0 0 var(--e3); max-width: 42rem; }
+.producto .aviso { margin: var(--e4) 0 0; }
+.producto ul.prosa { margin: var(--e3) 0 0; }
+.producto .escena > .centro > :last-child { margin-bottom: 0; }

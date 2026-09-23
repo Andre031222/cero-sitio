@@ -5,7 +5,13 @@ import Marco from './Marco.jsx'
 import Portada from './paginas/Portada.jsx'
 import Descargas from './paginas/Descargas.jsx'
 import Contenido from './paginas/Contenido.jsx'
+import './diseno.css'
 import './estilo.css'
+import './marco.css'
+import './portada.css'
+import './producto.css'
+import './documento.css'
+import './piezas.css'
 
 // El contenido se incrusta en el bundle con ?raw: son archivos nuestros, del repositorio, no
 // algo que llegue por la red. Así una página no espera a una segunda petición para pintarse.

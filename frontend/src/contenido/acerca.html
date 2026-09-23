@@ -1,170 +1,232 @@
-  <header class="cabecera-pagina">
-    <h1 class="titulo-pagina">Acerca de</h1>
-    <p class="entradilla">Quién hace Cero, por qué existe, con qué licencia se distribuye y cómo citarlo.</p>
-  </header>
+  <div class="producto">
 
-  <div class="cuerpo">
-    <nav class="indice" aria-label="En esta página">
-      <ol>
-        <li><a href="#quien"><span class="n">01</span> Quién lo hace</a></li>
-        <li><a href="#origen"><span class="n">02</span> Por qué existe</a></li>
-        <li><a href="#estado"><span class="n">03</span> En qué estado está</a></li>
-        <li><a href="#licencia"><span class="n">04</span> Licencia y cita</a></li>
-      </ol>
-    </nav>
-    <main>
-
-      <section id="quien">
-        <div class="titulo-seccion"><span class="indice-num">01</span><h2>Quién lo hace</h2></div>
-
-        <p>
-          Cero es obra de dos autores de la <b>Universidad Nacional del Altiplano</b>, en Puno,
-          Perú.
+    <section class="escena escena--alta">
+      <div class="centro">
+        <h1 class="heroe" data-revelar>Acerca de</h1>
+        <p class="guia sub" data-revelar>
+          Quién hace Cero, por qué existe, con qué licencia se distribuye y cómo citarlo.
         </p>
+        <nav class="indice" aria-label="En esta página" data-revelar>
+          <ol>
+            <li><a href="#quien"><span class="n">01</span> Quién lo hace</a></li>
+            <li><a href="#origen"><span class="n">02</span> Por qué existe</a></li>
+            <li><a href="#estado"><span class="n">03</span> En qué estado está</a></li>
+            <li><a href="#licencia"><span class="n">04</span> Licencia y cita</a></li>
+          </ol>
+        </nav>
+      </div>
+    </section>
 
-        <div class="envoltura">
-          <table>
-            <thead><tr><th>Autor</th><th>ORCID</th></tr></thead>
-            <tbody>
-              <tr>
-                <td>Richar Andre Vilca-Solorzano</td>
-                <td class="mono-clave"><a href="https://orcid.org/0009-0003-2385-5263">0009-0003-2385-5263</a></td>
-              </tr>
-              <tr>
-                <td>Ramiro Pedro Laura-Murillo</td>
-                <td class="mono-clave"><a href="https://orcid.org/0000-0003-1837-4871">0000-0003-1837-4871</a></td>
-              </tr>
-            </tbody>
-          </table>
+    <section id="quien" class="escena escena--panel">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">01</span>
+          <h2 class="titulo">Quién lo hace</h2>
+        </header>
+
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            Cero es obra de dos autores de la <b>Universidad Nacional del Altiplano</b>, en Puno,
+            Perú.
+          </p>
+
+          <!-- La autoría y sus ORCID van en ficha y sin tratamiento: es el dato que alguien viene
+               a copiar tal cual, no una pieza de la página. -->
+          <div class="formal" data-revelar>
+            <div class="envoltura">
+              <table>
+                <thead><tr><th>Autor</th><th>ORCID</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>Richar Andre Vilca-Solorzano</td>
+                    <td class="mono-clave"><a href="https://orcid.org/0009-0003-2385-5263">0009-0003-2385-5263</a></td>
+                  </tr>
+                  <tr>
+                    <td>Ramiro Pedro Laura-Murillo</td>
+                    <td class="mono-clave"><a href="https://orcid.org/0000-0003-1837-4871">0000-0003-1837-4871</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              <b>No se reparte el trabajo por partes:</b> los dos figuran como autores del proyecto
+              entero.
+            </p>
+          </div>
+
+          <div class="aviso nota" data-revelar>
+            <div class="etiqueta">Por qué el código no lleva cabeceras de autoría</div>
+            <p>
+              Los archivos fuente no llevan cabecera. La autoría vive en el <code>LICENSE</code> y
+              en esta página, una sola vez, y no repetida en cada archivo. Es coherente con el resto
+              del proyecto: el código se explica solo, sin adornos.
+            </p>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <p>
-          <b>No se reparte el trabajo por partes:</b> los dos figuran como autores del proyecto
-          entero.
-        </p>
+    <section id="origen" class="escena">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">02</span>
+          <h2 class="titulo">Por qué existe</h2>
+        </header>
 
-        <div class="aviso nota">
-          <div class="etiqueta">Por qué el código no lleva cabeceras de autoría</div>
-          <p>
-            Los archivos fuente no llevan cabecera. La autoría vive en el <code>LICENSE</code> y
-            en esta página, una sola vez, y no repetida en cada archivo. Es coherente con el resto
-            del proyecto: el código se explica solo, sin adornos.
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            Cero nace de una molestia concreta de estudiante: <b>para levantar una aplicación web
+            en Java había que montar un Tomcat</b>. Empaquetar un WAR, desplegarlo en un contenedor,
+            pelearse con el <code>web.xml</code>, y esperar a que el servidor arrancara cada vez que
+            cambiabas una línea. Para un trabajo de clase, para una prueba rápida, para cualquier
+            cosa pequeña, todo eso sobra.
+          </p>
+
+          <blockquote class="cita rotulo" data-revelar>
+            <p>¿Y si el servidor viniera dentro?</p>
+          </blockquote>
+
+          <p data-revelar>
+            Así que se escribió uno. <b>6 696 líneas de servidor HTTP/1.1 y HTTP/2</b> sobre la biblioteca
+            estándar de Java: lectura de peticiones, cabeceras, cuerpos por trozos, TLS recargable,
+            multipart, gzip, estáticos con rangos, WebSocket y SSE. Un hilo virtual por conexión,
+            que es lo que hace que un modelo tan directo aguante.
+          </p>
+
+          <div class="datos" data-revelar>
+            <div class="dato">
+              <p><b class="cifra-grande">6 696</b><span class="pie">Líneas de servidor HTTP/1.1 y HTTP/2</span></p>
+            </div>
+            <div class="dato">
+              <p><b class="cifra-grande">1</b><span class="pie">Hilo virtual por conexión</span></p>
+            </div>
+          </div>
+
+          <blockquote class="cita titulo" data-revelar>
+            <p>
+              El resultado es que <code>java -jar</code> y ya está corriendo. Sin Tomcat, sin
+              <code>web.xml</code>, sin despliegue.
+            </p>
+          </blockquote>
+
+          <div class="envoltura" data-revelar>
+            <table>
+              <thead><tr><th></th><th class="cifra">Clases</th><th class="cifra">Líneas</th></tr></thead>
+              <tbody>
+                <tr><td>Servidor HTTP propio</td><td class="cifra">43</td><td class="cifra">6 696</td></tr>
+                <tr><td>Núcleo: rutas, inyección, validación, seguridad</td><td class="cifra">71</td><td class="cifra">7 675</td></tr>
+                <tr><td>Plantillas, datos, pruebas, adaptador y empaquetador</td><td class="cifra">39</td><td class="cifra">4 861</td></tr>
+                <tr class="total"><td>Todo el framework</td><td class="cifra">153</td><td class="cifra">19 232</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 data-revelar>Y el nombre</h3>
+          <p data-revelar>
+            <b>Cero</b> dice lo que el framework hace: cero dependencias en ejecución, cero
+            configuración para arrancar, cero contenedor de servlets, cero paso de compilación en el
+            frontend si no lo quieres. No es una metáfora que haya que explicar: es la lista de lo
+            que este framework no te obliga a tener. El nombre y la primera línea del LEEME dicen ya
+            lo mismo.
+          </p>
+          <p data-revelar>
+            Se escribe <b>Cero</b>, con mayúscula, también a mitad de frase. Es una palabra común
+            del castellano y en minúscula desaparece dentro del texto: «Cero tiene cero
+            dependencias» se lee; «cero tiene cero dependencias», no. En artefactos y órdenes va en
+            minúscula, como siempre: <code>cero-core</code>, <code>cero new</code>.
           </p>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="origen">
-        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Por qué existe</h2></div>
+    <section id="estado" class="escena escena--panel">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">03</span>
+          <h2 class="titulo">En qué estado está</h2>
+        </header>
 
-
-        <p>
-          Cero nace de una molestia concreta de estudiante: <b>para levantar una aplicación web
-          en Java había que montar un Tomcat</b>. Empaquetar un WAR, desplegarlo en un contenedor,
-          pelearse con el <code>web.xml</code>, y esperar a que el servidor arrancara cada vez que
-          cambiabas una línea. Para un trabajo de clase, para una prueba rápida, para cualquier
-          cosa pequeña, todo eso sobra.
-        </p>
-
-        <p>
-          La pregunta era simple: <i>¿y si el servidor viniera dentro?</i> Así que se escribió uno.
-          <b>4 481 líneas de servidor HTTP/1.1</b> sobre la biblioteca estándar de Java: lectura de
-          peticiones, cabeceras, cuerpos por trozos, TLS recargable, multipart, gzip, estáticos con
-          rangos, WebSocket y SSE. Un hilo virtual por conexión, que es lo que hace que un modelo
-          tan directo aguante.
-        </p>
-
-        <p>
-          El resultado es que <code>java -jar</code> y ya está corriendo. Sin Tomcat, sin
-          <code>web.xml</code>, sin despliegue.
-        </p>
-
-        <div class="envoltura">
-          <table>
-            <thead><tr><th></th><th class="cifra">Clases</th><th class="cifra">Líneas</th></tr></thead>
-            <tbody>
-              <tr><td>Servidor HTTP propio</td><td class="cifra">39</td><td class="cifra">4 481</td></tr>
-              <tr><td>Núcleo: rutas, inyección, validación, seguridad</td><td class="cifra">70</td><td class="cifra">7 297</td></tr>
-              <tr><td>Plantillas, datos, adaptador y empaquetador</td><td class="cifra">30</td><td class="cifra">3 509</td></tr>
-              <tr class="total"><td>Todo el framework</td><td class="cifra">139</td><td class="cifra">15 287</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>Y el nombre</h3>
-        <p>
-          <b>Cero</b> dice lo que el framework hace: cero dependencias en ejecución, cero
-          configuración para arrancar, cero contenedor de servlets, cero paso de compilación en el
-          frontend si no lo quieres. No es una metáfora que haya que explicar: es la lista de lo
-          que este framework no te obliga a tener. El nombre y la primera línea del LEEME dicen ya
-          lo mismo.
-        </p>
-        <p>
-          Se escribe <b>Cero</b>, con mayúscula, también a mitad de frase. Es una palabra común
-          del castellano y en minúscula desaparece dentro del texto: «Cero tiene cero
-          dependencias» se lee; «cero tiene cero dependencias», no. En artefactos y órdenes va en
-          minúscula, como siempre: <code>cero-core</code>, <code>cero new</code>.
-        </p>
-      </section>
-
-      <section id="estado">
-        <div class="titulo-seccion"><span class="indice-num">03</span><h2>En qué estado está</h2></div>
-
-        <p>
-          Cero está en <b>0.7.0</b>, y conviene decir con claridad qué significa eso.
-        </p>
-
-        <div class="envoltura">
-          <table>
-            <thead><tr><th></th><th>Estado</th></tr></thead>
-            <tbody>
-              <tr><td>Batería de pruebas</td><td><b>1 835</b> en verde, sobre macOS y sobre Linux, con PostgreSQL y MySQL reales</td></tr>
-              <tr><td>Integración continua</td><td>JDK 25, en cada cambio</td></tr>
-              <tr><td>Dependencias en ejecución</td><td><b>Cero</b></td></tr>
-              <tr><td>Aplicaciones en producción</td><td>Seis, todas nuestras</td></tr>
-              <tr><td>Publicado en Maven Central</td><td><b>Sí</b>, desde la 0.6.0 — los seis módulos, firmados</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="aviso">
-          <div class="etiqueta">Lo que no está resuelto</div>
-          <p>
-            <b>El parser HTTP es joven.</b> Es la superficie que da a internet y la que más
-            castigo recibe: hasta que no acumule kilómetros bajo tráfico real y ráfagas
-            sostenidas, no es honesto llamarlo maduro.
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            Cero está en <b>0.7.0</b>, y conviene decir con claridad qué significa eso.
           </p>
-          <p>
-            Y las cifras de rendimiento se midieron en Docker Desktop, dentro de una máquina
-            virtual. Las condiciones fueron idénticas para todos los frameworks comparados, así
-            que la comparación es justa; <b>los números sueltos hay que repetirlos en bare-metal
-            antes de citarlos en ningún sitio</b>.
-          </p>
+
+          <div class="datos" data-revelar>
+            <div class="dato">
+              <p><b class="cifra-grande">1 726</b><span class="pie">Pruebas en verde</span></p>
+            </div>
+            <div class="dato">
+              <p><b class="cifra-grande">0</b><span class="pie">Dependencias en ejecución</span></p>
+            </div>
+            <div class="dato">
+              <p><b class="cifra-grande">6</b><span class="pie">Aplicaciones en producción</span></p>
+            </div>
+          </div>
+
+          <div class="envoltura" data-revelar>
+            <table>
+              <thead><tr><th></th><th>Estado</th></tr></thead>
+              <tbody>
+                <tr><td>Batería de pruebas</td><td><b>1 726</b> en verde, sobre macOS y sobre Linux, con PostgreSQL y MySQL reales</td></tr>
+                <tr><td>Integración continua</td><td>JDK 25, en cada cambio</td></tr>
+                <tr><td>Dependencias en ejecución</td><td><b>Cero</b></td></tr>
+                <tr><td>Aplicaciones en producción</td><td>Seis, todas nuestras</td></tr>
+                <tr><td>Publicado en Maven Central</td><td><b>Sí</b>, desde la 0.6.0 — los seis módulos, firmados</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="aviso" data-revelar>
+            <div class="etiqueta">Lo que no está resuelto</div>
+            <p>
+              <b>El parser HTTP es joven.</b> Es la superficie que da a internet y la que más
+              castigo recibe: hasta que no acumule kilómetros bajo tráfico real y ráfagas
+              sostenidas, no es honesto llamarlo maduro.
+            </p>
+            <p>
+              Y las cifras de rendimiento se midieron en Docker Desktop, dentro de una máquina
+              virtual. Las condiciones fueron idénticas para todos los frameworks comparados, así
+              que la comparación es justa; <b>los números sueltos hay que repetirlos en bare-metal
+              antes de citarlos en ningún sitio</b>.
+            </p>
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="licencia">
-        <div class="titulo-seccion"><span class="indice-num">04</span><h2>Licencia y cita</h2></div>
+    <section id="licencia" class="escena">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">04</span>
+          <h2 class="titulo">Licencia y cita</h2>
+        </header>
 
-        <p>
-          Cero se distribuye bajo <b>licencia Apache 2.0</b>. Puedes usarlo, modificarlo y
-          redistribuirlo, también en proyectos comerciales, a cambio de conservar el aviso de
-          copyright, dejar constancia de lo que cambies si publicas una versión modificada, y no
-          usar el nombre para presentar un fork como si fuera este proyecto. Trae además concesión
-          expresa de patentes.
-        </p>
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            Cero se distribuye bajo <b>licencia Apache 2.0</b>. Puedes usarlo, modificarlo y
+            redistribuirlo, también en proyectos comerciales, a cambio de conservar el aviso de
+            copyright, dejar constancia de lo que cambies si publicas una versión modificada, y no
+            usar el nombre para presentar un fork como si fuera este proyecto. Trae además concesión
+            expresa de patentes.
+          </p>
 
-        <p>Si lo usas en un trabajo académico:</p>
+          <!-- La cita, como la autoría, va en ficha y sin tratamiento. -->
+          <div class="formal" data-revelar>
+            <p>Si lo usas en un trabajo académico:</p>
 
-        <div class="codigo">
-          <div class="barra"><span class="etiqueta">Citación</span><span class="etiqueta">BibTeX</span></div>
+            <div class="codigo">
+              <div class="barra"><span class="etiqueta">Citación</span><span class="etiqueta">BibTeX</span></div>
 <pre>@software{vilcasolorzano2026cero,
   title  = {Cero: núcleo de framework web poliglota sin dependencias},
   author = {Vilca-Solorzano, Richar Andre and Laura-Murillo, Ramiro Pedro},
   year   = {2026},
   url    = {https://github.com/Andre031222/Cero}
 }</pre>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-    </main>
   </div>

@@ -1,0 +1,98 @@
+/* Formas del kit compuestas a gran escala. Decorativas: nunca llevan información. */
+
+.geometria {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  contain: strict;
+}
+
+.geo-pieza {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--tam);
+  aspect-ratio: 1;
+  background: var(--forma) center/contain no-repeat;
+  background-image: inherit;
+  opacity: var(--opacidad);
+  transform: translate3d(-50%, calc(-50% + var(--desvio, 0px)), 0) rotate(var(--giro));
+  will-change: transform;
+}
+
+/* Velo por la izquierda: la forma no puede comerle contraste al titular. */
+.geometria::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, var(--papel) 24%, transparent 62%);
+}
+
+/* Malla de color del héroe: dos focos del acento sobre el fondo, sin imagen que descargar. */
+.malla {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(48rem 32rem at 78% 8%, color-mix(in oklab, var(--acento) 16%, transparent), transparent 70%),
+    radial-gradient(38rem 28rem at 12% 72%, color-mix(in oklab, var(--acento-2) 12%, transparent), transparent 72%);
+}
+
+.escena { position: relative; }
+.escena > .centro { position: relative; z-index: 1; }
+
+@media (max-width: 48rem) {
+  .geo-pieza { opacity: calc(var(--opacidad) * .55); }
+  .geo-pieza:nth-child(n+3) { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .geo-pieza { transform: translate3d(-50%, -50%, 0) rotate(var(--giro)); will-change: auto; }
+}
+
+/* Láminas del catálogo en las bandas vacías de los lados. */
+.lamina {
+  position: absolute;
+  top: 50%;
+  width: clamp(14rem, 26vw, 30rem);
+  height: var(--alto);
+  background-size: cover;
+  background-position: center;
+  opacity: var(--fuerza);
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 14px;
+  /* Las láminas traen fondo propio: sin fundido se vería el recorte rectangular. */
+  -webkit-mask-image: radial-gradient(75% 75% at 50% 50%, #000 34%, transparent 78%);
+          mask-image: radial-gradient(75% 75% at 50% 50%, #000 34%, transparent 78%);
+}
+.lamina--derecha { right: 0; transform: translate(28%, -50%); }
+.lamina--izquierda { left: 0; transform: translate(-28%, -50%); }
+
+/* En tema claro un rectángulo casi negro no pinta nada. */
+:root[data-tema="claro"] .lamina { display: none; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-tema="oscuro"]) .lamina { display: none; }
+}
+
+/* Por debajo de la anchura del contenido no hay banda lateral que llenar. */
+@media (max-width: 82rem) { .lamina { display: none; } }
+
+/* Vídeo de fondo: siempre por detrás del velo, nunca compite con el texto. */
+.fondo-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .34;
+  z-index: 0;
+  pointer-events: none;
+}
+:root[data-tema="claro"] .fondo-video { display: none; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-tema="oscuro"]) .fondo-video { display: none; }
+}

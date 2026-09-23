@@ -1,26 +1,35 @@
   <header class="cabecera-pagina">
-<h1 class="titulo-pagina">Get started</h1>
-    <p class="entradilla">From nothing to a server answering requests, in four commands. All you need is git, Maven and a JDK 25.</p>
+    <h1 class="titulo-pagina">Getting started</h1>
+    <p class="entradilla">From nothing to a server answering, in four commands. All you need is git, Maven and a JDK 25.</p>
   </header>
 
   <div class="cuerpo">
-    <nav class="indice" aria-label="On this page">
-      <ol>
-        <li><a href="#instalar"><span class="n">01</span> Installation</a></li>
-        <li><a href="#empezar"><span class="n">02</span> First steps</a></li>
-      </ol>
-    </nav>
-    <main>
-<section id="instalar">
-        <div class="titulo-seccion"><span class="indice-num">01</span><h2>Installation</h2></div>
+        <nav class="indice" aria-label="On this page" data-revelar>
+          <ol>
+            <li><a href="#instalar"><span class="n">01</span> Installation</a></li>
+            <li><a href="#instalador"><span class="n">02</span> The installer</a></li>
+            <li><a href="#a-mano"><span class="n">03</span> By hand, step by step</a></li>
+            <li><a href="#empezar"><span class="n">04</span> In five minutes</a></li>
+            <li><a href="#declarado"><span class="n">05</span> With everything spelled out</a></li>
+          </ol>
+        </nav>
 
-        <p>
-          Cero has been on Maven Central since 0.6.0. Three lines in your <code>pom.xml</code> and
-          you are done: nothing to clone, nothing to build. Take only what you use.
-        </p>
+    <div class="prosa">
+    <section id="instalar" class="seccion">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">01</span>
+          <h2 class="titulo">Installation</h2>
+        </header>
 
-        <div class="codigo">
-          <div class="barra"><span class="etiqueta">pom.xml</span><span class="etiqueta">XML</span></div>
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            Cero has been on Maven Central since 0.6.0. Three lines in your <code>pom.xml</code> and
+            you are done: nothing to clone, nothing to build. Take only what you use.
+          </p>
+
+          <div class="codigo" data-revelar>
+            <div class="barra"><span class="etiqueta">pom.xml</span><span class="etiqueta">XML</span></div>
 <pre>&lt;dependency&gt;
     &lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;
     &lt;artifactId&gt;<span class="st">cero-core</span>&lt;/artifactId&gt;   <span class="cm">&lt;!-- pulls in cero-http --&gt;</span>
@@ -33,67 +42,96 @@
 
 <span class="cm">&lt;!-- the JDBC driver is your application's business --&gt;</span>
 &lt;dependency&gt;&lt;groupId&gt;<span class="st">org.postgresql</span>&lt;/groupId&gt;&lt;artifactId&gt;<span class="st">postgresql</span>&lt;/artifactId&gt;&lt;version&gt;<span class="st">42.7.3</span>&lt;/version&gt;&lt;/dependency&gt;</pre>
+          </div>
+
+          <p id="nota" data-revelar>
+            Requirements: <code>Maven</code> and a <code>JDK 25</code> or newer. Nothing else — Cero
+            pulls in no external dependencies, so that is all that enters your project.
+          </p>
         </div>
+      </div>
+    </section>
 
-        <p style="margin-top:1.5rem" id="nota">
-          Requirements: <code>Maven</code> and a <code>JDK 25</code> or newer. Nothing else — Cero
-          pulls in no external dependencies, so that is all that enters your project.
-        </p>
+    <section id="instalador" class="seccion">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">02</span>
+          <h2 class="titulo">The installer</h2>
+        </header>
 
-        <h3>The installer</h3>
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            It is still here, and now it is for something else: it puts the <code>cero</code> command
+            within reach, which is what scaffolds a project. It downloads the package, checks its
+            fingerprint, builds it and leaves the artefacts in your local Maven repository. It asks
+            for no password and writes nothing outside your home folder.
+          </p>
 
-        <p>
-          It is still here, and now it is for something else: it puts the <code>cero</code> command
-          within reach, which is what scaffolds a project. It downloads the package, checks its
-          fingerprint, builds it and leaves the artefacts in your local Maven repository. It asks
-          for no password and writes nothing outside your home folder.
-        </p>
-
-        <div class="codigo">
-          <div class="barra"><span class="etiqueta">macOS and Linux</span><span class="etiqueta">sh</span></div>
+          <div class="codigo" data-revelar>
+            <div class="barra"><span class="etiqueta">macOS and Linux</span><span class="etiqueta">sh</span></div>
 <pre>curl -fsSL https://cero.ginit.dev/instalar | sh</pre>
-        </div>
+          </div>
 
-        <div class="codigo">
-          <div class="barra"><span class="etiqueta">Windows</span><span class="etiqueta">PowerShell</span></div>
+          <div class="codigo" data-revelar>
+            <div class="barra"><span class="etiqueta">Windows</span><span class="etiqueta">PowerShell</span></div>
 <pre>irm https://cero.ginit.dev/instalar.ps1 | iex</pre>
+          </div>
+
+          <p class="medida" data-revelar>
+            Both scripts are served as plain text on purpose: open them in your browser and read them
+            before running them — <a href="/instalar">instalar</a> ·
+            <a href="/instalar.ps1">instalar.ps1</a>. With <code>--con-pruebas</code> the installer
+            also runs the 1,726 tests as it goes.
+          </p>
         </div>
+      </div>
+    </section>
 
-        <p class="medida">
-          Both scripts are served as plain text on purpose: open them in your browser and read them
-          before running them — <a href="/instalar">instalar</a> ·
-          <a href="/instalar.ps1">instalar.ps1</a>. With <code>--con-pruebas</code> the installer
-          also runs the 1,835 tests as it goes.
-        </p>
+    <section id="a-mano" class="seccion">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">03</span>
+          <h2 class="titulo">By hand, step by step</h2>
+        </header>
 
-        <p>And if you would rather do it by hand, it is the same thing step by step:</p>
-        <div class="codigo">
-          <div class="barra"><span class="etiqueta">By hand, step by step</span><span class="etiqueta">Shell</span></div>
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>And if you would rather do it by hand, it is the same thing step by step:</p>
+
+          <div class="codigo" data-revelar>
+            <div class="barra"><span class="etiqueta">By hand, step by step</span><span class="etiqueta">Shell</span></div>
 <pre>git clone https://github.com/Andre031222/Cero.git
 <span class="kw">cd</span> Cero
 ./cero install          <span class="cm"># builds, tests and installs into ~/.m2</span>
 ./cero new mi-app       <span class="cm"># a new project, ready to run</span></pre>
-        </div>
+          </div>
 
-        <div class="aviso nota">
-          <div class="etiqueta">Example application</div>
-          <p>
-            <code>java/ejemplo</code> is a complete task manager —views, forms, H2 and a REST API—
-            with 36 end-to-end tests. It is the best place to start reading.
+          <div class="aviso nota" data-revelar>
+            <div class="etiqueta">Example application</div>
+            <p>
+              <code>java/ejemplo</code> is a complete task manager —views, forms, H2 and a REST API—
+              with 36 end-to-end tests. It is the best place to start reading.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="empezar" class="seccion">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">04</span>
+          <h2 class="titulo">In five minutes</h2>
+        </header>
+
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            A controller is an ordinary class. What it returns decides the format: an object is
+            serialised to JSON, a <code>String</code> goes out as plain text, <code>null</code> is a
+            204. No annotation involved.
           </p>
-        </div>
-      </section>
-<section id="empezar">
-        <div class="titulo-seccion"><span class="indice-num">02</span><h2>In five minutes</h2></div>
 
-        <p>
-          A controller is an ordinary class. What it returns decides the format: an object is
-          serialised to JSON, a <code>String</code> goes out as plain text, <code>null</code> is a
-          204. No annotation involved.
-        </p>
-
-        <div class="codigo">
-          <div class="barra"><span class="etiqueta">Hola.java</span><span class="etiqueta">Java</span></div>
+          <div class="codigo" data-revelar>
+            <div class="barra"><span class="etiqueta">Hola.java</span><span class="etiqueta">Java</span></div>
 <pre><span class="kw">import</span> cero.core.*;
 
 <span class="an">@Route</span>(<span class="st">"/api/tareas"</span>)
@@ -120,17 +158,29 @@
 <span class="kw">public static void</span> main(String[] args) {
     Cero.run(<span class="st">8080</span>, TareaController.class);
 }</pre>
+          </div>
+
+          <blockquote class="cita titulo" data-revelar>
+            <p>
+              That is all. <code>Cero.run</code> registers the routes, starts the server and prints
+              the port and the boot time. There is no <code>web.xml</code>, no container, no
+              deployment.
+            </p>
+          </blockquote>
         </div>
+      </div>
+    </section>
 
-        <p>
-          That is all. <code>Cero.run</code> registers the routes, starts the server and prints the
-          port and the boot time. There is no <code>web.xml</code>, no container, no deployment.
-        </p>
+    <section id="declarado" class="seccion">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">05</span>
+          <h2 class="titulo">With everything spelled out</h2>
+        </header>
 
-        <h3>With everything spelled out</h3>
-
-        <div class="codigo">
-          <div class="barra"><span class="etiqueta">App.java</span><span class="etiqueta">Java</span></div>
+        <div class="paso__cuerpo">
+          <div class="codigo" data-revelar>
+            <div class="barra"><span class="etiqueta">App.java</span><span class="etiqueta">Java</span></div>
 <pre>Server servidor = Cero.app()
     .port(<span class="st">8080</span>)
     .loadConfig()
@@ -146,7 +196,10 @@
     .start();
 
 servidor.await();  <span class="cm">// blocks until shutdown</span></pre>
+          </div>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
+
+    </div>
   </div>

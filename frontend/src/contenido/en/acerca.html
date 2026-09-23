@@ -1,166 +1,228 @@
-  <header class="cabecera-pagina">
-    <h1 class="titulo-pagina">About</h1>
-    <p class="entradilla">Who makes Cero, why it exists, the licence it ships under and how to cite it.</p>
-  </header>
+  <div class="producto">
 
-  <div class="cuerpo">
-    <nav class="indice" aria-label="On this page">
-      <ol>
-        <li><a href="#quien"><span class="n">01</span> Who makes it</a></li>
-        <li><a href="#origen"><span class="n">02</span> Why it exists</a></li>
-        <li><a href="#estado"><span class="n">03</span> What state it is in</a></li>
-        <li><a href="#licencia"><span class="n">04</span> Licence and citation</a></li>
-      </ol>
-    </nav>
-    <main>
-
-      <section id="quien">
-        <div class="titulo-seccion"><span class="indice-num">01</span><h2>Who makes it</h2></div>
-
-        <p>
-          Cero is the work of two authors at the <b>Universidad Nacional del Altiplano</b>, in Puno,
-          Peru.
+    <section class="escena escena--alta">
+      <div class="centro">
+        <h1 class="heroe" data-revelar>About</h1>
+        <p class="guia sub" data-revelar>
+          Who makes Cero, why it exists, the licence it ships under and how to cite it.
         </p>
+        <nav class="indice" aria-label="On this page" data-revelar>
+          <ol>
+            <li><a href="#quien"><span class="n">01</span> Who makes it</a></li>
+            <li><a href="#origen"><span class="n">02</span> Why it exists</a></li>
+            <li><a href="#estado"><span class="n">03</span> What state it is in</a></li>
+            <li><a href="#licencia"><span class="n">04</span> Licence and citation</a></li>
+          </ol>
+        </nav>
+      </div>
+    </section>
 
-        <div class="envoltura">
-          <table>
-            <thead><tr><th>Author</th><th>ORCID</th></tr></thead>
-            <tbody>
-              <tr>
-                <td>Richar Andre Vilca-Solorzano</td>
-                <td class="mono-clave"><a href="https://orcid.org/0009-0003-2385-5263">0009-0003-2385-5263</a></td>
-              </tr>
-              <tr>
-                <td>Ramiro Pedro Laura-Murillo</td>
-                <td class="mono-clave"><a href="https://orcid.org/0000-0003-1837-4871">0000-0003-1837-4871</a></td>
-              </tr>
-            </tbody>
-          </table>
+    <section id="quien" class="escena escena--panel">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">01</span>
+          <h2 class="titulo">Who makes it</h2>
+        </header>
+
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            Cero is the work of two authors at the <b>Universidad Nacional del Altiplano</b>, in Puno,
+            Peru.
+          </p>
+
+          <!-- Authorship and ORCIDs go in a plain card and get no treatment: this is the record
+               someone comes to copy as it stands, not a piece of the page. -->
+          <div class="formal" data-revelar>
+            <div class="envoltura">
+              <table>
+                <thead><tr><th>Author</th><th>ORCID</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td>Richar Andre Vilca-Solorzano</td>
+                    <td class="mono-clave"><a href="https://orcid.org/0009-0003-2385-5263">0009-0003-2385-5263</a></td>
+                  </tr>
+                  <tr>
+                    <td>Ramiro Pedro Laura-Murillo</td>
+                    <td class="mono-clave"><a href="https://orcid.org/0000-0003-1837-4871">0000-0003-1837-4871</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p>
+              <b>The work is not split into parts:</b> both are credited as authors of the whole project.
+            </p>
+          </div>
+
+          <div class="aviso nota" data-revelar>
+            <div class="etiqueta">Why the code carries no authorship headers</div>
+            <p>
+              Source files carry no header. Authorship lives in <code>LICENSE</code> and on this page,
+              once, and not repeated in every file. It is consistent with the rest of the project:
+              the code explains itself, without ornament.
+            </p>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <p>
-          <b>The work is not split into parts:</b> both are credited as authors of the whole project.
-        </p>
+    <section id="origen" class="escena">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">02</span>
+          <h2 class="titulo">Why it exists</h2>
+        </header>
 
-        <div class="aviso nota">
-          <div class="etiqueta">Why the code carries no authorship headers</div>
-          <p>
-            Source files carry no header. Authorship lives in <code>LICENSE</code> and on this page,
-            once, and not repeated in every file. It is consistent with the rest of the project:
-            the code explains itself, without ornament.
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            Cero comes out of a concrete student annoyance: <b>to stand up a web application in Java
+            you had to set up a Tomcat</b>. Package a WAR, deploy it into a container, wrestle with
+            <code>web.xml</code>, and wait for the server to boot every time you changed a line. For
+            a class assignment, for a quick test, for anything small, all of that is overhead.
+          </p>
+
+          <blockquote class="cita rotulo" data-revelar>
+            <p>What if the server came inside?</p>
+          </blockquote>
+
+          <p data-revelar>
+            So one was written. <b>6,696 lines of HTTP/1.1 and HTTP/2 server</b> on top of the Java standard
+            library: request parsing, headers, chunked bodies, reloadable TLS, multipart, gzip,
+            static files with ranges, WebSocket and SSE. One virtual thread per connection, which is
+            what lets a model this direct hold up.
+          </p>
+
+          <div class="datos" data-revelar>
+            <div class="dato">
+              <p><b class="cifra-grande">6,696</b><span class="pie">Lines of HTTP/1.1 and HTTP/2 server</span></p>
+            </div>
+            <div class="dato">
+              <p><b class="cifra-grande">1</b><span class="pie">Virtual thread per connection</span></p>
+            </div>
+          </div>
+
+          <blockquote class="cita titulo" data-revelar>
+            <p>
+              The result is that <code>java -jar</code> and it is running. No Tomcat, no
+              <code>web.xml</code>, no deployment step.
+            </p>
+          </blockquote>
+
+          <div class="envoltura" data-revelar>
+            <table>
+              <thead><tr><th></th><th class="cifra">Classes</th><th class="cifra">Lines</th></tr></thead>
+              <tbody>
+                <tr><td>Its own HTTP server</td><td class="cifra">43</td><td class="cifra">6,696</td></tr>
+                <tr><td>Core: routing, injection, validation, security</td><td class="cifra">71</td><td class="cifra">7,675</td></tr>
+                <tr><td>Templates, data, testing, adapter and packager</td><td class="cifra">39</td><td class="cifra">4,861</td></tr>
+                <tr class="total"><td>The whole framework</td><td class="cifra">153</td><td class="cifra">19,232</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 data-revelar>And the name</h3>
+          <p data-revelar>
+            <b>Cero</b> is Spanish for zero, and it says what the framework does: zero runtime
+            dependencies, zero configuration to boot, zero servlet container, zero frontend build
+            step if you do not want one. It is not a metaphor that needs explaining — it is the list
+            of things this framework does not make you have. The name and the first line of the
+            README say the same thing.
+          </p>
+          <p data-revelar>
+            It is written <b>Cero</b>, capitalised, even mid-sentence: it is an ordinary Spanish word
+            and lowercase it vanishes into the text. Artifacts and commands stay lowercase, as
+            always: <code>cero-core</code>, <code>cero new</code>.
           </p>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="origen">
-        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Why it exists</h2></div>
+    <section id="estado" class="escena escena--panel">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">03</span>
+          <h2 class="titulo">What state it is in</h2>
+        </header>
 
-
-        <p>
-          Cero comes out of a concrete student annoyance: <b>to stand up a web application in Java
-          you had to set up a Tomcat</b>. Package a WAR, deploy it into a container, wrestle with
-          <code>web.xml</code>, and wait for the server to boot every time you changed a line. For
-          a class assignment, for a quick test, for anything small, all of that is overhead.
-        </p>
-
-        <p>
-          The question was simple: <i>what if the server came inside?</i> So one was written.
-          <b>4,481 lines of HTTP/1.1 server</b> on top of the Java standard library: request
-          parsing, headers, chunked bodies, reloadable TLS, multipart, gzip, static files with
-          ranges, WebSocket and SSE. One virtual thread per connection, which is what lets a model
-          this direct hold up.
-        </p>
-
-        <p>
-          The result is that <code>java -jar</code> and it is running. No Tomcat, no
-          <code>web.xml</code>, no deployment step.
-        </p>
-
-        <div class="envoltura">
-          <table>
-            <thead><tr><th></th><th class="cifra">Classes</th><th class="cifra">Lines</th></tr></thead>
-            <tbody>
-              <tr><td>Its own HTTP server</td><td class="cifra">39</td><td class="cifra">4,481</td></tr>
-              <tr><td>Core: routing, injection, validation, security</td><td class="cifra">70</td><td class="cifra">7,297</td></tr>
-              <tr><td>Templates, data, adapter and packager</td><td class="cifra">30</td><td class="cifra">3,509</td></tr>
-              <tr class="total"><td>The whole framework</td><td class="cifra">139</td><td class="cifra">15,287</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3>And the name</h3>
-        <p>
-          <b>Cero</b> is Spanish for zero, and it says what the framework does: zero runtime
-          dependencies, zero configuration to boot, zero servlet container, zero frontend build
-          step if you do not want one. It is not a metaphor that needs explaining — it is the list
-          of things this framework does not make you have. The name and the first line of the
-          README say the same thing.
-        </p>
-        <p>
-          It is written <b>Cero</b>, capitalised, even mid-sentence: it is an ordinary Spanish word
-          and lowercase it vanishes into the text. Artifacts and commands stay lowercase, as
-          always: <code>cero-core</code>, <code>cero new</code>.
-        </p>
-      </section>
-
-      <section id="estado">
-        <div class="titulo-seccion"><span class="indice-num">03</span><h2>What state it is in</h2></div>
-
-        <p>
-          Cero is at <b>0.7.0</b>, and it is worth saying plainly what that means.
-        </p>
-
-        <div class="envoltura">
-          <table>
-            <thead><tr><th></th><th>State</th></tr></thead>
-            <tbody>
-              <tr><td>Test suite</td><td><b>1,835</b> green, on macOS and on Linux, against real PostgreSQL and MySQL</td></tr>
-              <tr><td>Continuous integration</td><td>JDK 25, on every change</td></tr>
-              <tr><td>Runtime dependencies</td><td><b>Zero</b></td></tr>
-              <tr><td>Applications in production</td><td>Six, all ours</td></tr>
-              <tr><td>Published to Maven Central</td><td><b>Yes</b>, since 0.6.0 — all six modules, signed</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="aviso">
-          <div class="etiqueta">What is not settled</div>
-          <p>
-            <b>The HTTP parser is young.</b> It is the surface facing the internet and the one that
-            takes the most punishment: until it has miles on it under real traffic and sustained
-            bursts, calling it mature would not be honest.
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            Cero is at <b>0.7.0</b>, and it is worth saying plainly what that means.
           </p>
-          <p>
-            And the performance figures were measured in Docker Desktop, inside a virtual machine. The
-            conditions were identical for every framework compared, so the comparison is fair;
-            <b>the standalone numbers have to be repeated on bare metal before being quoted
-            anywhere</b>.
-          </p>
+
+          <div class="datos" data-revelar>
+            <div class="dato">
+              <p><b class="cifra-grande">1,726</b><span class="pie">Tests green</span></p>
+            </div>
+            <div class="dato">
+              <p><b class="cifra-grande">0</b><span class="pie">Runtime dependencies</span></p>
+            </div>
+            <div class="dato">
+              <p><b class="cifra-grande">6</b><span class="pie">Applications in production</span></p>
+            </div>
+          </div>
+
+          <div class="envoltura" data-revelar>
+            <table>
+              <thead><tr><th></th><th>State</th></tr></thead>
+              <tbody>
+                <tr><td>Test suite</td><td><b>1,726</b> green, on macOS and on Linux, against real PostgreSQL and MySQL</td></tr>
+                <tr><td>Continuous integration</td><td>JDK 25, on every change</td></tr>
+                <tr><td>Runtime dependencies</td><td><b>Zero</b></td></tr>
+                <tr><td>Applications in production</td><td>Six, all ours</td></tr>
+                <tr><td>Published to Maven Central</td><td><b>Yes</b>, since 0.6.0 — all six modules, signed</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="aviso" data-revelar>
+            <div class="etiqueta">What is not settled</div>
+            <p>
+              <b>The HTTP parser is young.</b> It is the surface facing the internet and the one that
+              takes the most punishment: until it has miles on it under real traffic and sustained
+              bursts, calling it mature would not be honest.
+            </p>
+            <p>
+              And the performance figures were measured in Docker Desktop, inside a virtual machine. The
+              conditions were identical for every framework compared, so the comparison is fair;
+              <b>the standalone numbers have to be repeated on bare metal before being quoted
+              anywhere</b>.
+            </p>
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="licencia">
-        <div class="titulo-seccion"><span class="indice-num">04</span><h2>Licence and citation</h2></div>
+    <section id="licencia" class="escena">
+      <div class="centro centro--medio">
+        <header class="paso" data-revelar>
+          <span class="n">04</span>
+          <h2 class="titulo">Licence and citation</h2>
+        </header>
 
-        <p>
-          Cero ships under the <b>Apache 2.0 licence</b>. You can use it, modify it and
-          redistribute it, in commercial projects too, in exchange for keeping the copyright
-          notice, stating what you changed if you publish a modified version, and not using the
-          name to pass a fork off as this project. It also grants patent rights explicitly.
-        </p>
+        <div class="paso__cuerpo">
+          <p class="guia" data-revelar>
+            Cero ships under the <b>Apache 2.0 licence</b>. You can use it, modify it and
+            redistribute it, in commercial projects too, in exchange for keeping the copyright
+            notice, stating what you changed if you publish a modified version, and not using the
+            name to pass a fork off as this project. It also grants patent rights explicitly.
+          </p>
 
-        <p>If you use it in academic work:</p>
+          <!-- The citation, like the authorship, goes in a plain card and gets no treatment. -->
+          <div class="formal" data-revelar>
+            <p>If you use it in academic work:</p>
 
-        <div class="codigo">
-          <div class="barra"><span class="etiqueta">Citation</span><span class="etiqueta">BibTeX</span></div>
+            <div class="codigo">
+              <div class="barra"><span class="etiqueta">Citation</span><span class="etiqueta">BibTeX</span></div>
 <pre>@software{vilcasolorzano2026cero,
   title  = {Cero: núcleo de framework web poliglota sin dependencias},
   author = {Vilca-Solorzano, Richar Andre and Laura-Murillo, Ramiro Pedro},
   year   = {2026},
   url    = {https://github.com/Andre031222/Cero}
 }</pre>
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-    </main>
   </div>

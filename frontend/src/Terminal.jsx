@@ -1,24 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { VERSION } from './version.js'
 
-/**
- * Una terminal que escribe sola los cuatro pasos de la instalación.
- *
- * Tres decisiones que la separan de un GIF, que es lo que suele ponerse aquí:
- *
- * - **No arranca hasta que se ve.** Con IntersectionObserver: si está debajo del pliegue, la
- *   animación habría terminado antes de que nadie la mirase.
- * - **Se puede copiar.** Es texto de verdad, no una imagen, así que las órdenes se seleccionan
- *   y el lector de pantalla las lee.
- * - **Respeta a quien pidió menos movimiento.** Bajo `prefers-reduced-motion: reduce` no anima:
- *   pinta el resultado completo de golpe, que es la información que importaba.
- */
+/** Una terminal que escribe sola los cuatro pasos de la instalación. */
 
 const GUION = [
   { orden: 'curl -fsSL https://cero.ginit.dev/instalar | sh', salida: [
       `descargando cero-${VERSION}.tar.gz … 736 KB`,
       'comprobando huella sha256 … correcta',
-      'compilando … 1 835 pruebas en verde',
+      'compilando … 1 726 pruebas en verde',
       'orden cero lista en ~/.local/bin',
   ]},
   { orden: 'cero new mi-app', salida: [
@@ -101,7 +90,8 @@ export default function Terminal() {
           repetir
         </button>
       </div>
-      <pre className="terminal-pantalla" role="log" aria-live="polite" aria-label="Instalación paso a paso">
+      {/* Sin región viva. */}
+      <pre className="terminal-pantalla" aria-label="Instalación paso a paso">
 {lineas.map((l, i) => (
   l.tipo === 'orden'
     ? <span key={i} className="linea-orden"><span className="senal">$</span> {l.texto}

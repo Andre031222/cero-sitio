@@ -44,10 +44,15 @@ export const TEXTOS = {
                 '. ', ' y está corriendo — sin Tomcat, sin ', ', sin despliegue.'],
       empezar: 'Empezar', codigo: 'Código',
       windows: ['En Windows, ', '. Requiere Maven y un JDK 25. Después: '],
-      cifras: [['407','KB','Desplegado'],['106','ms','Arranque'],['0','deps','En ejecución'],['1835','','Pruebas']],
+      cifras: [['416','KB','Desplegado'],['106','ms','Arranque'],['0','deps','En ejecución'],['1726','','Pruebas']],
       nota: 'Esta página la sirve el propio Cero: la API en Java y el front en React, dentro del mismo jar. Si el framework falla, falla aquí antes que en las aplicaciones de nadie.',
     },
     descargas: {
+      instalar: 'Instalar',
+      instalarGuia: 'Una orden. Detecta tu sistema, comprueba el Java que tienes y te dice qué hacer si falta.',
+      coordenadas: 'Coordenadas de Maven',
+      coordenadasGuia: 'Si solo quieres declararlo a mano, esto es todo lo que hace falta.',
+
       titulo: 'Descargas',
       entrada: ['Toma solo lo que uses. Marca lo que necesitas y te decimos qué arrastra, cuánto pesa y qué declarar en tu ', '.'],
       necesita: 'necesita', incluido: 'viene incluido por lo que elegiste',
@@ -92,10 +97,15 @@ export const TEXTOS = {
                 '. ', ' and it is running — no Tomcat, no ', ', no deployment.'],
       empezar: 'Get started', codigo: 'Source',
       windows: ['On Windows, ', '. Requires Maven and a JDK 25. Then: '],
-      cifras: [['407','KB','Deployed'],['106','ms','Boot'],['0','deps','At runtime'],['1835','','Tests']],
+      cifras: [['416','KB','Deployed'],['106','ms','Boot'],['0','deps','At runtime'],['1726','','Tests']],
       nota: 'This page is served by Cero itself: the API in Java and the front end in React, inside the same jar. If the framework breaks, it breaks here before it breaks anyone else\u2019s application.',
     },
     descargas: {
+      instalar: 'Install',
+      instalarGuia: 'One command. It detects your system, checks the Java you have and tells you what to do if it is missing.',
+      coordenadas: 'Maven coordinates',
+      coordenadasGuia: 'If you would rather declare it by hand, this is all you need.',
+
       titulo: 'Downloads',
       entrada: ['Take only what you use. Tick what you need and we tell you what it pulls in, how much it weighs and what to declare in your ', '.'],
       necesita: 'needs', incluido: 'comes in with what you picked',

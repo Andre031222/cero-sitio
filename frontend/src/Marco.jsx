@@ -1,7 +1,8 @@
 import { Link, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Tema from './Tema.jsx'
 import { idiomaDe, parejaDe, TEXTOS, raizDe } from './idioma.js'
+import './marco.css'
 
 /** La barra y el pie, en el idioma que toque según la ruta. */
 export default function Marco({ children }) {
@@ -10,6 +11,8 @@ export default function Marco({ children }) {
   const t = TEXTOS[idioma]
   const raiz = raizDe(idioma)
   const pareja = parejaDe(pathname)
+  const enPortada = pathname === '/' || pathname === '/en'
+  const [posada, setPosada] = useState(false)
 
   // El lang del documento y las etiquetas hreflang no son adorno: son lo que hace que un
   // buscador ofrezca la versión correcta y que un lector de pantalla pronuncie bien.
@@ -28,18 +31,24 @@ export default function Marco({ children }) {
     }
   }, [pathname, idioma, pareja, t.lang])
 
+  // La barra solo se vela cuando hay algo que velar debajo.
+  useEffect(() => {
+    const mirar = () => setPosada(window.scrollY > 8)
+    mirar()
+    window.addEventListener('scroll', mirar, { passive: true })
+    return () => window.removeEventListener('scroll', mirar)
+  }, [])
+
   return (
     <>
-      <header className="barra">
-        <div className="marco">
+      <header className={posada ? 'barra-sitio posada' : 'barra-sitio'}>
+        <div className="centro barra-caja">
           <Link to={raiz || '/'} className="marca">
             <span className="simbolo" aria-hidden="true" />
-            {/* «Ce» en azul y «ro» en tinta, como manda el kit. Va en dos spans y no con
-                ::first-letter porque eso solo alcanza a una letra. Ojo: partido así, la palabra
-                no existe como cadena y ningún grep la encuentra al renombrar. */}
+            {/* «Ce» en azul y «ro» en tinta, como manda el kit. */}
             <span className="palabra"><i>Ce</i>ro</span>
           </Link>
-          <nav>
+          <nav className="barra-menu">
             {t.menu.map(([sufijo, texto]) => {
               const a = `${raiz}${sufijo}` || '/'
               return (
@@ -48,9 +57,7 @@ export default function Marco({ children }) {
             })}
           </nav>
           <div className="mandos">
-            {/* Icono más código, y no solo el icono. Un globo suelto dice «hay idiomas» pero
-                no dice a cuál te lleva; con el código al lado se sabe antes de pulsar. El
-                texto largo sigue estando para quien no ve el icono, en aria-label. */}
+            {/* Icono más código, y no solo el icono. */}
             <Link className="idioma" to={pareja} hrefLang={idioma === 'es' ? 'en' : 'es'}
                   lang={idioma === 'es' ? 'en' : 'es'} title={t.otroTitulo}
                   aria-label={t.otroTitulo}>
@@ -67,16 +74,28 @@ export default function Marco({ children }) {
         </div>
       </header>
 
-      <main className="marco">{children}</main>
+      <main className={enPortada ? 'lienzo' : 'marco'}>{children}</main>
 
-      <footer className="pie marco">
-        <div>
-          Richar Andre Vilca-Solorzano · Ramiro Pedro Laura-Murillo<br />
-          {t.sede}
-        </div>
-        <div style={{ textAlign: 'right' }}>
-          {t.licencia}<br />
-          {t.servido}
+      <footer className="pie-sitio">
+        <div className="centro">
+          <div className="pie-caja">
+            <p className="pie-firma">
+              <b>Richar Andre Vilca-Solorzano · Ramiro Pedro Laura-Murillo</b>
+              {t.sede}
+            </p>
+            {/* Los enlaces del pie no van en otro <nav>: dos landmarks de navegación sin nada
+                que los distinga estorban al navegar por landmarks más de lo que ayudan. */}
+            <div className="pie-menu">
+              {t.menu.map(([sufijo, texto]) => {
+                const a = `${raiz}${sufijo}` || '/'
+                return <Link key={a} to={a}>{texto}</Link>
+              })}
+            </div>
+          </div>
+          <p className="pie-legal">
+            <span>{t.licencia}</span>
+            <span>{t.servido}</span>
+          </p>
         </div>
       </footer>
     </>

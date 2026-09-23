@@ -8,7 +8,7 @@
       <ol>
         <li><a href="#bases"><span class="n">01</span> Databases</a></li>
         <li><a href="#sistemas"><span class="n">02</span> Where it runs</a></li>
-        <li><a href="#comparacion"><span class="n">03</span> Against Tomcat</a></li>
+        <li><a href="#comparacion"><span class="n">03</span> Against the others</a></li>
       </ol>
     </nav>
     <main>
@@ -59,8 +59,8 @@
           <table>
             <thead><tr><th>System</th><th>Status</th><th>Note</th></tr></thead>
             <tbody>
-              <tr><td class="mono">macOS</td><td><span class="pastilla ok">Tested</span></td><td>Intel and Apple Silicon. Where it was developed and where the 1,835 tests run.</td></tr>
-              <tr><td class="mono">Linux</td><td><span class="pastilla ok">Tested</span></td><td>All 1,835 tests green on Linux 6.12, with real PostgreSQL and MySQL. In continuous integration, on JDK 25, on every change.</td></tr>
+              <tr><td class="mono">macOS</td><td><span class="pastilla ok">Tested</span></td><td>Intel and Apple Silicon. Where it was developed and where the 1,726 tests run.</td></tr>
+              <tr><td class="mono">Linux</td><td><span class="pastilla ok">Tested</span></td><td>All 1,726 tests green on Linux 6.12, with real PostgreSQL and MySQL. In continuous integration, on JDK 25, on every change.</td></tr>
               <tr><td class="mono">Windows</td><td><span class="pastilla parcial">Not verified</span></td><td>Nothing touches system-specific paths or permissions.</td></tr>
               <tr><td class="mono">Containers</td><td><span class="pastilla parcial">Not verified</span></td><td>Any image with a JRE 21. With no servlet container, the image is the JRE plus 223 KB.</td></tr>
             </tbody>
@@ -81,44 +81,29 @@
         </div>
       </section>
 <section id="comparacion">
-        <div class="titulo-seccion"><span class="indice-num">03</span><h2>Against Tomcat</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">03</span><h2>Against the others</h2></div>
 
         <p>
-          Cero grew out of JxMVC 3.4.0, an MVC framework that works and is in production, but
-          that needs Tomcat to start. The comparison is against its own predecessor.
+          All five in identical containers, 64 connections, 30 seconds, median of five runs, zero
+          errors, sorted by boot time. Same machine and same data-access class throughout: what
+          is measured is the cost of serving the request, not a choice of ORM or serialiser.
         </p>
 
-        <div class="envoltura">
-          <table>
-            <thead><tr><th>Metric</th><th class="cifra">JxMVC on Tomcat</th><th class="cifra">Cero</th></tr></thead>
-            <tbody>
-              <tr><td>Boot</td><td class="cifra">698 ms</td><td class="cifra">106 ms</td></tr>
-              <tr><td>Artefact</td><td class="cifra">253 KB + ~15 MB</td><td class="cifra">407 KB</td></tr>
-              <tr><td>Needs a container</td><td class="cifra">Tomcat 10.1+</td><td class="cifra">no</td></tr>
-              <tr><td>Runtime dependencies</td><td class="cifra">Jakarta EE 10</td><td class="cifra">none</td></tr>
-              <tr><td>Production lines</td><td class="cifra">10,379</td><td class="cifra">12,784</td></tr>
-              <tr><td>Tests</td><td class="cifra">347</td><td class="cifra">1,835</td></tr>
-              <tr><td>Tests / code</td><td class="cifra">22 %</td><td class="cifra">54 %</td></tr>
-              <tr><td>rps <code>/json</code></td><td class="cifra">23,307</td><td class="cifra">25,431</td></tr>
-              <tr><td>Memory (RSS)</td><td class="cifra">191 MB</td><td class="cifra">136 MB</td></tr>
-            </tbody>
-          </table>
+                <div class="aviso fecha-medicion" data-revelar>
+          <div class="etiqueta">Measured August 2026 · Cero 0.6.0</div>
+          <p>
+            These figures are from 0.6.0 and from an earlier run. They stay because the method is
+            written down and the run can be repeated; they will be replaced as soon as there is a
+            0.7.0 measurement. A number without a date is not a fact.
+          </p>
         </div>
 
-        <h3>Against the other five</h3>
-
-        <p>
-          All six in identical containers, 64 connections, 30 seconds, median of five runs, zero
-          errors. Sorted by boot time.
-        </p>
-
-        <div class="envoltura">
+<div class="envoltura">
           <table>
             <thead><tr><th>Framework</th><th class="cifra">Boot</th><th class="cifra">Image</th><th class="cifra">RSS</th><th class="cifra">/plaintext</th><th class="cifra">/json</th><th class="cifra">/db</th></tr></thead>
             <tbody>
               <tr><td><b>Cero</b></td><td class="cifra"><b>106 ms</b></td><td class="cifra">110.3 MB</td><td class="cifra"><b>136.4 MB</b></td><td class="cifra"><b>26,425</b></td><td class="cifra"><b>25,431</b></td><td class="cifra"><b>25,931</b></td></tr>
               <tr><td>Javalin</td><td class="cifra">451 ms</td><td class="cifra">115.2 MB</td><td class="cifra">285.7 MB</td><td class="cifra">21,994</td><td class="cifra">25,125</td><td class="cifra">24,459</td></tr>
-              <tr><td>JxMVC</td><td class="cifra">698 ms</td><td class="cifra"><b>110.1 MB</b></td><td class="cifra">191.5 MB</td><td class="cifra">24,240</td><td class="cifra">23,307</td><td class="cifra">18,771</td></tr>
               <tr><td>Quarkus</td><td class="cifra">707 ms</td><td class="cifra">123.2 MB</td><td class="cifra">259.8 MB</td><td class="cifra">25,515</td><td class="cifra">22,744</td><td class="cifra">21,258</td></tr>
               <tr><td>Micronaut</td><td class="cifra">838 ms</td><td class="cifra">120.7 MB</td><td class="cifra">201.2 MB</td><td class="cifra">18,381</td><td class="cifra">19,088</td><td class="cifra">17,213</td></tr>
               <tr><td>Spring Boot</td><td class="cifra">1467 ms</td><td class="cifra">127.3 MB</td><td class="cifra">352.5 MB</td><td class="cifra">19,809</td><td class="cifra">20,432</td><td class="cifra">20,088</td></tr>
@@ -130,21 +115,19 @@
           <div class="etiqueta">What this table says, and what it does not</div>
           <p>
             It says Cero <b>wins on everything except image size</b>, and there it loses by
-            0.2 MB. It boots 4.3 times faster than the next one, uses the least memory of the six
-            and leads on all three endpoints. On <code>/db</code> —the one that measures the
-            framework doing real work— it beats the JxMVC it came from by 38 %.
+            0.2 MB. It boots 4.3 times faster than the next one, uses the least memory of the five
+            and leads on all three endpoints, including <code>/db</code>, the one that measures
+            the framework doing real work.
           </p>
           <p>
-            Those 0.2 MB are no credit to JxMVC: they are its <b>base image</b>. Both application
-            layers weigh the same —2.6 MB— and the whole difference sits underneath, in the fact
-            that <code>tomcat:10.1-jre21</code> (107.5 MB) turns out to ride on a slimmer JRE than
-            <code>eclipse-temurin:21-jre</code> (107.7 MB). That column measures which base we
-            picked, not which framework we wrote; swapping Cero's flips it without touching a
-            line of code.
+            Those 0.2 MB are nobody's merit: they are the <b>base image</b>. The application
+            layers weigh practically the same and the whole difference sits underneath, in which
+            JRE is inside. That column measures the base we picked, not the framework we wrote;
+            changing Cero's turns it around without touching a line of code.
           </p>
           <p>
             What it does not give you is quotable absolute figures: this was measured on Docker
-            Desktop, inside a VM. The conditions were identical for all six, so the comparison is
+            Desktop, inside a VM. The conditions were identical for all five, so the comparison is
             fair; the individual numbers need repeating on bare metal before they go anywhere.
           </p>
         </div>

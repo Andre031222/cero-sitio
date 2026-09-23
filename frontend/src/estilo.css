@@ -19,38 +19,7 @@
   font-display: swap;
 }
 
-:root {
-  /* La paleta es la del kit de marca: navy #1E3A8A, cobalt #1D4ED8, blue #2563EB,
-     sky #38BDF8, cyan #22D3EE, purple #7C3AED, amber #F59E0B, ink #0B1220.
-
-     El acento cambia de tono entre temas y no por gusto: #2563EB da 5,17x sobre blanco
-     —AA de sobra— pero solo 4,06x sobre negro, que no llega para texto corrido. En oscuro
-     entra #38BDF8, que es del mismo kit y da 9,80x.
-
-     `sky` y `amber` no pasan AA sobre blanco (2,14x y 2,15x). No importa: son formas
-     decorativas, nunca texto. Si algún día alguien las usa para escribir, esto lo explica. */
-  --papel: #ffffff;
-  --panel: #f8fafc;
-  --tinta: #0b1220;
-  --apagado: #6b7280;
-  --acento: #2563eb;
-  /* El segundo acento existe para los degradados. Un degradado de un color a sí mismo
-     aclarado se ve sucio; con dos tonos vecinos de verdad el titular tiene profundidad. */
-  --acento-2: #1d4ed8;
-  --linea: rgba(11, 18, 32, .14);
-  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --serif: "Source Serif", Georgia, "Times New Roman", serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-tema="claro"]) {
-    --papel: #000000; --panel: #0b1220; --tinta: #f8fafc;
-    --apagado: #9aa4b8; --acento: #38bdf8; --acento-2: #22d3ee; --linea: rgba(248, 250, 252, .16);
-  }
-}
-:root[data-tema="oscuro"] {
-  --papel: #000000; --panel: #0b1220; --tinta: #f8fafc;
-    --apagado: #9aa4b8; --acento: #38bdf8; --acento-2: #22d3ee; --linea: rgba(248, 250, 252, .16);
-}
+/* La paleta vive en diseno.css. Aquí no se redefine: ganaría por orden de importación. */
 
 * { box-sizing: border-box; }
 

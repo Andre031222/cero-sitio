@@ -1,0 +1,140 @@
+/* La portada: */
+
+/* ── 1 · Apertura ──────────────────────────────────────────────────────── */
+
+
+.pt-antetitulo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem;
+  margin: 0 0 var(--e3);
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--acento);
+}
+.pt-nuevo {
+  padding: .18rem .5rem;
+  border-radius: 4px;
+  background: var(--acento);
+  color: var(--papel);
+  letter-spacing: .1em;
+}
+.pt-version { color: var(--apagado); }
+
+.pt-titular {
+  margin: 0;
+  max-width: 14ch;
+  text-wrap: balance;
+  /* «contenedor.» mide casi lo que la pantalla a 320 px. */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+.pt-titular span { color: var(--acento); }
+
+.pt-promesa { margin: var(--e4) 0 0; max-width: var(--ancho-medio); }
+.pt-promesa b { color: var(--tinta); font-weight: 600; }
+
+.pt-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  margin-top: var(--e4);
+}
+.pt-acciones .boton { padding: .85rem 1.7rem; font-size: var(--t-menor); border-radius: 6px; }
+
+/* ── 2 · La terminal ───────────────────────────────────────────────────── */
+
+/* Fuera de la portada la terminal es una figura más; aquí es la pieza principal y ocupa lo que le dejan. */
+.pt-terminal .terminal {
+  max-width: min(100%, 64rem);
+  margin: 0 auto;
+}
+.pt-terminal .terminal-barra { padding: .7rem 1.1rem; }
+.pt-terminal .terminal-pantalla {
+  padding: var(--e3);
+  font-size: clamp(.75rem, 1.15vw, .95rem);
+  min-height: min(58svh, 26rem);
+}
+
+/* ── 3 · Las cifras ────────────────────────────────────────────────────── */
+
+.pt-cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: var(--e4) var(--e3);
+}
+.pt-cifra b {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--t-escena);
+  font-weight: 700;
+  letter-spacing: var(--track-escena);
+  line-height: 1;
+  color: var(--acento);
+  font-variant-numeric: tabular-nums;
+}
+.pt-cifra b span {
+  margin-left: .12em;
+  font-size: var(--t-guia);
+  letter-spacing: 0;
+  color: var(--apagado);
+}
+.pt-cifra em {
+  display: block;
+  margin-top: var(--e1);
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--apagado);
+}
+.pt-nota { margin: var(--e6) 0 0; }
+
+/* ── 4 · El argumento y su diagrama ────────────────────────────────────── */
+
+.pt-diagrama { margin: var(--e5) 0 0; }
+
+/* Dos columnas mientras quepan a un tamaño en el que las etiquetas se lean. */
+.pt-pilas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--e4);
+  justify-items: center;
+  align-items: end;
+}
+.pt-pila {
+  width: 100%;
+  max-width: 20rem;
+  height: auto;
+  /* El color lo pone el contenedor y el dibujo lo hereda: */
+  color: var(--tinta);
+}
+.pt-pila--cero { color: var(--acento); }
+.pt-pila text { font-family: var(--mono); }
+.pt-pila .hueco { stroke: var(--apagado); }
+.pt-pila .orden { fill: var(--apagado); }
+
+.pt-pie-figura { margin: var(--e4) 0 0; max-width: var(--ancho-medio); }
+.pt-pie-figura code {
+  padding: .1em .35em;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--acento) 12%, transparent);
+  color: var(--tinta);
+}
+
+/* ── 5 · Cierre ────────────────────────────────────────────────────────── */
+
+.pt-cierre .orden { max-width: var(--ancho-medio); margin: var(--e4) 0 var(--e2); }
+.pt-cierre .pt-acciones { margin-top: var(--e4); }
+.pt-tras-orden { max-width: var(--ancho-medio); margin: 0; }
+.pt-tras-orden code {
+  padding: .1em .35em;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--acento) 12%, transparent);
+  color: var(--tinta);
+}

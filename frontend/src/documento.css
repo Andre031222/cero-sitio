@@ -1,0 +1,557 @@
+/* Cero — las páginas de documentación. */
+
+.pagina.documento {
+  /* Alto de la barra superior fija (`.barra .marco`, 3,6 rem). */
+  --doc-barra: 3.6rem;
+  /* Alto de la tira del índice plegado en el teléfono: */
+  --doc-tira: 3.9rem;
+  --doc-columna: 15rem;
+
+  font-family: var(--serif);
+  font-size: var(--t-cuerpo);
+  line-height: 1.75;
+}
+
+/* ── Cabecera de la página ──────────────────────────────────────────────────────────── El slab de 2 px en… */
+
+.pagina.documento .cabecera-pagina {
+  padding: var(--e4) 0 var(--e4);
+  border-bottom: 1px solid var(--linea);
+}
+.pagina.documento .titulo-pagina {
+  font-family: var(--sans);
+  font-size: var(--t-escena);
+  letter-spacing: var(--track-escena);
+  font-weight: 680;
+  line-height: 1.04;
+  margin: 0 0 var(--e2);
+  text-wrap: balance;
+}
+.pagina.documento .entradilla {
+  font-family: var(--serif);
+  font-size: var(--t-guia);
+  line-height: 1.5;
+  color: var(--apagado);
+  max-width: var(--ancho-medio);
+  margin: 0;
+}
+
+/* ── Rejilla: */
+
+.pagina.documento .cuerpo {
+  display: grid;
+  grid-template-columns: var(--doc-columna) minmax(0, 1fr);
+  gap: var(--e5);
+  margin-top: var(--e4);
+  align-items: start;
+}
+/* minmax(0, ·) arriba y esto aquí: */
+.pagina.documento .cuerpo > * { min-width: 0; }
+
+@media (min-width: 90rem) {
+  .pagina.documento { --doc-columna: 17rem; }
+  .pagina.documento .cuerpo { gap: var(--e6); }
+}
+
+/* ── Medida de lectura ──────────────────────────────────────────────────────────────── 34 rem con Source… */
+
+.pagina.documento p,
+.pagina.documento ul.prosa,
+.pagina.documento ol.prosa,
+.pagina.documento main > section > ul,
+.pagina.documento main > section > ol {
+  max-width: var(--ancho-texto);
+}
+.pagina.documento p {
+  margin: 0 0 var(--e2);
+  /* Los identificadores largos en línea —`@Get("/{id}/notas/{n}")`— son la única cosa de un párrafo que… */
+  overflow-wrap: break-word;
+}
+.pagina.documento ul.prosa,
+.pagina.documento ol.prosa {
+  margin: 0 0 var(--e3);
+  padding-left: 1.2em;
+}
+.pagina.documento ul.prosa li,
+.pagina.documento ol.prosa li {
+  margin-bottom: var(--e1);
+  overflow-wrap: break-word;
+}
+.pagina.documento ::marker { color: var(--apagado); }
+
+.pagina.documento a { text-underline-offset: .18em; }
+.pagina.documento strong,
+.pagina.documento b { font-weight: 640; color: var(--tinta); }
+
+/* ── Secciones ──────────────────────────────────────────────────────────────────────── El aire es lo que… */
+
+.pagina.documento main > section {
+  padding-top: 0;
+  scroll-margin-top: calc(var(--doc-barra) + var(--e2));
+}
+.pagina.documento main > section + section {
+  margin-top: var(--e5);
+  padding-top: var(--e4);
+  border-top: 1px solid var(--linea);
+}
+.pagina.documento main > section:last-child { padding-bottom: var(--e5); }
+
+/* El número de sección deja de ser un prefijo en la misma línea del título y pasa a ser un antetítulo. */
+.pagina.documento .titulo-seccion {
+  display: block;
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: var(--e3);
+}
+.pagina.documento .titulo-seccion .indice-num {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: var(--acento);
+  margin-bottom: var(--e1);
+  font-variant-numeric: tabular-nums;
+}
+.pagina.documento .titulo-seccion h2 {
+  font-family: var(--sans);
+  font-size: var(--t-titulo);
+  letter-spacing: var(--track-titulo);
+  font-weight: 680;
+  line-height: 1.06;
+  text-transform: none;
+  color: var(--tinta);
+  max-width: var(--ancho-medio);
+  text-wrap: balance;
+}
+
+.pagina.documento h3 {
+  font-family: var(--sans);
+  font-size: var(--t-guia);
+  font-weight: 680;
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  text-transform: none;
+  color: var(--tinta);
+  margin: var(--e4) 0 var(--e2);
+  max-width: var(--ancho-medio);
+}
+.pagina.documento h4 {
+  font-family: var(--sans);
+  font-size: var(--t-cuerpo);
+  font-weight: 680;
+  letter-spacing: 0;
+  color: var(--tinta);
+  margin: var(--e3) 0 var(--e1);
+}
+/* Un encabezado no arrastra el margen superior si abre la sección. */
+.pagina.documento .titulo-seccion + h3,
+.pagina.documento .titulo-seccion + h4 { margin-top: 0; }
+
+/* ── Índice del documento ───────────────────────────────────────────────────────────── El marcado es el… */
+
+.pagina.documento nav.indice {
+  position: sticky;
+  top: calc(var(--doc-barra) + var(--e2));
+  align-self: start;
+  max-height: calc(100svh - var(--doc-barra) - var(--e4));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--apagado) 45%, transparent) transparent;
+}
+.pagina.documento nav.indice ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--linea);
+}
+.pagina.documento nav.indice li { margin: 0; }
+.pagina.documento nav.indice a {
+  display: grid;
+  grid-template-columns: 1.6em minmax(0, 1fr);
+  gap: .5em;
+  align-items: baseline;
+  padding: .45rem .7rem;
+  margin-left: -1px;
+  font-family: var(--sans);
+  font-size: var(--t-menor);
+  line-height: 1.35;
+  color: var(--apagado);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color var(--rapido) var(--curva), border-color var(--rapido) var(--curva),
+              background var(--rapido) var(--curva);
+}
+.pagina.documento nav.indice a .n {
+  font-family: var(--mono);
+  font-size: .82em;
+  font-variant-numeric: tabular-nums;
+  color: var(--apagado);
+  opacity: .75;
+}
+.pagina.documento nav.indice a:hover {
+  color: var(--tinta);
+  border-left-color: color-mix(in srgb, var(--apagado) 60%, transparent);
+}
+/* El estado activo no se fía del color solo: */
+.pagina.documento nav.indice a.activo {
+  color: var(--tinta);
+  font-weight: 600;
+  border-left-color: var(--acento);
+  background: color-mix(in srgb, var(--acento) 8%, transparent);
+}
+.pagina.documento nav.indice a.activo .n { color: var(--acento); opacity: 1; }
+
+/* El botón solo existe cuando hay algo que plegar. */
+.pagina.documento .indice-boton { display: none; }
+
+@media (max-width: 60rem) {
+  .pagina.documento .cuerpo {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  /* Plegado y pegado bajo la barra: */
+  .pagina.documento nav.indice {
+    position: sticky;
+    top: var(--doc-barra);
+    z-index: 20;
+    max-height: none;
+    overflow: visible;
+    padding: var(--e1) 0;
+    margin-bottom: var(--e3);
+    background: var(--papel);
+    border-bottom: 1px solid var(--linea);
+  }
+
+  .pagina.documento .indice-boton {
+    display: flex;
+    align-items: center;
+    gap: var(--e1);
+    width: 100%;
+    min-height: 2.75rem;
+    padding: .45rem .7rem;
+    text-align: left;
+    font-family: var(--sans);
+    font-size: var(--t-menor);
+    font-weight: 600;
+    color: var(--tinta);
+    background: var(--panel);
+    /* 75 % de `--apagado` da 3,16x en claro y 4,94x en oscuro contra el papel: */
+    border: 1px solid color-mix(in srgb, var(--apagado) 75%, transparent);
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .pagina.documento .indice-boton .indice-rotulo { flex: 0 0 auto; }
+  /* La sección en la que se está, a la derecha del rótulo: */
+  .pagina.documento .indice-boton .indice-actual {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-weight: 400;
+    color: var(--apagado);
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pagina.documento .indice-boton .indice-flecha {
+    flex: 0 0 auto;
+    width: .9em;
+    height: .9em;
+    transition: transform var(--rapido) var(--curva);
+  }
+  .pagina.documento .indice-boton[aria-expanded="true"] .indice-flecha { transform: rotate(180deg); }
+
+  .pagina.documento nav.indice ol {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    z-index: 1;
+    max-height: min(60svh, 24rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--e1) 0;
+    background: var(--papel);
+    border: 1px solid var(--linea);
+    border-top: 0;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 14px 34px var(--velo);
+  }
+  .pagina.documento nav.indice ol[hidden] { display: none; }
+  .pagina.documento nav.indice a { padding: .6rem .8rem; }
+
+  .pagina.documento main > section {
+    scroll-margin-top: calc(var(--doc-barra) + var(--doc-tira) + var(--e1));
+  }
+}
+
+/* ── Código ─────────────────────────────────────────────────────────────────────────── Un bloque de… */
+
+.pagina.documento .codigo {
+  margin: var(--e3) 0;
+  background: var(--panel);
+  border: 1px solid var(--linea);
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: var(--ancho-ancho);
+}
+.pagina.documento .codigo .barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e1);
+  position: static;
+  padding: .5rem var(--e2);
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--linea);
+}
+.pagina.documento .etiqueta {
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--apagado);
+}
+/* La primera etiqueta nombra el bloque; las demás son el idioma o el archivo. */
+.pagina.documento .codigo .barra .etiqueta:first-child { color: var(--tinta); }
+
+.pagina.documento pre,
+.pagina.documento .codigo pre {
+  margin: 0;
+  padding: var(--e2);
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  line-height: 1.75;
+  tab-size: 4;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--apagado) 45%, transparent) transparent;
+}
+/* Un <pre> suelto, fuera de una tarjeta, se viste igual: */
+.pagina.documento main > section > pre,
+.pagina.documento .aviso > pre {
+  background: var(--panel);
+  border: 1px solid var(--linea);
+  border-radius: 8px;
+  margin: var(--e3) 0;
+}
+
+@media (min-width: 48rem) {
+  .pagina.documento .codigo pre { padding: var(--e3); }
+}
+
+/* El resaltado viene de `estilo.css` y se queda como está: */
+
+/* Código en línea, dentro de la prosa. */
+.pagina.documento p > code,
+.pagina.documento li > code,
+.pagina.documento td > code,
+.pagina.documento th > code,
+.pagina.documento .aviso code,
+.pagina.documento h3 > code,
+.pagina.documento h4 > code {
+  font-family: var(--mono);
+  font-size: .86em;
+  color: var(--tinta);
+  background: color-mix(in srgb, var(--acento) 10%, transparent);
+  padding: .1em .36em;
+  border-radius: 4px;
+  overflow-wrap: break-word;
+}
+.pagina.documento pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ── Tablas ─────────────────────────────────────────────────────────────────────────── Siguen siendo… */
+
+.pagina.documento .envoltura {
+  margin: var(--e3) 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: 1px solid var(--linea);
+  border-radius: 8px;
+  max-width: var(--ancho-ancho);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--apagado) 45%, transparent) transparent;
+}
+.pagina.documento .envoltura table {
+  /* `separate` y no `collapse` a propósito: */
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  min-width: 32rem;
+  font-family: var(--sans);
+  font-size: var(--t-menor);
+  line-height: 1.5;
+}
+.pagina.documento .envoltura th {
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--apagado);
+  text-align: left;
+  white-space: nowrap;
+  padding: .7rem var(--e2);
+  background: var(--panel);
+  border-bottom: 1px solid var(--linea);
+}
+.pagina.documento .envoltura td {
+  padding: .7rem var(--e2);
+  vertical-align: top;
+  border-bottom: 1px solid color-mix(in srgb, var(--linea) 60%, transparent);
+}
+.pagina.documento .envoltura tbody tr:last-child td { border-bottom: 0; }
+.pagina.documento .envoltura tbody tr:hover td {
+  background: color-mix(in srgb, var(--panel) 60%, transparent);
+}
+.pagina.documento .envoltura tr.total td {
+  border-top: 1px solid var(--tinta);
+  border-bottom: 0;
+  font-weight: 640;
+}
+
+/* Las cifras a la derecha y en tabulares, que es lo que deja las unidades alineadas y hace comparable una… */
+.pagina.documento .envoltura td.cifra,
+.pagina.documento .envoltura th.cifra {
+  text-align: right;
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.pagina.documento .envoltura td.nowrap,
+.pagina.documento .envoltura td .mono { white-space: nowrap; }
+.pagina.documento .mono,
+.pagina.documento .mono-clave { font-family: var(--mono); font-size: var(--t-nota); }
+.pagina.documento .mono-clave { color: var(--acento); }
+.pagina.documento .detalle {
+  display: block;
+  margin-top: .25rem;
+  font-family: var(--serif);
+  font-size: var(--t-nota);
+  line-height: 1.5;
+  color: var(--apagado);
+  white-space: normal;
+}
+
+/* Cabecera fija, solo cuando la tabla es lo bastante larga como para que valga la pena. */
+.pagina.documento .envoltura:has(tbody > tr:nth-child(10)) {
+  max-height: min(72svh, 38rem);
+  overflow-y: auto;
+}
+.pagina.documento .envoltura:has(tbody > tr:nth-child(10)) th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* ── Avisos ─────────────────────────────────────────────────────────────────────────── Se distinguen por… */
+
+.pagina.documento .aviso {
+  margin: var(--e4) 0;
+  padding: var(--e3);
+  max-width: var(--ancho-medio);
+  border-left: 3px solid var(--acento);
+  border-radius: 0 8px 8px 0;
+  background: color-mix(in srgb, var(--acento) 7%, transparent);
+}
+.pagina.documento .aviso.nota {
+  border-left-color: color-mix(in srgb, var(--apagado) 75%, transparent);
+  background: var(--panel);
+}
+.pagina.documento .aviso .etiqueta {
+  display: block;
+  margin-bottom: var(--e1);
+  font-family: var(--sans);
+  font-size: var(--t-nota);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--acento);
+}
+.pagina.documento .aviso.nota .etiqueta { color: var(--apagado); }
+.pagina.documento .aviso p { max-width: none; margin-bottom: var(--e2); }
+.pagina.documento .aviso p:last-child { margin-bottom: 0; }
+.pagina.documento .aviso pre { margin: var(--e2) 0 0; }
+
+/* ── Pastillas ──────────────────────────────────────────────────────────────────────── Dos de las tres no… */
+
+.pagina.documento .pastilla {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: .2em .55em;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.pagina.documento .pastilla.ok {
+  color: #26734a;
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+:root[data-tema="oscuro"] .pagina.documento .pastilla.ok,
+:root:not([data-tema="claro"]) .pagina.documento .pastilla.ok { color: #56c98a; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-tema="oscuro"]) .pagina.documento .pastilla.ok { color: #26734a; }
+}
+/* `--acento-2` es el mismo azul un paso más cerrado en claro (#1d4ed8): */
+.pagina.documento .pastilla.pend { color: var(--acento-2); }
+.pagina.documento .pastilla.parcial { color: var(--apagado); background: var(--panel); }
+
+/* ── Fichas ───────────────────────────────────────────────────────────────────────── */
+
+.pagina.documento .ficha { margin: var(--e3) 0; border-radius: 8px; }
+.pagina.documento .campo { font-family: var(--serif); font-size: var(--t-menor); }
+
+/* ── Asomo ──────────────────────────────────────────────────────────────────────────── El único… */
+
+.pagina.documento [data-asomar] {
+  opacity: 0;
+  transform: translate3d(0, .4rem, 0);
+  transition: opacity var(--medio) var(--curva), transform var(--medio) var(--curva);
+}
+.pagina.documento [data-asomar].dentro { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pagina.documento [data-asomar] { opacity: 1 !important; transform: none !important; }
+  .pagina.documento .indice-boton .indice-flecha { transition: none; }
+}
+
+/* ── Impresión ────────────────────────────────────────────────────────────────────── */
+
+@media print {
+  .pagina.documento nav.indice,
+  .pagina.documento .indice-boton { display: none; }
+  .pagina.documento .cuerpo { display: block; }
+  .pagina.documento .envoltura,
+  .pagina.documento .codigo { overflow: visible; max-height: none; }
+  .pagina.documento [data-asomar] { opacity: 1 !important; transform: none !important; }
+}
+
+/* Cifras con fecha: el aviso va pegado a la tabla que califica, no suelto al final. */
+.aviso.fecha-medicion {
+  border-left: 3px solid var(--acento);
+  background: var(--panel);
+  padding: var(--e2) var(--e3);
+  border-radius: 0 8px 8px 0;
+  margin-bottom: var(--e2);
+}
+.aviso.fecha-medicion .etiqueta {
+  font-family: var(--mono);
+  font-size: var(--t-nota);
+  color: var(--acento);
+  letter-spacing: .04em;
+  margin-bottom: .35rem;
+}
+.aviso.fecha-medicion p { margin: 0; font-size: var(--t-menor); color: var(--apagado); }
