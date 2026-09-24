@@ -67,6 +67,7 @@ export default function Portada() {
       {/* 3 · Las cifras. El retraso va escrito aquí y no lo pone el observador: el escalonado
           debe seguir el orden de la fila, no el que estas tarjetas ocupen en la página. */}
       <section className="escena escena--panel">
+        <Fondo nombre="04-pulso-electrico" poster="06-pulso-nocturno" tenue />
         <Lamina nombre="08-convergencia" lado="derecha" alto="26rem" fuerza={.38} />
         <div className="centro">
           <div className="pt-cifras">
@@ -88,9 +89,9 @@ export default function Portada() {
           <h2 className="rotulo" data-revelar>{t.promesa[1]}</h2>
           <figure className="pt-diagrama" data-revelar>
             <div className="pt-pilas">
-              <Pila capas={['systemd', 'JVM', 'Tomcat 10', 'app.war']}
+              <Pila capas={['systemd', 'JVM', 'Tomcat 10', 'app.war']} ritmo={220}
                     orden="$ systemctl start tomcat" />
-              <Pila capas={['JVM', 'app.jar']} orden="$ java -jar app.jar" hueco
+              <Pila capas={['JVM', 'app.jar']} orden="$ java -jar app.jar" hueco ritmo={90}
                     clase="pt-pila--cero" />
             </div>
             {/* Los dos dibujos van ocultos al lector de pantalla y el pie hace de alternativa
@@ -104,6 +105,7 @@ export default function Portada() {
 
       {/* 5 · Cierre. */}
       <section className="escena escena--panel pt-cierre">
+        <Fondo nombre="05-umbral-lento" poster="10-umbral" tenue />
         <Geometria variante="sobria" />
         <div className="centro">
           <h2 className="rotulo" data-revelar>{t.empezar}</h2>
@@ -124,18 +126,23 @@ export default function Portada() {
   )
 }
 
-/** Una pila de capas, de abajo arriba. */
-function Pila({ capas, orden, hueco, clase }) {
+/** Una pila de capas, de abajo arriba. Se levanta piso a piso al entrar en pantalla. */
+function Pila({ capas, orden, hueco, clase, ritmo = 150 }) {
+  const alto = 330
+  const base = 240
   return (
-    <svg className={clase ? `pt-pila ${clase}` : 'pt-pila'} viewBox="0 0 260 330" aria-hidden="true">
+    <svg className={clase ? `pt-pila ${clase}` : 'pt-pila'} viewBox={`0 0 260 ${alto}`}
+         data-revelar aria-hidden="true">
+      <line className="pt-cable" x1="130" y1={base + 46} x2="130"
+            y2={base - (capas.length - 1) * 56} strokeWidth="1.5" />
       {hueco && (
         <rect className="hueco" x="20" y="72" width="220" height="102" rx="6"
               fill="none" strokeWidth="1.5" strokeDasharray="6 7" />
       )}
       {capas.map((nombre, i) => {
-        const y = 240 - i * 56
+        const y = base - i * 56
         return (
-          <g key={nombre}>
+          <g key={nombre} className="pt-piso" style={{ '--piso': `${i * ritmo}ms` }}>
             <rect x="20" y={y} width="220" height="46" rx="6" strokeWidth="1.5"
                   stroke="currentColor" fill="color-mix(in srgb, currentColor 8%, transparent)" />
             <text x="130" y={y + 28} fontSize="15" textAnchor="middle" fill="currentColor">
@@ -144,6 +151,8 @@ function Pila({ capas, orden, hueco, clase }) {
           </g>
         )
       })}
+      <circle className="pt-pulso" cx="130" r="3.5" fill="currentColor"
+              style={{ '--desde': `${base + 40}px`, '--hasta': `${base - (capas.length - 1) * 56}px` }} />
       <text className="orden" x="130" y="316" fontSize="13" textAnchor="middle">{orden}</text>
     </svg>
   )

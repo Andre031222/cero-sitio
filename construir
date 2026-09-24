@@ -32,7 +32,7 @@ azul "1/4 · el front"
 # porque el archivo no viajaba dentro del jar. Ahora se copia solo, y si no está se para aquí
 # en vez de desplegar un instalador roto.
 azul "1.5/4 · el paquete que baja el instalador"
-PAQUETE=$(ls "$FRAMEWORK"/java/cero-web/src/main/resources/estaticos/cero-*.tar.gz 2>/dev/null | head -1)
+PAQUETE=$(ls "$FRAMEWORK"/dist/cero-*.tar.gz 2>/dev/null | head -1)
 [ -n "$PAQUETE" ] || {
   malo "no encuentro el paquete en el framework."
   malo "ármalo primero:  (cd $FRAMEWORK && ./cero dist)"

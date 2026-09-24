@@ -442,13 +442,13 @@ ul.prosa li { margin-bottom: .45rem; }
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) .terminal {
-    --term-fondo: #0b1020; --term-barra: #141a2e; --term-borde: rgba(255, 255, 255, .1);
-    --term-texto: #c8d2e8; --term-orden: #eaf0fa; --term-tenue: #7c88a8;
+    --term-fondo: #060607; --term-barra: #131315; --term-borde: rgba(255, 255, 255, .1);
+    --term-texto: #ccd2dd; --term-orden: #f2f5fa; --term-tenue: #878d99;
   }
 }
 :root[data-tema="oscuro"] .terminal {
-  --term-fondo: #0b1020; --term-barra: #141a2e; --term-borde: rgba(255, 255, 255, .1);
-  --term-texto: #c8d2e8; --term-orden: #eaf0fa; --term-tenue: #7c88a8;
+  --term-fondo: #060607; --term-barra: #131315; --term-borde: rgba(255, 255, 255, .1);
+  --term-texto: #ccd2dd; --term-orden: #f2f5fa; --term-tenue: #878d99;
 }
 .terminal-barra { display: flex; align-items: center; gap: .8rem;
   padding: .5rem .8rem; background: var(--term-barra); border-bottom: 1px solid var(--term-borde); }

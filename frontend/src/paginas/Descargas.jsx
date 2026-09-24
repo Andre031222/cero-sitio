@@ -4,6 +4,7 @@ import { idiomaDe, TEXTOS } from '../idioma.js'
 import useRevelar from '../revelar.js'
 import Orden from '../Orden.jsx'
 import Lamina from '../Lamina.jsx'
+import Fondo from '../Fondo.jsx'
 import { VERSION } from '../version.js'
 import '../producto.css'
 
@@ -86,6 +87,7 @@ export default function Descargas() {
       </section>
 
       <section className="escena escena--panel">
+        <Fondo nombre="02-prisma-recorrido" poster="02-prisma-horizonte" tenue />
         <Lamina nombre="10-umbral" lado="derecha" alto="24rem" fuerza={.36} />
         <div className="centro centro--medio">
           <h2 className="rotulo" data-revelar>{t.instalar}</h2>
