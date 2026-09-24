@@ -5,8 +5,8 @@ const CLAVE = 'cero.tema'
 /**
  * Conmutador de tema.
  *
- * Tres estados y no dos: claro, oscuro y «el del sistema», que es el de partida. Forzar una
- * elección desde el principio es peor que respetar lo que el visitante ya decidió en su equipo.
+ * Tres estados y no dos: claro, oscuro y «el del sistema». Arranca en oscuro, que es el tema
+ * en el que está diseñado el sitio; quien prefiera seguir a su equipo lo elige en el conmutador.
  *
  * La preferencia se guarda en localStorage, y ese acceso va en try/catch: en una ventana privada
  * o con las cookies bloqueadas, leerlo lanza. Si falla, se sigue con el tema del sistema.
@@ -14,9 +14,9 @@ const CLAVE = 'cero.tema'
 export default function Tema() {
   const [tema, setTema] = useState(() => {
     try {
-      return localStorage.getItem(CLAVE) || 'sistema'
+      return localStorage.getItem(CLAVE) || 'oscuro'
     } catch {
-      return 'sistema'
+      return 'oscuro'
     }
   })
 
@@ -28,7 +28,8 @@ export default function Tema() {
       raiz.setAttribute('data-tema', tema)
     }
     try {
-      tema === 'sistema' ? localStorage.removeItem(CLAVE) : localStorage.setItem(CLAVE, tema)
+      // «sistema» se guarda como los demás: borrarlo lo convertiría en el oscuro por omisión.
+      localStorage.setItem(CLAVE, tema)
     } catch {
       // Sin almacenamiento la elección dura lo que la pestaña. Es aceptable.
     }

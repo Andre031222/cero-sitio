@@ -40,6 +40,16 @@
   </head>
   <body>
     <div id="raiz"></div>
+    <script>
+      // Antes de pintar: sin esto, con el sistema en claro se ve un destello blanco hasta que
+      // React monta. Oscuro por omisión; «sistema» solo si el visitante lo eligió.
+      try {
+        var t = localStorage.getItem('cero.tema') || 'oscuro'
+        if (t !== 'sistema') document.documentElement.setAttribute('data-tema', t)
+      } catch (e) {
+        document.documentElement.setAttribute('data-tema', 'oscuro')
+      }
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
