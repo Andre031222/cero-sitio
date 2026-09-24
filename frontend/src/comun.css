@@ -18,10 +18,8 @@
 
 /* ─── ajustes de base ─── */
 
-/* Los dos valores que el sitio lleva pintados desde antes del rediseño y que no coinciden con
-   la primitiva de diseno.css. Se conservan para no cambiar nada; quedan pendientes de decidir. */
-body { line-height: 1.6; }
-.nota { font-size: .95rem; max-width: 42rem; }
+/* `.nota` es prosa, no una etiqueta: por eso no usa --t-nota, que es para rótulos diminutos. */
+.nota { font-size: .95rem; max-width: 42rem; color: var(--apagado); }
 .nota code { font-size: .9em; background: color-mix(in srgb, var(--acento) 9%, transparent);
   padding: .1em .35em; border-radius: 3px; }
 

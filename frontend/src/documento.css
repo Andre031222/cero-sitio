@@ -607,9 +607,10 @@ nav.indice a .n { color: var(--apagado); opacity: .6; font-variant-numeric: tabu
   vertical-align: top; }
 .pagina tbody tr:last-child td { border-bottom: none; }
 tr.total td { border-top: 2px solid var(--tinta); font-weight: 600; }
-/* La fila de totales se compone como una tira y no como una fila de tabla. */
-.total { display: flex; gap: 2.5rem; border-top: 2px solid var(--tinta); padding-top: 1.2rem; }
-@media (max-width: 40rem) { .total { gap: 1.5rem; } }
+/* Acotado al bloque de Descargas: como regla suelta alcanzaba a los `tr.total` de las tablas
+   y una fila con `display:flex` deja de alinearse con las columnas de su propia tabla. */
+.producto .resumen .total { display: flex; gap: 2.5rem; border-top: 2px solid var(--tinta); padding-top: 1.2rem; }
+@media (max-width: 40rem) { .producto .resumen .total { gap: 1.5rem; } }
 
 /* El filete separa una columna numérica de la siguiente; la primera no tiene de qué separarse. */
 .cifra { border-left: 1px solid var(--linea); padding: 0 1.25rem; }

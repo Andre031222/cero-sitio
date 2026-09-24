@@ -306,9 +306,9 @@
   transition: border-color .14s, color .14s;
 }
 .bajar .sueltos a:hover { color: var(--acento); border-color: var(--acento); }
+/* Sin opacidad: a .65 sobre --apagado daba 2,65:1 en claro, lejos del 4,5 que pide AA. */
 .bajar .sueltos .peso {
   font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
-  opacity: .65;
 }
 /* El aviso de qué son los jar va junto al botón, no al final: quien descarga lo lee antes de
    intentar `java -jar` y llevarse un error que parece del framework y no lo es. */
