@@ -6,7 +6,7 @@
   .producto { margin-inline: -1rem; }
 }
 
-/* `estilo.css` le da a `.pagina section` un padding-top propio que se sumaba al de la escena. */
+/* `documento.css` le da a `.pagina section` un padding-top propio que se sumaba al de la escena. */
 .producto .escena { padding-block: var(--e7); scroll-margin-top: 5rem; }
 .producto .escena--apretada { padding-block: var(--e5); }
 .producto .escena:first-child { padding-top: var(--e5); }
@@ -219,8 +219,108 @@
 /* El botón de copiar es interfaz: */
 .producto .barra-codigo button { font-size: .72rem; color: var(--tinta); padding: .4rem .7rem; }
 
-/* ── Ajustes finos que `estilo.css` no prevé dentro de una escena ─────── */
+/* ── Ajustes finos que la base de `.pagina` no prevé dentro de una escena ─ */
 .producto .guia { margin: 0 0 var(--e3); max-width: 42rem; }
 .producto .aviso { margin: var(--e4) 0 0; }
 .producto ul.prosa { margin: var(--e3) 0 0; }
 .producto .escena > .centro > :last-child { margin-bottom: 0; }
+
+/* ── Catálogo de módulos ───────────────────────────────────────────────── */
+
+.rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1px;
+  background: var(--linea); border: 1px solid var(--linea); border-radius: 6px; overflow: hidden; }
+/* auto-fit repartía seis módulos en cinco columnas y dejaba el sexto solo en una fila. */
+@media (min-width: 62rem) {
+  .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.modulo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .85rem; align-items: start;
+  padding: 1.1rem 1.2rem; background: var(--papel); cursor: pointer; transition: background .14s; }
+.modulo:hover { background: var(--panel); }
+.modulo.marcado { background: color-mix(in srgb, var(--acento) 9%, var(--papel)); }
+.modulo.arrastrado:not(.marcado) { background: color-mix(in srgb, var(--acento) 3%, var(--papel)); }
+.modulo input { margin-top: .3rem; accent-color: var(--acento); width: 1rem; height: 1rem; }
+.modulo .cabeza { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+.modulo .cabeza .mono { font-weight: 600; font-size: .92rem; }
+.modulo .peso { font-family: var(--mono); font-size: .78rem; color: var(--apagado); white-space: nowrap; }
+.modulo p { margin: .4rem 0 0; font-size: .92rem; color: var(--apagado); line-height: 1.5; }
+.modulo .necesita, .modulo .aviso { font-family: var(--mono); font-size: .7rem; letter-spacing: .05em; }
+.modulo .aviso { color: var(--acento); }
+/* Los dos habituales pesan más: es la elección de la mayoría y conviene que se vea. */
+.modulo.habitual .cabeza .mono::after {
+  content: "habitual"; margin-left: .5rem; font-size: .6rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--acento); vertical-align: middle;
+}
+
+/* ── Atajos por escenario ──────────────────────────────────────────────── */
+
+/* Quien llega no piensa en módulos: los atajos traducen la intención a una selección. */
+.atajos { margin: 0 0 1.5rem; }
+.atajos .etiqueta { display: block; margin-bottom: .6rem; }
+.atajos .fichas { display: flex; flex-wrap: wrap; gap: .45rem; }
+.atajo {
+  font-family: var(--mono); font-size: .74rem; letter-spacing: .02em;
+  padding: .42rem .8rem; border-radius: 20px; cursor: pointer;
+  border: 1px solid var(--linea); background: transparent; color: var(--apagado);
+  transition: color .14s, border-color .14s, background .14s;
+}
+.atajo:hover { color: var(--tinta); border-color: var(--apagado); }
+.atajo.activo {
+  background: linear-gradient(120deg, var(--acento), var(--acento-2));
+  border-color: transparent; color: var(--papel);
+}
+.atajo.vaciar { color: var(--acento); border-style: dashed; }
+.atajo.todo { border-style: solid; border-color: var(--acento); color: var(--acento); }
+
+/* ── El resumen de la selección ────────────────────────────────────────── */
+
+.total b { font-family: var(--mono); font-weight: 800; }
+.total span { font-family: var(--mono); color: var(--apagado); margin-left: .25rem; }
+.total em { display: block; font-style: normal; font-family: var(--mono);
+  letter-spacing: .15em; text-transform: uppercase; color: var(--apagado); }
+
+.fallo { color: var(--acento); font-family: var(--mono); font-size: .85rem; }
+
+/* ── Descargar los jar ─────────────────────────────────────────────────── */
+
+/* El botón grande primero y los módulos sueltos debajo: la mayoría quiere el zip con todo
+   resuelto, y quien busca un jar concreto sabe lo que busca y lo encuentra en la lista. */
+.bajar { margin-top: 1.6rem; }
+.bajar .boton {
+  width: 100%; flex-direction: column; gap: .3rem; padding: .95rem 1.35rem; text-align: center;
+  border-color: transparent;
+}
+/* color: inherit a propósito: el gris azulado de `.detalle` sobre el botón relleno era ilegible. */
+.bajar .boton .detalle {
+  color: inherit; opacity: .78;
+  font-weight: 400; font-size: .7rem; letter-spacing: .03em; text-transform: none;
+}
+.bajar .sueltos {
+  list-style: none; margin: .7rem 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: .4rem;
+}
+.bajar .sueltos a {
+  display: inline-flex; align-items: baseline; gap: .45rem;
+  padding: .3rem .6rem; border: 1px solid var(--linea); border-radius: 4px;
+  text-decoration: none; font-size: .78rem; color: var(--apagado);
+  transition: border-color .14s, color .14s;
+}
+.bajar .sueltos a:hover { color: var(--acento); border-color: var(--acento); }
+.bajar .sueltos .peso {
+  font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+  opacity: .65;
+}
+/* El aviso de qué son los jar va junto al botón, no al final: quien descarga lo lee antes de
+   intentar `java -jar` y llevarse un error que parece del framework y no lo es. */
+.bajar .que-son {
+  margin: .8rem 0 0; font-size: .88rem; line-height: 1.55; color: var(--apagado);
+  max-width: 46rem;
+}
+.bajar .que-son b { color: var(--tinta); }
+
+/* El filete y la sangría del pie del dato venían del pie viejo del sitio, que alcanzaba a
+   `.dato .pie` por el nombre. La regla se fue; el aspecto se queda escrito donde toca. */
+.producto .dato .pie { border-top: 2px solid var(--tinta); padding: 1.25rem 1.5rem 3rem; }
+@media (max-width: 26rem) {
+  .producto .dato .pie { padding-left: 1rem; padding-right: 1rem; }
+}

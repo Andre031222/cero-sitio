@@ -52,6 +52,7 @@ export const TEXTOS = {
       instalarGuia: 'Una orden. Detecta tu sistema, comprueba el Java que tienes y te dice qué hacer si falta.',
       coordenadas: 'Coordenadas de Maven',
       coordenadasGuia: 'Si solo quieres declararlo a mano, esto es todo lo que hace falta.',
+      coordenadasCentral: ['Maven Central es inmutable, así que va por detrás del instalador. En Central está la ', '; para la ', ' usa el instalador o compila desde el paquete.'],
 
       titulo: 'Descargas',
       entrada: ['Toma solo lo que uses. Marca lo que necesitas y te decimos qué arrastra, cuánto pesa y qué declarar en tu ', '.'],
@@ -105,6 +106,7 @@ export const TEXTOS = {
       instalarGuia: 'One command. It detects your system, checks the Java you have and tells you what to do if it is missing.',
       coordenadas: 'Maven coordinates',
       coordenadasGuia: 'If you would rather declare it by hand, this is all you need.',
+      coordenadasCentral: ['Maven Central is immutable, so it lags behind the installer. Central has ', '; for ', ' use the installer or build from the tarball.'],
 
       titulo: 'Downloads',
       entrada: ['Take only what you use. Tick what you need and we tell you what it pulls in, how much it weighs and what to declare in your ', '.'],

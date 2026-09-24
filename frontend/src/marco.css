@@ -134,11 +134,83 @@
   .pie-caja { grid-template-columns: minmax(0, 1fr); gap: var(--e3); }
 }
 
-/* La marca crece con la barra. Va aquí y no en estilo.css, que ya no manda en la cabecera. */
+/* La marca crece con la barra. El tamaño de partida está más abajo, en esta misma hoja. */
 .barra-sitio .marca .simbolo { width: 2.5rem; height: 2.5rem; }
 .barra-sitio .marca .palabra { font-size: 1.4rem; }
 
 @media (max-width: 26rem) {
   .barra-sitio .marca .simbolo { width: 2rem; height: 2rem; }
   .barra-sitio .marca .palabra { font-size: 1.15rem; }
+}
+
+/* ── El marco del contenido ────────────────────────────────────────────── */
+
+/* Un grid de una columna que puede encoger: los ítems de grid tienen min-width:auto y sin
+   minmax(0,·) cualquier tabla o <pre> ancho desborda la página entera en el teléfono. */
+.marco {
+  /* Tres límites, y gana el más pequeño: 96 % manda por debajo de 960 px; calc(84vw + 7.2rem)
+     de ahí arriba, cediendo margen según crece la pantalla; 118 rem es el tope. */
+  width: min(96%, calc(84vw + 7.2rem), 118rem); margin: 0 auto; padding: 0 1.5rem;
+  display: grid; grid-template-columns: minmax(0, 1fr);
+}
+@media (max-width: 26rem) {
+  /* A 360 px el 96 % dejaba 7 px de margen ANTES del relleno. Aquí manda el relleno y nada más. */
+  .marco { width: 100%; padding: 0 1rem; }
+}
+
+/* ── La marca ──────────────────────────────────────────────────────────── */
+
+/* El isotipo, uno por tema. El principal es negro con cian: perfecto sobre fondo claro e
+   invisible sobre el oscuro. La variante ice —gris, azul y ámbar— aguanta los dos. */
+:root { --isotipo: url("/marca/logo-primary.png"); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) { --isotipo: url("/marca/logo-light.png"); }
+}
+:root[data-tema="oscuro"] { --isotipo: url("/marca/logo-light.png"); }
+
+/* `color` explícito: diseno.css tiñe los enlaces con el acento y la palabra va en tinta. */
+.marca { display: flex; align-items: center; gap: .55rem; text-decoration: none; color: var(--tinta); }
+.marca .simbolo {
+  flex: none; width: 2rem; height: 2rem;
+  background: var(--isotipo) center/contain no-repeat;
+  transition: transform .35s cubic-bezier(.16, 1, .3, 1);
+}
+.marca:hover .simbolo { transform: translateX(-2px) scale(1.06); }
+.marca .palabra {
+  font-family: var(--mono); font-weight: 800; font-size: 1.15rem; letter-spacing: -.02em;
+}
+/* La C en el acento, como en el kit. */
+.marca .palabra i { font-style: normal; color: var(--acento); }
+@media (prefers-reduced-motion: reduce) {
+  .marca .simbolo, .marca:hover .simbolo { transform: none; transition: none; }
+}
+
+/* ── Los mandos: tema e idioma ─────────────────────────────────────────── */
+
+.mandos { display: flex; align-items: center; gap: .45rem; }
+
+.tema {
+  flex: none; width: 2rem; height: 2rem; display: grid; place-items: center;
+  border: 1px solid var(--linea); border-radius: 6px; background: transparent;
+  color: var(--apagado); cursor: pointer; transition: color .15s, border-color .15s;
+}
+.tema:hover { color: var(--acento); border-color: var(--acento); }
+.tema svg { width: 15px; height: 15px; }
+
+.idioma {
+  display: inline-flex; align-items: center; gap: .3rem;
+  height: 2rem; padding: 0 .5rem;
+  border: 1px solid var(--linea); border-radius: 6px;
+  font-family: var(--mono); font-size: .68rem; font-weight: 700; letter-spacing: .08em;
+  color: var(--apagado); text-decoration: none; white-space: nowrap;
+  transition: color .15s, border-color .15s;
+}
+.idioma svg { width: 15px; height: 15px; flex: none; }
+/* La caja de la fuente monoespaciada es más alta que el glifo y el código se alineaba arriba. */
+.idioma .codigo { line-height: 1; }
+.idioma:hover { color: var(--acento); border-color: var(--acento); }
+/* En pantalla estrecha se queda el globo: el código es lo primero que sobra. */
+@media (max-width: 26rem) {
+  .idioma { padding: 0 .45rem; }
+  .idioma .codigo { display: none; }
 }

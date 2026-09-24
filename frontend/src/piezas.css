@@ -99,3 +99,20 @@
 
 /* En escenas con texto denso el vídeo baja para no competir con la lectura. */
 .fondo-video--tenue { opacity: .16; }
+
+/* En las páginas interiores, una sola forma y arriba a la derecha: aquí hay prosa que leer,
+   no un titular al que acompañar. */
+.pagina, .descargas { position: relative; }
+.pagina::before, .descargas::before {
+  content: "";
+  position: absolute;
+  top: -1rem; right: -1rem;
+  width: 5.5rem; height: 5.5rem;
+  background: url("/marca/shape-triangle-cyan.svg") center/contain no-repeat;
+  transform: rotate(-12deg);
+  opacity: .75;
+  pointer-events: none;
+  z-index: -1;
+}
+/* En el teléfono no hay huecos que rellenar, solo texto. */
+@media (max-width: 62rem) { .pagina::before, .descargas::before { display: none; } }

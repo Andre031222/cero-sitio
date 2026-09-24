@@ -24,7 +24,13 @@ regresión del framework, antes que las de nadie más.
     └── src/
         ├── main.jsx             # rutas
         ├── Marco.jsx            # barra y pie
-        ├── estilo.css
+        ├── diseno.css           # tokens, escala y primitivas. Manda
+        ├── comun.css            # tipografías, base y piezas de varias páginas
+        ├── marco.css            # barra, marca, mandos y pie
+        ├── portada.css          # la portada y la terminal
+        ├── producto.css         # Descargas y Acerca de
+        ├── documento.css        # Guía, Módulos, Referencia y Empezar
+        ├── piezas.css           # geometría, láminas y vídeos de fondo
         ├── Tema.jsx             # conmutador claro / oscuro / sistema
         ├── Orden.jsx            # orden de terminal con copiar
         ├── contenido/           # el cuerpo de cada página, en HTML

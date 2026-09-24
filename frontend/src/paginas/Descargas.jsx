@@ -5,7 +5,7 @@ import useRevelar from '../revelar.js'
 import Orden from '../Orden.jsx'
 import Lamina from '../Lamina.jsx'
 import Fondo from '../Fondo.jsx'
-import { VERSION } from '../version.js'
+import { VERSION, VERSION_CENTRAL } from '../version.js'
 import '../producto.css'
 
 const INSTALAR = 'curl -fsSL https://cero.ginit.dev/instalar | sh'
@@ -13,7 +13,7 @@ const INSTALAR = 'curl -fsSL https://cero.ginit.dev/instalar | sh'
 const POM = `<dependency>
   <groupId>dev.ginit.cero</groupId>
   <artifactId>cero-core</artifactId>
-  <version>${VERSION}</version>
+  <version>${VERSION_CENTRAL}</version>
 </dependency>`
 
 /** Elegir módulos y ver qué te llevas. */
@@ -105,6 +105,10 @@ export default function Descargas() {
             <div className="barra-codigo"><span>pom.xml</span></div>
             <pre>{POM}</pre>
           </div>
+          <p className="nota" data-revelar>
+            {t.coordenadasCentral[0]}<b>{VERSION_CENTRAL}</b>{t.coordenadasCentral[1]}
+            <b>{VERSION}</b>{t.coordenadasCentral[2]}
+          </p>
         </div>
       </section>
 

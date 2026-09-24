@@ -183,3 +183,56 @@
   .pt-cable { stroke-dashoffset: 0; }
   .pt-pulso { display: none; }
 }
+
+/* ── 6 · La terminal ───────────────────────────────────────────────────── */
+
+/* La terminal tenía sus seis colores escritos a mano y salía negra también en el tema claro:
+   un agujero oscuro en medio de una página blanca. Usa sus propios tokens, y solo ella. */
+.terminal {
+  --term-fondo: #f7f9fc;
+  --term-barra: #eaeef6;
+  --term-borde: rgba(15, 20, 28, .12);
+  --term-texto: #2b3653;
+  --term-orden: #0f141c;
+  --term-tenue: #616c87;
+
+  border: 1px solid var(--term-borde); border-radius: 6px; overflow: hidden;
+  background: var(--term-fondo); margin: 2.2rem 0 1rem; max-width: 46rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) .terminal {
+    --term-fondo: #060607; --term-barra: #131315; --term-borde: rgba(255, 255, 255, .1);
+    --term-texto: #ccd2dd; --term-orden: #f2f5fa; --term-tenue: #878d99;
+  }
+}
+:root[data-tema="oscuro"] .terminal {
+  --term-fondo: #060607; --term-barra: #131315; --term-borde: rgba(255, 255, 255, .1);
+  --term-texto: #ccd2dd; --term-orden: #f2f5fa; --term-tenue: #878d99;
+}
+.terminal-barra { display: flex; align-items: center; gap: .8rem;
+  padding: .5rem .8rem; background: var(--term-barra); border-bottom: 1px solid var(--term-borde); }
+.terminal-barra .luces { display: flex; gap: .35rem; }
+.terminal-barra .luces i { width: 10px; height: 10px; border-radius: 50%; background: var(--term-tenue); }
+.terminal-barra .luces i:nth-child(1) { background: #ff5f57; }
+.terminal-barra .luces i:nth-child(2) { background: #febc2e; }
+.terminal-barra .luces i:nth-child(3) { background: #28c840; }
+.terminal-barra .ruta { flex: 1; font-family: var(--mono); font-size: .72rem; color: var(--term-tenue); }
+.terminal-barra button { font-family: var(--mono); font-size: .66rem; letter-spacing: .08em;
+  text-transform: uppercase; border: 1px solid var(--term-borde); background: transparent;
+  color: var(--term-tenue); padding: .22rem .55rem; border-radius: 4px; cursor: pointer; }
+.terminal-barra button:hover:not(:disabled) { color: var(--acento); border-color: var(--acento); }
+.terminal-barra button:disabled { opacity: .4; cursor: default; }
+
+.terminal-pantalla { margin: 0; padding: 1rem 1.1rem; min-height: 17rem;
+  font-family: var(--mono); font-size: .78rem; line-height: 1.75;
+  color: var(--term-texto); white-space: pre-wrap; word-break: break-word; }
+.linea-orden { color: var(--term-orden); }
+.linea-orden .senal { color: var(--acento); font-weight: 700; }
+.linea-salida { color: var(--term-tenue); }
+.cursor { display: inline-block; width: .55em; height: 1.05em; background: var(--acento);
+  vertical-align: text-bottom; margin-left: 1px; }
+@media (prefers-reduced-motion: no-preference) {
+  .cursor { animation: latir 1.05s step-end infinite; }
+  @keyframes latir { 0%,50% { opacity: 1 } 50.01%,100% { opacity: 0 } }
+}
+@media (max-width: 40rem) { .terminal-pantalla { font-size: .7rem; min-height: 15rem; } }

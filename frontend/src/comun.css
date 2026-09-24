@@ -1,0 +1,122 @@
+/* Lo compartido: las tipografías alojadas, los ajustes de base sobre diseno.css y las piezas
+   de interfaz que usan varias páginas. Va justo detrás de diseno.css y delante de las de área. */
+
+/* Alojadas, no traídas de Google: es una dependencia externa en un proyecto cuyo argumento es
+   no tener ninguna. Subconjunto latino y eje óptico fijado, 55 KB las dos. */
+@font-face {
+  font-family: "Source Serif";
+  src: url("/fuentes/source-serif-4-latin.woff2") format("woff2");
+  font-weight: 400 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("/fuentes/jetbrains-mono-latin.woff2") format("woff2");
+  font-weight: 400 800;
+  font-display: swap;
+}
+
+/* ─── ajustes de base ─── */
+
+/* Los dos valores que el sitio lleva pintados desde antes del rediseño y que no coinciden con
+   la primitiva de diseno.css. Se conservan para no cambiar nada; quedan pendientes de decidir. */
+body { line-height: 1.6; }
+.nota { font-size: .95rem; max-width: 42rem; }
+.nota code { font-size: .9em; background: color-mix(in srgb, var(--acento) 9%, transparent);
+  padding: .1em .35em; border-radius: 3px; }
+
+pre { overflow-x: auto; max-width: 100%; }
+
+/* `clip` y no `hidden`: `hidden` haría de la raíz un contenedor de desplazamiento y rompería
+   el `position: sticky` de la barra. */
+html { overflow-x: clip; }
+
+/* ─── foco de teclado ─── */
+
+/* `:focus-visible` y no `:focus`: con `:focus` el anillo salta también al pulsar con el ratón. */
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.boton.principal:focus-visible { outline-color: var(--tinta); }
+
+/* ─── botones ─── */
+
+.boton {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: .62rem 1.35rem; border-radius: 4px; border: 1px solid var(--linea);
+  font-family: var(--mono); font-size: .8125rem; font-weight: 600; letter-spacing: .04em;
+  text-decoration: none; color: var(--tinta); background: transparent;
+  transition: transform .14s cubic-bezier(.16,1,.3,1), border-color .14s, background .14s;
+}
+.boton:hover { border-color: var(--acento); color: var(--acento); transform: translateY(-1px); }
+/* Una sombra gris debajo de un botón de color lo ensucia; teñirla lo levanta del papel. */
+.boton.principal {
+  background: linear-gradient(135deg, var(--acento) 0%, var(--acento-2) 130%);
+  border-color: var(--acento); color: var(--papel);
+  box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--acento) 55%, transparent);
+}
+.boton.principal:hover {
+  color: var(--papel); filter: brightness(1.08);
+  box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--acento) 70%, transparent);
+}
+@media (prefers-reduced-motion: reduce) { .boton, .boton:hover { transform: none; transition: none; } }
+
+/* ─── la orden con su botón de copiar ─── */
+
+/* Papel teñido para partir la página en dos zonas en vez de un rollo blanco continuo. */
+.orden {
+  display: flex; align-items: center; gap: .75rem; margin: 2.2rem 0 .6rem;
+  max-width: 34rem; padding: .7rem .95rem;
+  border: 1px solid color-mix(in srgb, var(--acento) 22%, var(--linea)); border-radius: 5px;
+  background:
+    linear-gradient(180deg,
+      color-mix(in srgb, var(--acento) 6%, var(--papel)) 0%,
+      var(--panel) 100%);
+}
+.orden code { flex: 1; min-width: 0; overflow-x: auto; font-size: .8125rem; white-space: nowrap; }
+.orden .senal { color: var(--acento); font-weight: 700; margin-right: .35rem; }
+.orden button {
+  flex: none; width: 1.8rem; height: 1.8rem; display: grid; place-items: center;
+  border: 1px solid var(--linea); border-radius: 4px; background: transparent;
+  color: var(--apagado); cursor: pointer; font-family: var(--mono); font-size: .8rem;
+}
+.orden button:hover { color: var(--acento); border-color: var(--acento); }
+.orden button svg { width: 14px; height: 14px; }
+
+/* ─── bloque de código ─── */
+
+/* El desplazamiento va en el eje X y nada más: recortar también en Y cortaría el borde. */
+.codigo {
+  background: var(--panel); border: 1px solid color-mix(in srgb, var(--linea) 55%, transparent);
+  border-radius: 4px; overflow: hidden; overflow-x: auto; margin: 0 0 1.25rem;
+}
+/* `sticky` en los dos ejes: la cabecera no se va de lado al desplazar el código. */
+.codigo .barra {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  padding: .48rem .9rem; border-bottom: 1px solid color-mix(in srgb, var(--linea) 55%, transparent);
+  position: sticky; left: 0; top: 0; z-index: 30;
+  background: color-mix(in srgb, var(--papel) 92%, transparent); backdrop-filter: blur(12px);
+}
+.codigo pre { margin: 0; padding: .95rem 1.1rem 1.1rem; font-size: .8125rem; line-height: 1.72; tab-size: 4; }
+
+.barra-codigo { display: flex; justify-content: space-between; align-items: center;
+  padding: .45rem .9rem; border-bottom: 1px solid var(--linea);
+  font-family: var(--mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--apagado); }
+.barra-codigo button { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  border: 1px solid var(--linea); background: transparent; color: var(--apagado);
+  padding: .25rem .6rem; border-radius: 4px; cursor: pointer; }
+.barra-codigo button:hover { color: var(--acento); border-color: var(--acento); }
+
+/* ─── resaltado de sintaxis ─── */
+
+.cm { color: var(--apagado); }
+.an { color: var(--acento); }
+.kw { color: var(--tinta); font-weight: 600; }
+/* El verde de las cadenas: #2f8f5b se quedaba en 4,04x sobre papel y 3,34x dentro de la
+   pastilla, por debajo de AA para texto normal —y el código lo es, a 13 px. #26734a es el
+   mismo tono más cerrado y da 5,78 / 5,52 / 4,62. En oscuro #56c98a da 9,02x sobre #0a0a0c. */
+.st { color: #26734a; }
+:root[data-tema="oscuro"] .st, :root:not([data-tema="claro"]) .st { color: #56c98a; }
+@media (prefers-color-scheme: light) { :root:not([data-tema="oscuro"]) .st { color: #26734a; } }

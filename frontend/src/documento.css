@@ -345,7 +345,7 @@
   .pagina.documento .codigo pre { padding: var(--e3); }
 }
 
-/* El resaltado viene de `estilo.css` y se queda como está: */
+/* El resaltado viene de `comun.css` y se queda como está: */
 
 /* Código en línea, dentro de la prosa. */
 .pagina.documento p > code,
@@ -555,3 +555,104 @@
   margin-bottom: .35rem;
 }
 .aviso.fecha-medicion p { margin: 0; font-size: var(--t-menor); color: var(--apagado); }
+
+/* ── Base de `.pagina` ──────────────────────────────────────────────────────────────── Lo que
+   comparten todas las páginas servidas desde `contenido/`: las largas con índice, «Acerca de»
+   —que además es `.producto`— y la de no encontrada. Lo específico de las largas va arriba, con
+   más especificidad, y gana. Venía de la hoja vieja, que ya no existe. */
+
+/* diseno.css tiñe los enlaces con el acento; en prosa el color lo pone lo que los rodea. */
+.pagina a { color: inherit; }
+
+.pagina h3 { font-family: var(--mono); font-size: .95rem; font-weight: 700; letter-spacing: .04em;
+  margin: 2rem 0 .75rem; }
+.pagina p { max-width: 42rem; }
+
+.titulo-pagina { font-family: var(--mono); font-size: clamp(2rem, 5vw, 3rem); font-weight: 800;
+  letter-spacing: -.04em; margin: 2rem 0 .5rem; }
+/* El título de una página interior llevaba el mismo negro que el cuerpo. */
+.titulo-pagina::after {
+  content: "";
+  display: block; width: 3.5rem; height: 3px; margin-top: .7rem;
+  background: linear-gradient(90deg, var(--acento), var(--acento-2));
+}
+.entradilla { color: var(--apagado); font-size: 1.06rem; max-width: 42rem; margin: 0; text-wrap: balance; }
+
+/* Una sección sin revestir aún lleva su propio aire; las largas lo ponen desde arriba. */
+.pagina section { padding-top: 3rem; scroll-margin-top: 5rem; }
+.pagina section:first-child { padding-top: 0; }
+
+/* El índice: el marcado es el mismo en los dos tipos de página y cada hoja lo reviste. */
+nav.indice { position: sticky; top: 5rem; align-self: start; max-height: calc(100vh - 7rem); overflow-y: auto; }
+nav.indice ol { list-style: none; margin: 0; padding: 0; }
+nav.indice a {
+  display: flex; gap: .55rem; padding: .22rem 0 .22rem .6rem;
+  font-family: var(--mono); font-size: .75rem; color: var(--apagado);
+  text-decoration: none; border-left: 2px solid transparent;
+}
+nav.indice a:hover { color: var(--tinta); }
+nav.indice a .n { color: var(--apagado); opacity: .6; font-variant-numeric: tabular-nums; }
+@media (max-width: 60rem) {
+  nav.indice { position: static; max-height: none; border-bottom: 1px solid var(--linea); padding-bottom: 1rem; }
+  nav.indice ol { display: flex; flex-wrap: wrap; gap: .15rem .9rem; }
+}
+
+/* Tablas: la envoltura las desplaza en vez de dejarlas romper la página. */
+.envoltura { overflow-x: auto; margin-bottom: 1.25rem; }
+.pagina table { width: 100%; border-collapse: collapse; font-size: .8438rem; min-width: 32rem; }
+.pagina th { font-family: var(--mono); font-size: .6875rem; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--apagado); text-align: left;
+  padding: 0 1rem .5rem 0; border-bottom: 1px solid var(--linea); white-space: nowrap; }
+.pagina td { padding: .62rem 1rem .62rem 0; border-bottom: 1px solid color-mix(in srgb, var(--linea) 55%, transparent);
+  vertical-align: top; }
+.pagina tbody tr:last-child td { border-bottom: none; }
+tr.total td { border-top: 2px solid var(--tinta); font-weight: 600; }
+/* La fila de totales se compone como una tira y no como una fila de tabla. */
+.total { display: flex; gap: 2.5rem; border-top: 2px solid var(--tinta); padding-top: 1.2rem; }
+@media (max-width: 40rem) { .total { gap: 1.5rem; } }
+
+/* El filete separa una columna numérica de la siguiente; la primera no tiene de qué separarse. */
+.cifra { border-left: 1px solid var(--linea); padding: 0 1.25rem; }
+.cifra:first-child { padding-left: 0; border-left: 0; }
+@media (max-width: 40rem) { .cifra { padding: 0 1rem; } }
+
+/* El aire va a la izquierda, que es donde no estorba a la alineación derecha; nowrap porque
+   «147 KB» partía en dos líneas y descuadraba la fila entera. */
+td.cifra, th.cifra {
+  text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono);
+  padding-right: 0; padding-left: 1.6rem; white-space: nowrap;
+}
+/* En una tabla, el <b> marca quién gana esa métrica: color y peso, no tamaño. */
+td.cifra b, th.cifra b { color: var(--acento); font-weight: 700; }
+.pagina .mono, .mono-clave { font-family: var(--mono); }
+.mono-clave { font-size: .8125rem; color: var(--acento); }
+.detalle { color: var(--apagado); font-size: .8125rem; display: block; margin-top: .12rem; }
+
+/* Avisos. */
+.aviso { border-left: 3px solid var(--acento); background: color-mix(in srgb, var(--acento) 5%, transparent);
+  padding: 1rem 1.2rem; margin: 1.5rem 0; border-radius: 0 4px 4px 0; }
+.aviso.nota { border-left-color: var(--apagado); background: var(--panel); }
+.aviso .etiqueta { display: block; margin-bottom: .4rem; }
+.aviso p { margin: 0 0 .6rem; font-size: .95rem; }
+.aviso p:last-child { margin-bottom: 0; }
+.aviso pre { margin: .8rem 0; font-size: .8rem; }
+
+/* Fichas y pastillas. */
+.ficha { display: grid; gap: 1px; background: var(--linea); border: 1px solid var(--linea);
+  border-radius: 5px; overflow: hidden; margin: 1.25rem 0; }
+.campo { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 1rem;
+  padding: .85rem 1.1rem; background: var(--papel); font-size: .9rem; }
+@media (max-width: 40rem) { .campo { grid-template-columns: minmax(0, 1fr); gap: .3rem; } }
+
+.pastilla { font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+  padding: .18rem .5rem; border-radius: 3px; white-space: nowrap; }
+.pastilla.ok { background: color-mix(in srgb, #26734a 16%, transparent); color: #26734a; }
+.pastilla.parcial { background: var(--panel); color: var(--apagado); }
+.pastilla.pend { background: color-mix(in srgb, var(--acento) 14%, transparent); color: var(--acento); }
+
+/* Pantallas anchas: el ancho extra lo aprovecha la página; el contenido conserva su escala. */
+@media (min-width: 90rem) {
+  .pagina p { max-width: 52rem; }
+  .entradilla { max-width: 52rem; }
+  .envoltura, .codigo { max-width: 72rem; }
+}

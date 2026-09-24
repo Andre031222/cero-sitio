@@ -84,7 +84,7 @@ export default function Portada() {
 
       {/* 4 · El argumento, con el diagrama que lo sostiene. */}
       <section className="escena">
-        <Lamina nombre="09-vector-vertical" lado="izquierda" alto="32rem" fuerza={.34} />
+        <Lamina nombre="geometria-cian-01" lado="izquierda" alto="34rem" fuerza={.46} />
         <div className="centro">
           <h2 className="rotulo" data-revelar>{t.promesa[1]}</h2>
           <figure className="pt-diagrama" data-revelar>
