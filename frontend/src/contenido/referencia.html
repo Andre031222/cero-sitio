@@ -485,16 +485,16 @@
 
 
         <p>
-          Los cinco en contenedores idénticos, 64 conexiones, 30 segundos, mediana de cinco
-          repeticiones, cero errores. Ordenado por arranque.
+          Los nueve en contenedores idénticos, 64 conexiones, 30 segundos, el mismo
+          <code>-Xmx256m</code> para todos, mediana de cinco repeticiones. 135 mediciones sin un
+          solo error ni una sola respuesta no-2xx. Ordenado por arranque.
         </p>
 
-                <div class="aviso fecha-medicion" data-revelar>
-          <div class="etiqueta">Medición de agosto de 2026 · Cero 0.6.0</div>
+        <div class="aviso fecha-medicion" data-revelar>
+          <div class="etiqueta">Medición del 24 de septiembre de 2026 · Cero 0.7.0</div>
           <p>
-            Estas cifras son de la 0.6.0 y de una corrida anterior. Se mantienen porque el
-            método está descrito y la corrida se puede rehacer; se sustituirán en cuanto haya
-            medición de la 0.7.0. Un número sin fecha no es un dato.
+            Un número sin fecha no es un dato. Esta corrida es de la 0.7.0, con la máquina
+            enchufada y sin una sola suspensión: las dos anteriores se descartaron por eso.
           </p>
         </div>
 
@@ -502,11 +502,15 @@
           <table>
             <thead><tr><th>Framework</th><th class="cifra">Arranque</th><th class="cifra">Imagen</th><th class="cifra">RSS</th><th class="cifra">/plaintext</th><th class="cifra">/json</th><th class="cifra">/db</th></tr></thead>
             <tbody>
-              <tr><td><b>Cero</b></td><td class="cifra"><b>106 ms</b></td><td class="cifra">110,3 MB</td><td class="cifra"><b>136,4 MB</b></td><td class="cifra"><b>26 425</b></td><td class="cifra"><b>25 431</b></td><td class="cifra"><b>25 931</b></td></tr>
-              <tr><td>Javalin</td><td class="cifra">451 ms</td><td class="cifra">115,2 MB</td><td class="cifra">285,7 MB</td><td class="cifra">21 994</td><td class="cifra">25 125</td><td class="cifra">24 459</td></tr>
-              <tr><td>Quarkus</td><td class="cifra">707 ms</td><td class="cifra">123,2 MB</td><td class="cifra">259,8 MB</td><td class="cifra">25 515</td><td class="cifra">22 744</td><td class="cifra">21 258</td></tr>
-              <tr><td>Micronaut</td><td class="cifra">838 ms</td><td class="cifra">120,7 MB</td><td class="cifra">201,2 MB</td><td class="cifra">18 381</td><td class="cifra">19 088</td><td class="cifra">17 213</td></tr>
-              <tr><td>Spring Boot</td><td class="cifra">1467 ms</td><td class="cifra">127,3 MB</td><td class="cifra">352,5 MB</td><td class="cifra">19 809</td><td class="cifra">20 432</td><td class="cifra">20 088</td></tr>
+              <tr><td><b>Cero</b></td><td class="cifra"><b>87 ms</b></td><td class="cifra">112,2 MB</td><td class="cifra">332,1 MB</td><td class="cifra">23 840</td><td class="cifra">25 470</td><td class="cifra">24 330</td></tr>
+              <tr><td>Jooby</td><td class="cifra">383 ms</td><td class="cifra">114,6 MB</td><td class="cifra">137,0 MB</td><td class="cifra">24 306</td><td class="cifra">24 512</td><td class="cifra">23 555</td></tr>
+              <tr><td>Javalin</td><td class="cifra">457 ms</td><td class="cifra">115,2 MB</td><td class="cifra">198,2 MB</td><td class="cifra">24 026</td><td class="cifra">22 749</td><td class="cifra">24 048</td></tr>
+              <tr><td>Vert.x</td><td class="cifra">505 ms</td><td class="cifra">119,6 MB</td><td class="cifra"><b>104,2 MB</b></td><td class="cifra">24 728</td><td class="cifra">24 949</td><td class="cifra">24 473</td></tr>
+              <tr><td>Helidon</td><td class="cifra">653 ms</td><td class="cifra">112,4 MB</td><td class="cifra">115,4 MB</td><td class="cifra">24 599</td><td class="cifra">24 966</td><td class="cifra">23 545</td></tr>
+              <tr><td>Quarkus</td><td class="cifra">695 ms</td><td class="cifra">123,2 MB</td><td class="cifra">152,7 MB</td><td class="cifra">25 327</td><td class="cifra">24 981</td><td class="cifra">24 297</td></tr>
+              <tr><td>Micronaut</td><td class="cifra">907 ms</td><td class="cifra">120,7 MB</td><td class="cifra">134,6 MB</td><td class="cifra">23 275</td><td class="cifra">23 630</td><td class="cifra">20 646</td></tr>
+              <tr><td>JxMVC</td><td class="cifra">979 ms</td><td class="cifra"><b>110,2 MB</b></td><td class="cifra">237,1 MB</td><td class="cifra">22 020</td><td class="cifra">23 550</td><td class="cifra">21 310</td></tr>
+              <tr><td>Spring Boot</td><td class="cifra">1 551 ms</td><td class="cifra">127,3 MB</td><td class="cifra">229,2 MB</td><td class="cifra">22 353</td><td class="cifra">23 238</td><td class="cifra">21 534</td></tr>
             </tbody>
           </table>
         </div>
@@ -514,15 +518,20 @@
         <div class="aviso nota">
           <div class="etiqueta">Qué dice esta tabla, y qué no</div>
           <p>
-            Dice que Cero <b>gana en todo menos en tamaño de imagen</b>, y ahí pierde por
-            0,2 MB. Arranca 4,3 veces más rápido que el siguiente, gasta la menor memoria de los
-            cinco y lidera los tres endpoints.
+            <b>Dice que Cero arranca en 87 ms</b>, 4,4 veces más rápido que el segundo y 17,8
+            veces más rápido que Spring Boot. Esa distancia no la explica ningún margen de error.
           </p>
           <p>
-            Esos 0,2 MB no son mérito de nadie: son la <b>imagen base</b>. Las capas de
-            aplicación pesan prácticamente lo mismo y la diferencia entera está debajo, en qué
-            JRE va por dentro. Esa columna mide qué base elegimos, no qué framework escribimos;
-            cambiando la de Cero se da la vuelta sin tocar una línea de código.
+            <b>Y dice que Cero es el que más memoria gasta de los nueve:</b> 332 MB contra los
+            104 de Vert.x. No es una fuga —el RSS se estanca, y con <code>-Xmx96m</code> sirve el
+            mismo tráfico un 4 % más rápido en 176 MB—, es que asigna más por petición que los
+            demás y llena el montón que se le da. Es lo siguiente que hay que arreglar.
+          </p>
+          <p>
+            <b>De las peticiones por segundo no dice nada.</b> Los seis de arriba caen dentro del
+            2 % unos de otros, y el abanico de cada uno entre sus propias cinco repeticiones va
+            del 2,2 % al 12,5 %. Con esta medición, afirmar que uno sirve más rápido que otro
+            sería ruido. Lo único que se separa es la cola en <code>/db</code>.
           </p>
         </div>
       </section>

@@ -477,17 +477,18 @@
         <div class="titulo-seccion"><span class="indice-num">10</span><h2>Against the others</h2></div>
 
         <p>
-          All five in identical containers, 64 connections, 30 seconds, median of five runs, zero
-          errors, sorted by boot time. Same machine and same data-access class throughout: what
-          is measured is the cost of serving the request, not a choice of ORM or serialiser.
+          All nine in identical containers, 64 connections, 30 seconds, the same
+          <code>-Xmx256m</code> for every one, median of five runs, sorted by boot time. 135
+          measurements with no errors and no non-2xx responses. Same machine and same data-access
+          class throughout: what is measured is the cost of serving the request, not a choice of
+          ORM or serialiser.
         </p>
 
-                <div class="aviso fecha-medicion" data-revelar>
-          <div class="etiqueta">Measured August 2026 · Cero 0.6.0</div>
+        <div class="aviso fecha-medicion" data-revelar>
+          <div class="etiqueta">Measured 24 September 2026 · Cero 0.7.0</div>
           <p>
-            These figures are from 0.6.0 and from an earlier run. They stay because the method is
-            written down and the run can be repeated; they will be replaced as soon as there is a
-            0.7.0 measurement. A number without a date is not a fact.
+            A number without a date is not a fact. This run is on 0.7.0, on mains power and with
+            no suspend during the window: the two previous runs were discarded for exactly that.
           </p>
         </div>
 
@@ -495,11 +496,15 @@
           <table>
             <thead><tr><th>Framework</th><th class="cifra">Boot</th><th class="cifra">Image</th><th class="cifra">RSS</th><th class="cifra">/plaintext</th><th class="cifra">/json</th><th class="cifra">/db</th></tr></thead>
             <tbody>
-              <tr><td><b>Cero</b></td><td class="cifra"><b>106 ms</b></td><td class="cifra">110.3 MB</td><td class="cifra"><b>136.4 MB</b></td><td class="cifra"><b>26,425</b></td><td class="cifra"><b>25,431</b></td><td class="cifra"><b>25,931</b></td></tr>
-              <tr><td>Javalin</td><td class="cifra">451 ms</td><td class="cifra">115.2 MB</td><td class="cifra">285.7 MB</td><td class="cifra">21,994</td><td class="cifra">25,125</td><td class="cifra">24,459</td></tr>
-              <tr><td>Quarkus</td><td class="cifra">707 ms</td><td class="cifra">123.2 MB</td><td class="cifra">259.8 MB</td><td class="cifra">25,515</td><td class="cifra">22,744</td><td class="cifra">21,258</td></tr>
-              <tr><td>Micronaut</td><td class="cifra">838 ms</td><td class="cifra">120.7 MB</td><td class="cifra">201.2 MB</td><td class="cifra">18,381</td><td class="cifra">19,088</td><td class="cifra">17,213</td></tr>
-              <tr><td>Spring Boot</td><td class="cifra">1467 ms</td><td class="cifra">127.3 MB</td><td class="cifra">352.5 MB</td><td class="cifra">19,809</td><td class="cifra">20,432</td><td class="cifra">20,088</td></tr>
+              <tr><td><b>Cero</b></td><td class="cifra"><b>87 ms</b></td><td class="cifra">112.2 MB</td><td class="cifra">332.1 MB</td><td class="cifra">23,840</td><td class="cifra">25,470</td><td class="cifra">24,330</td></tr>
+              <tr><td>Jooby</td><td class="cifra">383 ms</td><td class="cifra">114.6 MB</td><td class="cifra">137.0 MB</td><td class="cifra">24,306</td><td class="cifra">24,512</td><td class="cifra">23,555</td></tr>
+              <tr><td>Javalin</td><td class="cifra">457 ms</td><td class="cifra">115.2 MB</td><td class="cifra">198.2 MB</td><td class="cifra">24,026</td><td class="cifra">22,749</td><td class="cifra">24,048</td></tr>
+              <tr><td>Vert.x</td><td class="cifra">505 ms</td><td class="cifra">119.6 MB</td><td class="cifra"><b>104.2 MB</b></td><td class="cifra">24,728</td><td class="cifra">24,949</td><td class="cifra">24,473</td></tr>
+              <tr><td>Helidon</td><td class="cifra">653 ms</td><td class="cifra">112.4 MB</td><td class="cifra">115.4 MB</td><td class="cifra">24,599</td><td class="cifra">24,966</td><td class="cifra">23,545</td></tr>
+              <tr><td>Quarkus</td><td class="cifra">695 ms</td><td class="cifra">123.2 MB</td><td class="cifra">152.7 MB</td><td class="cifra">25,327</td><td class="cifra">24,981</td><td class="cifra">24,297</td></tr>
+              <tr><td>Micronaut</td><td class="cifra">907 ms</td><td class="cifra">120.7 MB</td><td class="cifra">134.6 MB</td><td class="cifra">23,275</td><td class="cifra">23,630</td><td class="cifra">20,646</td></tr>
+              <tr><td>JxMVC</td><td class="cifra">979 ms</td><td class="cifra"><b>110.2 MB</b></td><td class="cifra">237.1 MB</td><td class="cifra">22,020</td><td class="cifra">23,550</td><td class="cifra">21,310</td></tr>
+              <tr><td>Spring Boot</td><td class="cifra">1,551 ms</td><td class="cifra">127.3 MB</td><td class="cifra">229.2 MB</td><td class="cifra">22,353</td><td class="cifra">23,238</td><td class="cifra">21,534</td></tr>
             </tbody>
           </table>
         </div>
@@ -507,16 +512,20 @@
         <div class="aviso nota">
           <div class="etiqueta">What this table says, and what it does not</div>
           <p>
-            It says Cero <b>wins on everything except image size</b>, and there it loses by
-            0.2 MB. It boots 4.3 times faster than the next one, uses the least memory of the five
-            and leads on all three endpoints, including <code>/db</code>, the one that measures
-            the framework doing real work.
+            <b>It says Cero boots in 87 ms</b>, 4.4 times faster than the runner-up and 17.8
+            times faster than Spring Boot. No margin of error explains that gap.
           </p>
           <p>
-            Those 0.2 MB are nobody's merit: they are the <b>base image</b>. The application
-            layers weigh practically the same and the whole difference sits underneath, in which
-            JRE is inside. That column measures the base we picked, not the framework we wrote;
-            changing Cero's turns it around without touching a line of code.
+            <b>And it says Cero uses the most memory of the nine:</b> 332 MB against Vert.x's
+            104. It is not a leak — RSS plateaus, and with <code>-Xmx96m</code> it serves the same
+            traffic 4% faster in 176 MB — it allocates more per request than the others and fills
+            whatever heap it is given. That is the next thing to fix.
+          </p>
+          <p>
+            <b>About requests per second it says nothing.</b> The top six land within 2% of each
+            other, while each one's own spread across its five runs ranges from 2.2% to 12.5%.
+            On this measurement, claiming one serves faster than another would be noise. The only
+            real separation is the tail on <code>/db</code>.
           </p>
           <p>
             What it does not give you is quotable absolute figures: this was measured on Docker
