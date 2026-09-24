@@ -6,7 +6,7 @@
   <div class="cuerpo">
     <nav class="indice" aria-label="On this page">
       <ol>
-        <li><a href="#piezas"><span class="n">01</span> The six</a></li>
+        <li><a href="#piezas"><span class="n">01</span> All seven</a></li>
         <li><a href="#servidor"><span class="n">02</span> Server</a></li>
         <li><a href="#vistas"><span class="n">03</span> Views</a></li>
         <li><a href="#datos"><span class="n">04</span> Data</a></li>
@@ -16,7 +16,7 @@
     </nav>
     <main>
 <section id="piezas">
-        <div class="titulo-seccion"><span class="indice-num">01</span><h2>The six modules</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">01</span><h2>The seven modules</h2></div>
 
         <p>
           Each module is taken separately. If all you need is to answer HTTP,
@@ -30,39 +30,43 @@
             </thead>
             <tbody>
               <tr>
-                <td><span class="mono">cero-http</span><span class="detalle">HTTP/1.1 server, reloadable TLS, pluggable sessions, multipart, gzip, static files with ranges, WebSocket</span></td>
-                <td>—</td><td class="cifra">39</td><td class="cifra">4481</td><td class="cifra">315</td><td class="cifra">95 KB</td>
+                <td><span class="mono">cero-http</span><span class="detalle">HTTP/1.1 and HTTP/2 server, reloadable TLS, pluggable sessions, multipart, gzip, static files with ranges, WebSocket</span></td>
+                <td>—</td><td class="cifra">43</td><td class="cifra">6,696</td><td class="cifra">432</td><td class="cifra">133 KB</td>
               </tr>
               <tr>
-                <td><span class="mono">cero-core</span><span class="detalle">Routing, injection, JSON, validation, security, metrics, cache, events, tasks, OpenAPI, languages, health and self-repainting regions</span></td>
-                <td class="mono nowrap">cero-http</td><td class="cifra">70</td><td class="cifra">7297</td><td class="cifra">772</td><td class="cifra">186 KB</td>
+                <td><span class="mono">cero-core</span><span class="detalle">Routing, injection, JSON, validation, security, metrics, cache, events, tasks, OpenAPI, i18n, health and self-refreshing regions</span></td>
+                <td class="mono nowrap">cero-http</td><td class="cifra">71</td><td class="cifra">7,675</td><td class="cifra">834</td><td class="cifra">192 KB</td>
               </tr>
               <tr>
                 <td><span class="mono">cero-view</span><span class="detalle">Templates with inheritance, loops and escaping by default</span></td>
-                <td class="mono nowrap">cero-core</td><td class="cifra">9</td><td class="cifra">1001</td><td class="cifra">93</td><td class="cifra">39 KB</td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">9</td><td class="cifra">1,001</td><td class="cifra">93</td><td class="cifra">39 KB</td>
               </tr>
               <tr>
-                <td><span class="mono">cero-data</span><span class="detalle">JDBC, pool, transactions, repositories and table-backed sessions</span></td>
-                <td class="mono nowrap">cero-core</td><td class="cifra">16</td><td class="cifra">1745</td><td class="cifra">224</td><td class="cifra">48 KB</td>
+                <td><span class="mono">cero-data</span><span class="detalle">JDBC, pool, transactions, repositories, migrations and table-backed sessions</span></td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">16</td><td class="cifra">1,937</td><td class="cifra">250</td><td class="cifra">52 KB</td>
+              </tr>
+              <tr>
+                <td><span class="mono">cero-test</span><span class="detalle">Boots your application on a free port, HTTP client that keeps cookies, and assertions over the response</span></td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">4</td><td class="cifra">439</td><td class="cifra">29</td><td class="cifra">12 KB</td>
               </tr>
               <tr>
                 <td><span class="mono">cero-adapter-servlet</span><span class="detalle">Deploy a Cero application inside Tomcat 10.1+</span></td>
-                <td class="mono nowrap">cero-core</td><td class="cifra">4</td><td class="cifra">604</td><td class="cifra">35</td><td class="cifra">13 KB</td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">4</td><td class="cifra">603</td><td class="cifra">35</td><td class="cifra">13 KB</td>
               </tr>
               <tr>
-                <td><span class="mono">cero-launcher</span><span class="detalle">Packs the application and the framework into one jar you run with java -jar</span></td>
-                <td class="mono nowrap">—</td><td class="cifra">1</td><td class="cifra">159</td><td class="cifra">10</td><td class="cifra">9 KB</td>
+                <td><span class="mono">cero-launcher</span><span class="detalle">The <span class="mono">cero</span> command: creates projects, packages the app into a runnable jar and verifies migrations</span></td>
+                <td class="mono nowrap">—</td><td class="cifra">6</td><td class="cifra">881</td><td class="cifra">10</td><td class="cifra">33 KB</td>
               </tr>
               <tr class="total">
-                <td>All six</td><td>—</td><td class="cifra">139</td><td class="cifra">15,287</td><td class="cifra">1,449</td><td class="cifra">407 KB</td>
+                <td>All seven</td><td>—</td><td class="cifra">153</td><td class="cifra">19,232</td><td class="cifra">1,683</td><td class="cifra">474 KB</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <p>
-          The remaining 43 tests up to 1,171 belong to the example application, which exercises the
-          six modules end to end.
+          The remaining 79 up to 1,762 belong to the example application, which exercises all
+          seven modules end to end with <span class="mono">cero-test</span>.
         </p>
       </section>
 <section id="servidor">

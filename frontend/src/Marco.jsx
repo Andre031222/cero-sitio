@@ -4,6 +4,12 @@ import Tema from './Tema.jsx'
 import { idiomaDe, parejaDe, TEXTOS, raizDe } from './idioma.js'
 import './marco.css'
 
+const subirDelTodo = (e) => {
+  e.preventDefault()
+  const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  window.scrollTo({ top: 0, behavior: suave ? 'smooth' : 'auto' })
+}
+
 /** La barra y el pie, en el idioma que toque según la ruta. */
 export default function Marco({ children }) {
   const { pathname } = useLocation()
@@ -51,8 +57,11 @@ export default function Marco({ children }) {
           <nav className="barra-menu">
             {t.menu.map(([sufijo, texto]) => {
               const a = `${raiz}${sufijo}` || '/'
+              const aqui = pathname === a
               return (
-                <Link key={a} to={a} className={pathname === a ? 'activo' : undefined}>{texto}</Link>
+                <Link key={a} to={a} className={aqui ? 'activo' : undefined}
+                      aria-current={aqui ? 'page' : undefined}
+                      onClick={aqui ? subirDelTodo : undefined}>{texto}</Link>
               )
             })}
           </nav>

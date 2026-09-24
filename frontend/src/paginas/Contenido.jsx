@@ -114,6 +114,22 @@ export default function Contenido({ html, titulo }) {
       // El corte es el scroll-margin-top de la sección: lo mismo que usa el navegador al saltar.
       const corte = () => parseFloat(getComputedStyle(pares[0].seccion).scrollMarginTop) || 0
 
+      // El indicador se coloca sobre el enlace activo: una sola barra que se desliza en vez de
+      // encenderse y apagarse por saltos.
+      const deslizar = (enlace) => {
+        lista.style.setProperty('--y', `${enlace.offsetTop}px`)
+        lista.style.setProperty('--alto', `${enlace.offsetHeight}px`)
+        lista.style.setProperty('--visible', '1')
+      }
+
+      const marcarLeidos = (activo) => {
+        let pasado = true
+        for (const par of pares) {
+          par.enlace.classList.toggle('leido', pasado && par !== activo)
+          if (par === activo) pasado = false
+        }
+      }
+
       let ultimo = null
       const repintar = () => {
         const y = corte()
@@ -130,6 +146,8 @@ export default function Contenido({ html, titulo }) {
         activo.enlace.setAttribute('aria-current', 'location')
         actual.textContent = activo.enlace.textContent.trim().replace(/\s+/g, ' ')
         ultimo = activo
+        deslizar(activo.enlace)
+        marcarLeidos(activo)
       }
 
       let observador = null
@@ -164,6 +182,35 @@ export default function Contenido({ html, titulo }) {
         // Sin observador el índice sigue siendo una lista de enlaces que funciona.
         repintar()
       }
+
+      // Bajo el índice queda hueco: se llena con el avance y un atajo para volver arriba.
+      const pie = document.createElement('div')
+      pie.className = 'indice-pie'
+      pie.innerHTML =
+        '<div class="indice-avance"><span></span></div>' +
+        '<button type="button" class="indice-arriba">' +
+        (document.documentElement.lang === 'en' ? 'Back to top' : 'Volver arriba') +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"' +
+        ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>'
+      indice.appendChild(pie)
+
+      const barra = pie.querySelector('.indice-avance span')
+      const arriba = pie.querySelector('.indice-arriba')
+      const alSubir = () => window.scrollTo({
+        top: 0,
+        behavior: window.matchMedia(QUIETO).matches ? 'auto' : 'smooth',
+      })
+      arriba.addEventListener('click', alSubir)
+      limpiezas.push(() => { arriba.removeEventListener('click', alSubir); pie.remove() })
+
+      const avance = () => {
+        const total = document.documentElement.scrollHeight - window.innerHeight
+        const cuanto = total > 0 ? Math.min(1, Math.max(0, window.scrollY / total)) : 0
+        barra.style.transform = `scaleX(${cuanto})`
+      }
+      avance()
+      window.addEventListener('scroll', avance, { passive: true })
+      limpiezas.push(() => window.removeEventListener('scroll', avance))
 
       limpiezas.push(() => {
         boton.remove()

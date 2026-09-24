@@ -38,6 +38,13 @@ export const TEXTOS = {
     servido: 'Servido por Cero, sin contenedor',
     noEncontrada: ['No encontrada', 'Esa página no existe. Prueba desde', 'el inicio'],
     portada: {
+      flujoPesado: ['Con contenedor de servlets', 'Seis pasos, y cinco son de infraestructura.',
+                    'Escribes la aplicación', 'Empaquetas un WAR', 'Instalas y mantienes Tomcat',
+                    'Configuras el descriptor', 'Copias el WAR al contenedor',
+                    'Reinicias el servicio', 'Corriendo'],
+      flujoCero: ['Con Cero', 'Dos pasos, y el segundo ya la deja corriendo.',
+                  'Escribes la aplicación', 'Empaquetas un jar', 'Corriendo'],
+
       nuevo: 'Nuevo', ante: 'Framework web para Java',
       titular: ['Sin', 'contenedor.'],
       promesa: ['Un servidor HTTP propio, un hilo virtual por conexión y ', 'cero dependencias',
@@ -92,6 +99,13 @@ export const TEXTOS = {
     servido: 'Served by Cero, with no container',
     noEncontrada: ['Not found', 'That page does not exist. Try from', 'the home page'],
     portada: {
+      flujoPesado: ['With a servlet container', 'Six steps, and five of them are infrastructure.',
+                    'You write the application', 'You build a WAR', 'You install and maintain Tomcat',
+                    'You configure the descriptor', 'You copy the WAR into the container',
+                    'You restart the service', 'Running'],
+      flujoCero: ['With Cero', 'Two steps, and the second one leaves it running.',
+                  'You write the application', 'You build a jar', 'Running'],
+
       nuevo: 'New', ante: 'Web framework for Java',
       titular: ['No', 'container.'],
       promesa: ['Its own HTTP server, one virtual thread per connection and ', 'zero dependencies',

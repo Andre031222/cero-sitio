@@ -1,0 +1,101 @@
+/* ── El recorrido de despliegue ────────────────────────────────────────── */
+
+.fl {
+  margin: 0;
+  padding: var(--e3);
+  border: 1px solid var(--linea);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+}
+
+.fl-rotulo { display: grid; gap: .3rem; margin-bottom: var(--e3); }
+.fl-nombre {
+  font-family: var(--mono); font-size: var(--t-menor);
+  letter-spacing: .08em; text-transform: uppercase;
+}
+.fl-resumen { font-size: var(--t-nota); color: var(--apagado); }
+
+.fl-pasos {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: stretch; gap: var(--e2);
+  counter-reset: paso;
+}
+
+.fl-paso {
+  flex: 1 1 7rem; min-width: 0;
+  display: grid; justify-items: center; gap: .5rem;
+  position: relative;
+  opacity: 0;
+  transform: translateY(10px);
+}
+.fl.dentro .fl-paso {
+  animation: fl-entra .5s var(--curva) forwards;
+  animation-delay: var(--paso, 0s);
+}
+@keyframes fl-entra { to { opacity: 1; transform: none; } }
+
+/* La flecha vive en el hueco entre pasos, no dentro de ninguno. */
+.fl-paso + .fl-paso::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--e2) * -1); top: 1.4rem;
+  width: var(--e2); height: 1px;
+  background: currentColor; opacity: .4;
+}
+.fl-paso + .fl-paso::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--e2) * -.42); top: 1.15rem;
+  width: .4rem; height: .4rem;
+  border-top: 1px solid currentColor; border-right: 1px solid currentColor;
+  transform: rotate(45deg); opacity: .55;
+}
+
+.fl-caja {
+  width: 2.9rem; height: 2.9rem;
+  display: grid; place-items: center;
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+.fl-caja svg { width: 1.35rem; height: 1.35rem; }
+
+.fl-texto { font-size: var(--t-nota); text-align: center; line-height: 1.35; }
+.fl-orden {
+  font-family: var(--mono); font-size: .68rem;
+  color: var(--apagado); text-align: center; word-break: break-word;
+}
+
+/* Que se vea cuál es la buena antes de leer: una apagada, la otra con el acento y su halo. */
+.fl--pesada { color: var(--apagado); }
+.fl--pesada .fl-texto { color: var(--tinta); }
+
+.fl--cero {
+  color: var(--acento);
+  border-color: color-mix(in srgb, var(--acento) 38%, var(--linea));
+  background:
+    radial-gradient(120% 90% at 50% 100%, color-mix(in srgb, var(--acento) 9%, transparent), transparent 70%),
+    color-mix(in srgb, var(--panel) 70%, transparent);
+  box-shadow: 0 18px 50px -30px color-mix(in srgb, var(--acento) 65%, transparent);
+}
+.fl--cero .fl-texto { color: var(--tinta); }
+.fl--cero .fl-orden { color: color-mix(in srgb, var(--acento) 75%, var(--tinta)); }
+
+/* El último paso de cada recorrido es la meta: se marca. */
+.fl-paso:last-child .fl-caja {
+  border-color: currentColor;
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+@media (max-width: 34rem) {
+  .fl-pasos { flex-direction: column; }
+  .fl-paso { flex: none; grid-template-columns: auto 1fr; justify-items: start; align-items: center; gap: var(--e2); }
+  .fl-texto, .fl-orden { text-align: left; }
+  /* En columna la flecha baja en vez de apuntar a la derecha. */
+  .fl-paso + .fl-paso::before { left: 1.45rem; top: calc(var(--e2) * -1); width: 1px; height: var(--e2); }
+  .fl-paso + .fl-paso::after { left: 1.2rem; top: calc(var(--e2) * -.42); transform: rotate(135deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fl-paso { opacity: 1; transform: none; animation: none; }
+}

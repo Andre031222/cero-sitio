@@ -6,7 +6,7 @@
   <div class="cuerpo">
     <nav class="indice" aria-label="En esta página">
       <ol>
-        <li><a href="#piezas"><span class="n">01</span> Los seis</a></li>
+        <li><a href="#piezas"><span class="n">01</span> Los siete</a></li>
         <li><a href="#servidor"><span class="n">02</span> Servidor</a></li>
         <li><a href="#vistas"><span class="n">03</span> Vistas</a></li>
         <li><a href="#datos"><span class="n">04</span> Datos</a></li>
@@ -16,7 +16,7 @@
     </nav>
     <main>
 <section id="piezas">
-        <div class="titulo-seccion"><span class="indice-num">01</span><h2>Los seis módulos</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">01</span><h2>Los siete módulos</h2></div>
 
         <p>
           Cada módulo se toma por separado. Si solo necesitas atender HTTP, <code>cero-http</code>
@@ -30,39 +30,43 @@
             </thead>
             <tbody>
               <tr>
-                <td><span class="mono">cero-http</span><span class="detalle">Servidor HTTP/1.1, TLS recargable, sesiones enchufables, multipart, gzip, estáticos con rangos, WebSocket</span></td>
-                <td>—</td><td class="cifra">39</td><td class="cifra">4481</td><td class="cifra">315</td><td class="cifra">95 KB</td>
+                <td><span class="mono">cero-http</span><span class="detalle">Servidor HTTP/1.1 y HTTP/2, TLS recargable, sesiones enchufables, multipart, gzip, estáticos con rangos, WebSocket</span></td>
+                <td>—</td><td class="cifra">43</td><td class="cifra">6 696</td><td class="cifra">432</td><td class="cifra">133 KB</td>
               </tr>
               <tr>
                 <td><span class="mono">cero-core</span><span class="detalle">Rutas, inyección, JSON, validación, seguridad, métricas, caché, eventos, tareas, OpenAPI, idiomas, salud y zonas que se repintan solas</span></td>
-                <td class="mono nowrap">cero-http</td><td class="cifra">70</td><td class="cifra">7297</td><td class="cifra">772</td><td class="cifra">186 KB</td>
+                <td class="mono nowrap">cero-http</td><td class="cifra">71</td><td class="cifra">7 675</td><td class="cifra">834</td><td class="cifra">192 KB</td>
               </tr>
               <tr>
                 <td><span class="mono">cero-view</span><span class="detalle">Plantillas con herencia, bucles y escapado por defecto</span></td>
-                <td class="mono nowrap">cero-core</td><td class="cifra">9</td><td class="cifra">1001</td><td class="cifra">93</td><td class="cifra">39 KB</td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">9</td><td class="cifra">1 001</td><td class="cifra">93</td><td class="cifra">39 KB</td>
               </tr>
               <tr>
-                <td><span class="mono">cero-data</span><span class="detalle">JDBC, pool, transacciones, repositorios y sesiones en tabla</span></td>
-                <td class="mono nowrap">cero-core</td><td class="cifra">16</td><td class="cifra">1745</td><td class="cifra">224</td><td class="cifra">48 KB</td>
+                <td><span class="mono">cero-data</span><span class="detalle">JDBC, pool, transacciones, repositorios, migraciones y sesiones en tabla</span></td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">16</td><td class="cifra">1 937</td><td class="cifra">250</td><td class="cifra">52 KB</td>
+              </tr>
+              <tr>
+                <td><span class="mono">cero-test</span><span class="detalle">Levanta tu aplicación en un puerto libre, cliente HTTP que mantiene las cookies y aserciones sobre la respuesta</span></td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">4</td><td class="cifra">439</td><td class="cifra">29</td><td class="cifra">12 KB</td>
               </tr>
               <tr>
                 <td><span class="mono">cero-adapter-servlet</span><span class="detalle">Desplegar una aplicación Cero dentro de Tomcat 10.1+</span></td>
-                <td class="mono nowrap">cero-core</td><td class="cifra">4</td><td class="cifra">604</td><td class="cifra">35</td><td class="cifra">13 KB</td>
+                <td class="mono nowrap">cero-core</td><td class="cifra">4</td><td class="cifra">603</td><td class="cifra">35</td><td class="cifra">13 KB</td>
               </tr>
               <tr>
-                <td><span class="mono">cero-launcher</span><span class="detalle">Empaqueta la aplicación y el framework en un jar ejecutable con java -jar</span></td>
-                <td class="mono nowrap">—</td><td class="cifra">1</td><td class="cifra">159</td><td class="cifra">10</td><td class="cifra">9 KB</td>
+                <td><span class="mono">cero-launcher</span><span class="detalle">La orden <span class="mono">cero</span>: crea proyectos, empaqueta la aplicación en un jar ejecutable y verifica migraciones</span></td>
+                <td class="mono nowrap">—</td><td class="cifra">6</td><td class="cifra">881</td><td class="cifra">10</td><td class="cifra">33 KB</td>
               </tr>
               <tr class="total">
-                <td>Los seis</td><td>—</td><td class="cifra">139</td><td class="cifra">15 287</td><td class="cifra">1 449</td><td class="cifra">407 KB</td>
+                <td>Los siete</td><td>—</td><td class="cifra">153</td><td class="cifra">19 232</td><td class="cifra">1 683</td><td class="cifra">474 KB</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <p>
-          Las 43 pruebas restantes hasta 1 171 son de la aplicación de ejemplo, que ejercita los
-          seis módulos de punta a punta.
+          Las 79 restantes hasta 1 762 son de la aplicación de ejemplo, que ejercita los siete
+          módulos de punta a punta con <span class="mono">cero-test</span>.
         </p>
       </section>
 <section id="servidor">

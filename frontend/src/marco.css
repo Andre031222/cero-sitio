@@ -29,7 +29,7 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--e2);
-  min-height: 4.75rem;
+  min-height: 5.5rem;
 }
 
 .barra-menu {
@@ -45,10 +45,10 @@
 .barra-menu::-webkit-scrollbar { display: none; }
 
 .barra-menu a {
-  padding: .55rem .85rem;
-  border-radius: 8px;
+  padding: .6rem 1rem;
+  border-radius: 9px;
   font-family: var(--mono);
-  font-size: .9375rem;
+  font-size: 1rem;
   letter-spacing: .02em;
   /* El menú se desplaza dentro de sí mismo: */
   white-space: nowrap;
@@ -60,7 +60,7 @@
 
 /* El activo no se distingue solo por el color: */
 .barra-menu a.activo {
-  color: var(--acento-2);
+  color: var(--acento);
   background: color-mix(in srgb, var(--acento) 8%, transparent);
 }
 
@@ -73,7 +73,7 @@
 
 @media (max-width: 26rem) {
   .barra-menu a { padding: .45rem .55rem; font-size: .8125rem; }
-  .barra-caja { gap: .6rem; min-height: 4rem; }
+  .barra-caja { gap: .6rem; min-height: 4.25rem; }
 }
 
 /* ── Envoltura del contenido ───────────────────────────────────────────── */
@@ -83,11 +83,11 @@
 
 /* ── Pie ───────────────────────────────────────────────────────────────── */
 
+/* Sin fondo propio: con panel quedaba pegado al cierre de la portada y se leían como dos pies. */
 .pie-sitio {
   margin-top: var(--e4);
   padding: var(--e4) 0 var(--e3);
   border-top: 1px solid var(--linea);
-  background: var(--panel);
 }
 
 .pie-caja {
@@ -135,8 +135,8 @@
 }
 
 /* La marca crece con la barra. El tamaño de partida está más abajo, en esta misma hoja. */
-.barra-sitio .marca .simbolo { width: 2.5rem; height: 2.5rem; }
-.barra-sitio .marca .palabra { font-size: 1.4rem; }
+.barra-sitio .marca .simbolo { width: 2.9rem; height: 2.9rem; }
+.barra-sitio .marca .palabra { font-size: 1.6rem; }
 
 @media (max-width: 26rem) {
   .barra-sitio .marca .simbolo { width: 2rem; height: 2rem; }

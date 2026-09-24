@@ -48,15 +48,15 @@
 
 @media (prefers-color-scheme: light) {
   :root:not([data-tema="oscuro"]) {
-    --papel: #ffffff; --panel: #f6f8fb; --panel-2: #eef2f7;
-    --tinta: #0b1220; --apagado: #606c88; --acento: #2563eb; --acento-2: #1d4ed8;
-    --linea: rgba(11, 18, 32, .13); --velo: rgba(255, 255, 255, .78);
+    --papel: #fcfdff; --panel: #eef2f8; --panel-2: #e2e8f2;
+    --tinta: #0b1220; --apagado: #5a6885; --acento: #1d4ed8; --acento-2: #2563eb;
+    --linea: rgba(11, 18, 32, .16); --velo: rgba(252, 253, 255, .8);
   }
 }
 :root[data-tema="claro"] {
-  --papel: #ffffff; --panel: #f6f8fb; --panel-2: #eef2f7;
-  --tinta: #0b1220; --apagado: #606c88; --acento: #2563eb; --acento-2: #1d4ed8;
-  --linea: rgba(11, 18, 32, .13); --velo: rgba(255, 255, 255, .78);
+  --papel: #fcfdff; --panel: #eef2f8; --panel-2: #e2e8f2;
+  --tinta: #0b1220; --apagado: #5a6885; --acento: #1d4ed8; --acento-2: #2563eb;
+  --linea: rgba(11, 18, 32, .16); --velo: rgba(252, 253, 255, .8);
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────── */
@@ -95,7 +95,7 @@ img, svg, video { max-width: 100%; height: auto; display: block; }
   position: relative;
   padding: var(--e7) 0;
 }
-.escena--alta { min-height: 100svh; display: grid; align-content: center; }
+.escena--alta { min-height: 88svh; display: grid; align-content: start; padding-top: var(--e5); }
 .escena--panel { background: var(--panel); }
 .escena--apretada { padding: var(--e5) 0; }
 

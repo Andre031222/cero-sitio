@@ -5,7 +5,7 @@
   --doc-barra: 3.6rem;
   /* Alto de la tira del índice plegado en el teléfono: */
   --doc-tira: 3.9rem;
-  --doc-columna: 15rem;
+  --doc-columna: 18rem;
 
   font-family: var(--serif);
   font-size: var(--t-cuerpo);
@@ -49,7 +49,7 @@
 .pagina.documento .cuerpo > * { min-width: 0; }
 
 @media (min-width: 90rem) {
-  .pagina.documento { --doc-columna: 17rem; }
+  .pagina.documento { --doc-columna: 21rem; }
   .pagina.documento .cuerpo { gap: var(--e6); }
 }
 
@@ -505,8 +505,7 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-tema="oscuro"]) .pagina.documento .pastilla.ok { color: #26734a; }
 }
-/* `--acento-2` es el mismo azul un paso más cerrado en claro (#1d4ed8): */
-.pagina.documento .pastilla.pend { color: var(--acento-2); }
+.pagina.documento .pastilla.pend { color: var(--acento); }
 .pagina.documento .pastilla.parcial { color: var(--apagado); background: var(--panel); }
 
 /* ── Fichas ───────────────────────────────────────────────────────────────────────── */
@@ -656,4 +655,113 @@ td.cifra b, th.cifra b { color: var(--acento); font-weight: 700; }
   .pagina p { max-width: 52rem; }
   .entradilla { max-width: 52rem; }
   .envoltura, .codigo { max-width: 72rem; }
+}
+
+/* ── Pasos numerados ──────────────────────────────────────────────────────────────── */
+
+.pagina.documento .paso {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--e2);
+  margin: var(--e5) 0 var(--e2);
+}
+.pagina.documento .seccion:first-child .paso { margin-top: 0; }
+
+/* Sólido y no hueco: el contorno queda bonito pero su contraste no se puede verificar. */
+.pagina.documento .paso .n {
+  font-family: var(--mono);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.04em;
+  color: var(--acento);
+}
+.pagina.documento .paso h2,
+.pagina.documento .paso h3 { margin: 0; text-wrap: balance; }
+
+/* El cuerpo se sangra a la altura del título, no del número. */
+.pagina.documento .paso__cuerpo { display: grid; gap: var(--e2); }
+
+.pagina.documento .seccion + .seccion { border-top: 1px solid var(--linea); padding-top: var(--e4); }
+
+/* ── El índice, con vida ──────────────────────────────────────────────────────────── */
+
+/* Un indicador que se desliza al que toca, en vez de encenderse y apagarse por saltos.
+   Va en la lista y se mueve con --y/--alto, que pone el observador. */
+.pagina.documento nav.indice ol { position: relative; }
+.pagina.documento nav.indice ol::before {
+  content: "";
+  position: absolute;
+  left: -1px; top: 0;
+  width: 2px;
+  height: var(--alto, 0);
+  transform: translateY(var(--y, 0));
+  background: var(--acento);
+  border-radius: 2px;
+  opacity: var(--visible, 0);
+  transition: transform .34s var(--curva), height .34s var(--curva), opacity .2s;
+  box-shadow: 0 0 14px -2px var(--acento);
+}
+
+/* La barrita por enlace estorba al indicador deslizante: se queda solo en el foco. */
+.pagina.documento nav.indice a { transition: color .18s, padding-left .22s var(--curva); }
+.pagina.documento nav.indice a:hover { border-left-color: transparent; padding-left: 1rem; }
+.pagina.documento nav.indice a.activo { border-left-color: transparent; }
+
+/* Lo leído se apaga; lo que queda por delante, no. Da sensación de avance. */
+.pagina.documento nav.indice a.leido .n { opacity: .4; }
+.pagina.documento nav.indice a .n { transition: opacity .25s, color .25s; }
+.pagina.documento nav.indice a.activo .n { color: var(--acento); opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pagina.documento nav.indice ol::before,
+  .pagina.documento nav.indice a { transition: none; }
+  .pagina.documento nav.indice a:hover { padding-left: .7rem; }
+}
+
+/* ── El pie del índice ────────────────────────────────────────────────────────────── */
+
+.pagina.documento .indice-pie {
+  margin-top: var(--e3);
+  padding-top: var(--e2);
+  border-top: 1px solid var(--linea);
+  display: grid;
+  gap: var(--e2);
+}
+
+.pagina.documento .indice-avance {
+  height: 3px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--apagado) 22%, transparent);
+  overflow: hidden;
+}
+.pagina.documento .indice-avance span {
+  display: block; height: 100%;
+  background: linear-gradient(90deg, var(--acento), var(--acento-2));
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.pagina.documento .indice-arriba {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .5rem .7rem;
+  border: 1px solid var(--linea); border-radius: 9px;
+  background: transparent; color: var(--apagado);
+  font-family: var(--mono); font-size: var(--t-nota);
+  cursor: pointer;
+  transition: color .18s, border-color .18s, transform .18s var(--curva);
+}
+.pagina.documento .indice-arriba svg { width: .95rem; height: .95rem; }
+.pagina.documento .indice-arriba:hover {
+  color: var(--acento); border-color: var(--acento); transform: translateY(-2px);
+}
+
+/* En el teléfono el índice es un desplegable: su pie estorbaría. */
+@media (max-width: 60rem) {
+  .pagina.documento .indice-pie { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pagina.documento .indice-arriba { transition: none; }
+  .pagina.documento .indice-arriba:hover { transform: none; }
 }

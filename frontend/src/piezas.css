@@ -72,10 +72,21 @@
 .lamina--derecha { right: 0; transform: translate(28%, -50%); }
 .lamina--izquierda { left: 0; transform: translate(-28%, -50%); }
 
-/* En tema claro un rectángulo casi negro no pinta nada. */
-:root[data-tema="claro"] .lamina { display: none; }
+/* Las láminas traen fondo casi negro. En claro se invierten y se suavizan en vez de esconderse:
+   un tema no puede ser el otro menos las cosas. */
+:root[data-tema="claro"] .lamina,
+:root:not([data-tema="oscuro"]) .lamina { }
 @media (prefers-color-scheme: light) {
-  :root:not([data-tema="oscuro"]) .lamina { display: none; }
+  :root:not([data-tema="oscuro"]) .lamina {
+    filter: invert(1) hue-rotate(180deg) saturate(1.25) brightness(1.06);
+    opacity: calc(var(--fuerza) * .55);
+    mix-blend-mode: multiply;
+  }
+}
+:root[data-tema="claro"] .lamina {
+  filter: invert(1) hue-rotate(180deg) saturate(1.25) brightness(1.06);
+  opacity: calc(var(--fuerza) * .55);
+  mix-blend-mode: multiply;
 }
 
 /* Por debajo de la anchura del contenido no hay banda lateral que llenar. */
@@ -92,9 +103,18 @@
   z-index: 0;
   pointer-events: none;
 }
-:root[data-tema="claro"] .fondo-video { display: none; }
+/* El vídeo también se invierte: la geometría se lee igual y el fondo pasa a claro. */
+:root[data-tema="claro"] .fondo-video {
+  filter: invert(1) hue-rotate(180deg) saturate(1.2);
+  opacity: .22;
+}
+:root[data-tema="claro"] .fondo-video--tenue { opacity: .1; }
 @media (prefers-color-scheme: light) {
-  :root:not([data-tema="oscuro"]) .fondo-video { display: none; }
+  :root:not([data-tema="oscuro"]) .fondo-video {
+    filter: invert(1) hue-rotate(180deg) saturate(1.2);
+    opacity: .22;
+  }
+  :root:not([data-tema="oscuro"]) .fondo-video--tenue { opacity: .1; }
 }
 
 /* En escenas con texto denso el vídeo baja para no competir con la lectura. */
@@ -116,3 +136,9 @@
 }
 /* En el teléfono no hay huecos que rellenar, solo texto. */
 @media (max-width: 62rem) { .pagina::before, .descargas::before { display: none; } }
+
+/* El lienzo de física va al fondo y nunca delante del texto. */
+.fisica { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.fisica canvas { display: block; }
+/* Solo el lienzo recibe el ratón, para poder empujar las piezas sin capturar la página. */
+.fisica > canvas { pointer-events: auto; }

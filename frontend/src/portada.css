@@ -100,24 +100,6 @@
 .pt-diagrama { margin: var(--e5) 0 0; }
 
 /* Dos columnas mientras quepan a un tamaño en el que las etiquetas se lean. */
-.pt-pilas {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-  gap: var(--e4);
-  justify-items: center;
-  align-items: end;
-}
-.pt-pila {
-  width: 100%;
-  max-width: 20rem;
-  height: auto;
-  /* El color lo pone el contenedor y el dibujo lo hereda: */
-  color: var(--tinta);
-}
-.pt-pila--cero { color: var(--acento); }
-.pt-pila text { font-family: var(--mono); }
-.pt-pila .hueco { stroke: var(--apagado); }
-.pt-pila .orden { fill: var(--apagado); }
 
 .pt-pie-figura { margin: var(--e4) 0 0; max-width: var(--ancho-medio); }
 .pt-pie-figura code {
@@ -236,3 +218,66 @@
   @keyframes latir { 0%,50% { opacity: 1 } 50.01%,100% { opacity: 0 } }
 }
 @media (max-width: 40rem) { .terminal-pantalla { font-size: .7rem; min-height: 15rem; } }
+
+/* ── Las dos pilas ─────────────────────────────────────────────────────── */
+
+.pt-pilas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--e4);
+  align-items: end;
+}
+
+.pt-pila {
+  margin: 0;
+  padding: var(--e3) var(--e2) var(--e2);
+  border: 1px solid var(--linea);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  display: grid;
+  gap: var(--e2);
+  justify-items: center;
+  transition: border-color var(--medio) var(--curva), transform var(--medio) var(--curva);
+}
+.pt-pila svg { width: 100%; max-width: 19rem; height: auto; }
+
+.pt-pila-rotulo { display: grid; gap: .25rem; text-align: center; }
+.pt-pila-nombre {
+  font-family: var(--mono); font-size: var(--t-menor);
+  letter-spacing: .08em; text-transform: uppercase;
+}
+.pt-pila-peso { font-size: var(--t-nota); color: var(--apagado); max-width: 17rem; }
+
+.pt-pila-orden {
+  font-family: var(--mono); font-size: var(--t-nota);
+  color: var(--apagado); text-align: center;
+}
+
+/* La pesada se apaga; la de Cero manda. Que la diferencia se vea antes de leer una palabra. */
+.pt-pila--pesada { color: var(--apagado); }
+.pt-pila--pesada .pt-pila-nombre { color: var(--apagado); }
+
+.pt-pila--cero {
+  color: var(--acento);
+  border-color: color-mix(in srgb, var(--acento) 38%, var(--linea));
+  background:
+    radial-gradient(120% 80% at 50% 100%, color-mix(in srgb, var(--acento) 10%, transparent), transparent 70%),
+    color-mix(in srgb, var(--panel) 70%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--acento) 12%, transparent),
+              0 18px 50px -28px color-mix(in srgb, var(--acento) 60%, transparent);
+}
+.pt-pila--cero .pt-pila-nombre { color: var(--acento); }
+.pt-pila--cero .pt-pila-orden { color: color-mix(in srgb, var(--acento) 80%, var(--tinta)); }
+
+.pt-pila .hueco { stroke: var(--apagado); opacity: .45; }
+.pt-pila-orden, .pt-hueco-texto { font-family: var(--mono); }
+.pt-hueco-texto {
+  fill: var(--apagado); letter-spacing: .1em; text-transform: uppercase; font-size: .72rem;
+}
+
+@media (hover: hover) {
+  .pt-pila--cero:hover { transform: translateY(-3px); }
+}
+
+/* Los dos recorridos, uno sobre otro: la diferencia de longitud es el argumento. */
+.pt-recorridos { display: grid; gap: var(--e3); }

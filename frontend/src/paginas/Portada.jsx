@@ -5,6 +5,8 @@ import Terminal from '../Terminal.jsx'
 import Geometria from '../Geometria.jsx'
 import Lamina from '../Lamina.jsx'
 import Fondo from '../Fondo.jsx'
+import Flujo from '../Flujo.jsx'
+import Fisica from '../Fisica.jsx'
 import useRevelar from '../revelar.js'
 import { idiomaDe, TEXTOS, raizDe } from '../idioma.js'
 import { VERSION } from '../version.js'
@@ -35,7 +37,7 @@ export default function Portada() {
       <section className="escena escena--alta">
         <Fondo nombre="01-nucleo-orbita" poster="01-nucleo-cero" />
         <div className="malla" aria-hidden="true" />
-        <Geometria />
+        <Fisica />
         <div className="centro">
           <p className="pt-antetitulo" data-revelar>
             <span className="pt-nuevo">{t.nuevo}</span>
@@ -88,11 +90,25 @@ export default function Portada() {
         <div className="centro">
           <h2 className="rotulo" data-revelar>{t.promesa[1]}</h2>
           <figure className="pt-diagrama" data-revelar>
-            <div className="pt-pilas">
-              <Pila capas={['systemd', 'JVM', 'Tomcat 10', 'app.war']} ritmo={220}
-                    orden="$ systemctl start tomcat" />
-              <Pila capas={['JVM', 'app.jar']} orden="$ java -jar app.jar" hueco ritmo={90}
-                    clase="pt-pila--cero" />
+            <div className="pt-recorridos">
+              <Flujo clase="fl--pesada" ritmo={190}
+                     rotulo={t.flujoPesado[0]} resumen={t.flujoPesado[1]}
+                     pasos={[
+                       { icono: 'codigo',    texto: t.flujoPesado[2] },
+                       { icono: 'paquete',   texto: t.flujoPesado[3], orden: 'app.war' },
+                       { icono: 'servidor',  texto: t.flujoPesado[4] },
+                       { icono: 'ajuste',    texto: t.flujoPesado[5], orden: 'web.xml' },
+                       { icono: 'subir',     texto: t.flujoPesado[6] },
+                       { icono: 'reiniciar', texto: t.flujoPesado[7], orden: 'systemctl restart' },
+                       { icono: 'listo',     texto: t.flujoPesado[8] },
+                     ]} />
+              <Flujo clase="fl--cero" ritmo={120}
+                     rotulo={t.flujoCero[0]} resumen={t.flujoCero[1]}
+                     pasos={[
+                       { icono: 'codigo',  texto: t.flujoCero[2] },
+                       { icono: 'paquete', texto: t.flujoCero[3], orden: 'app.jar' },
+                       { icono: 'listo',   texto: t.flujoCero[4], orden: 'java -jar app.jar' },
+                     ]} />
             </div>
             {/* Los dos dibujos van ocultos al lector de pantalla y el pie hace de alternativa
                 textual: así la explicación la lee todo el mundo y no solo quien no ve. */}
@@ -127,33 +143,54 @@ export default function Portada() {
 }
 
 /** Una pila de capas, de abajo arriba. Se levanta piso a piso al entrar en pantalla. */
-function Pila({ capas, orden, hueco, clase, ritmo = 150 }) {
-  const alto = 330
-  const base = 240
+function Pila({ capas, orden, hueco, clase, ritmo = 150, rotulo, peso }) {
+  const base = 250
+  const cima = base - (capas.length - 1) * 58
   return (
-    <svg className={clase ? `pt-pila ${clase}` : 'pt-pila'} viewBox={`0 0 260 ${alto}`}
-         data-revelar aria-hidden="true">
-      <line className="pt-cable" x1="130" y1={base + 46} x2="130"
-            y2={base - (capas.length - 1) * 56} strokeWidth="1.5" />
-      {hueco && (
-        <rect className="hueco" x="20" y="72" width="220" height="102" rx="6"
-              fill="none" strokeWidth="1.5" strokeDasharray="6 7" />
-      )}
-      {capas.map((nombre, i) => {
-        const y = base - i * 56
-        return (
-          <g key={nombre} className="pt-piso" style={{ '--piso': `${i * ritmo}ms` }}>
-            <rect x="20" y={y} width="220" height="46" rx="6" strokeWidth="1.5"
-                  stroke="currentColor" fill="color-mix(in srgb, currentColor 8%, transparent)" />
-            <text x="130" y={y + 28} fontSize="15" textAnchor="middle" fill="currentColor">
-              {nombre}
+    <figure className={clase ? `pt-pila ${clase}` : 'pt-pila'} data-revelar>
+      <figcaption className="pt-pila-rotulo">
+        <span className="pt-pila-nombre">{rotulo}</span>
+        <span className="pt-pila-peso">{peso}</span>
+      </figcaption>
+
+      <svg viewBox={`0 0 280 ${base + 100}`} aria-hidden="true">
+        <defs>
+          <linearGradient id={`brillo-${clase || 'base'}`} x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="currentColor" stopOpacity=".22" />
+            <stop offset="100%" stopColor="currentColor" stopOpacity=".04" />
+          </linearGradient>
+        </defs>
+
+        <line className="pt-cable" x1="140" y1={base + 48} x2="140" y2={cima} strokeWidth="1.5" />
+
+        {hueco && (
+          <g className="pt-hueco-grupo">
+            <rect className="hueco" x="24" y={cima - 122} width="232" height="106" rx="10"
+                  fill="none" strokeWidth="1.5" strokeDasharray="7 8" />
+            <text className="pt-hueco-texto" x="140" y={cima - 63} fontSize="13" textAnchor="middle">
+              nada más
             </text>
           </g>
-        )
-      })}
-      <circle className="pt-pulso" cx="130" r="3.5" fill="currentColor"
-              style={{ '--desde': `${base + 40}px`, '--hasta': `${base - (capas.length - 1) * 56}px` }} />
-      <text className="orden" x="130" y="316" fontSize="13" textAnchor="middle">{orden}</text>
-    </svg>
+        )}
+
+        {capas.map((nombre, i) => {
+          const y = base - i * 58
+          return (
+            <g key={nombre} className="pt-piso" style={{ '--piso': `${i * ritmo}ms` }}>
+              <rect x="24" y={y} width="232" height="48" rx="10" strokeWidth="1.5"
+                    stroke="currentColor" fill={`url(#brillo-${clase || 'base'})`} />
+              <text x="140" y={y + 30} fontSize="16" textAnchor="middle" fill="currentColor">
+                {nombre}
+              </text>
+            </g>
+          )
+        })}
+
+        <circle className="pt-pulso" cx="140" r="4" fill="currentColor"
+                style={{ '--desde': `${base + 42}px`, '--hasta': `${cima}px` }} />
+      </svg>
+
+      <code className="pt-pila-orden">{orden}</code>
+    </figure>
   )
 }
