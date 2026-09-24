@@ -233,6 +233,19 @@ export default function Contenido({ html, titulo, pide }) {
       })
     }
 
+    // Cada celda lleva el rótulo de su columna. Con eso el CSS puede apilar la tabla en el
+    // teléfono sin que nadie tenga que arrastrarla de lado para ver las cifras.
+    for (const tabla of raiz.querySelectorAll('table')) {
+      const rotulos = [...tabla.querySelectorAll('thead th')].map((th) => th.textContent.trim())
+      if (!rotulos.some(Boolean)) continue
+      for (const fila of tabla.querySelectorAll('tbody tr')) {
+        ;[...fila.children].forEach((celda, i) => {
+          if (rotulos[i]) celda.setAttribute('data-rotulo', rotulos[i])
+        })
+      }
+      tabla.classList.add('apilable')
+    }
+
     // El atributo lo pone el script, no el HTML: sin script no queda nada esperando a revelarse.
     if ('IntersectionObserver' in window && !window.matchMedia(QUIETO).matches) {
       const bloques = [...raiz.querySelectorAll('.codigo, .envoltura')]

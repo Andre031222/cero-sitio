@@ -239,8 +239,10 @@
             backdrop-filter: blur(16px) saturate(1.6);
     overflow-x: auto;
     scrollbar-width: none;
-    /* Siete destinos no caben en un teléfono: el desvanecido dice que hay más, en vez de
-       dejar el último cortado como si faltara. */
+  }
+  /* Siete destinos no caben en un teléfono: el desvanecido dice que hay más, en vez de dejar
+     el último cortado como si faltara. Lo pone Marco.jsx, y solo mientras quede algo detrás. */
+  .barra-abajo.hay-mas {
     -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 1.6rem), transparent);
             mask-image: linear-gradient(to right, #000 calc(100% - 1.6rem), transparent);
   }

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Tema from './Tema.jsx'
 import { idiomaDe, parejaDe, TEXTOS, raizDe } from './idioma.js'
 import './marco.css'
@@ -39,6 +39,8 @@ export default function Marco({ children }) {
   const pareja = parejaDe(pathname)
   const enPortada = pathname === '/' || pathname === '/en'
   const [posada, setPosada] = useState(false)
+  const barraAbajo = useRef(null)
+  const destinoActivo = useRef(null)
 
   // El lang del documento y las etiquetas hreflang no son adorno: son lo que hace que un
   // buscador ofrezca la versión correcta y que un lector de pantalla pronuncie bien.
@@ -56,6 +58,24 @@ export default function Marco({ children }) {
       document.head.appendChild(l)
     }
   }, [pathname, idioma, pareja, t.lang])
+
+  // Siete destinos no caben en un teléfono y la barra de abajo se desplaza. Si el destino
+  // actual queda fuera, nada dice dónde estás: se trae a la vista al cambiar de página.
+  useEffect(() => {
+    const caja = barraAbajo.current, aqui = destinoActivo.current
+    if (!caja || !aqui) return
+    // El desvanecido del borde solo mientras quede algo detrás: si no, tapa al destino actual.
+    const borde = () => caja.classList.toggle('hay-mas',
+      caja.scrollLeft + caja.clientWidth < caja.scrollWidth - 1)
+    caja.addEventListener('scroll', borde, { passive: true })
+    if (caja.scrollWidth > caja.clientWidth) {
+      const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      caja.scrollTo({ left: aqui.offsetLeft - (caja.clientWidth - aqui.offsetWidth) / 2,
+                      behavior: suave ? 'smooth' : 'auto' })
+    }
+    borde()
+    return () => caja.removeEventListener('scroll', borde)
+  }, [pathname])
 
   // La barra solo se vela cuando hay algo que velar debajo.
   useEffect(() => {
@@ -128,14 +148,15 @@ export default function Marco({ children }) {
         </div>
       </footer>
 
-      <nav className="barra-abajo" aria-label={t.menuMovil}>
+      <nav className="barra-abajo" aria-label={t.menuMovil} ref={barraAbajo}>
         {t.menu.map(([sufijo, texto]) => {
           const a = `${raiz}${sufijo}` || '/'
           const aqui = pathname === a
           return (
             <Link key={a} to={a} className={aqui ? 'activo' : undefined}
                   aria-current={aqui ? 'page' : undefined}
-                  onClick={aqui ? subirDelTodo : undefined}>
+                  onClick={aqui ? subirDelTodo : undefined}
+                  ref={aqui ? destinoActivo : undefined}>
               <Icono ruta={sufijo} />
               <span>{texto}</span>
             </Link>

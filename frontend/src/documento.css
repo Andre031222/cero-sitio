@@ -765,3 +765,78 @@ td.cifra b, th.cifra b { color: var(--acento); font-weight: 700; }
   .pagina.documento .indice-arriba { transition: none; }
   .pagina.documento .indice-arriba:hover { transform: none; }
 }
+
+/* ── Tablas apiladas en el teléfono ───────────────────────────────────────────────── */
+
+/* Una tabla de seis columnas en 390 px obliga a arrastrarla de lado y las cifras quedan
+   fuera. Por debajo de 40rem cada fila pasa a ser una ficha con su rótulo por celda. */
+@media (max-width: 40rem) {
+  .pagina .envoltura:has(.apilable) { overflow-x: visible; }
+  .pagina.documento .envoltura table.apilable { min-width: 0; width: 100%; display: block; }
+
+  .pagina table.apilable,
+  .pagina table.apilable tbody,
+  .pagina table.apilable tr,
+  .pagina table.apilable td,
+  .pagina.documento .envoltura table.apilable tbody,
+  .pagina.documento .envoltura table.apilable tr,
+  .pagina.documento .envoltura table.apilable td { display: block; width: auto; min-width: 0; }
+
+  .pagina table.apilable thead,
+  .pagina.documento .envoltura table.apilable thead { display: none; }
+
+  .pagina table.apilable tr {
+    margin-bottom: var(--e2);
+    padding: var(--e2);
+    border: 1px solid var(--linea);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--panel) 55%, transparent);
+  }
+  .pagina table.apilable tr:last-child { margin-bottom: 0; }
+
+  .pagina table.apilable td[data-rotulo],
+  .pagina.documento .envoltura table.apilable td[data-rotulo] {
+    display: block;
+    padding: .45rem 0;
+    border: none;
+    border-bottom: 1px solid var(--linea);
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+  /* Rótulo al lado solo si la celda es texto pelado: en una rejilla cada <code> o <a> sería
+     un ítem más y se colocaría solo, fuera de su columna. */
+  .pagina table.apilable td[data-rotulo]:not(:has(*)),
+  .pagina.documento .envoltura table.apilable td[data-rotulo]:not(:has(*)) {
+    display: grid;
+    grid-template-columns: minmax(6.5rem, auto) 1fr;
+    gap: var(--e2);
+    align-items: baseline;
+  }
+  .pagina table.apilable tr td:last-child { border-bottom: none; }
+
+  .pagina table.apilable td[data-rotulo]::before {
+    content: attr(data-rotulo);
+    display: block;
+    margin-bottom: .15rem;
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--apagado);
+  }
+  .pagina table.apilable td[data-rotulo]:not(:has(*))::before { margin-bottom: 0; }
+
+  /* Sin rótulo solo queda la celda cuyo encabezado venía vacío: es el nombre de la fila. */
+  .pagina table.apilable td:not([data-rotulo]),
+  .pagina.documento .envoltura table.apilable td:not([data-rotulo]) {
+    display: block;
+    padding-top: 0;
+    font-size: var(--t-guia);
+    overflow-wrap: anywhere;
+  }
+
+  .pagina table.apilable td.cifra { text-align: left; }
+  .pagina table.apilable tr.total {
+    border-color: color-mix(in srgb, var(--acento) 45%, var(--linea));
+  }
+}
