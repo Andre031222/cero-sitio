@@ -5,6 +5,7 @@ import useRevelar from '../revelar.js'
 import Orden from '../Orden.jsx'
 import Lamina from '../Lamina.jsx'
 import Fondo from '../Fondo.jsx'
+import Sistemas from '../Sistemas.jsx'
 import { VERSION, VERSION_CENTRAL } from '../version.js'
 import '../producto.css'
 
@@ -89,10 +90,10 @@ export default function Descargas() {
       <section className="escena escena--panel">
         <Fondo nombre="02-prisma-recorrido" poster="02-prisma-horizonte" tenue />
         <Lamina nombre="10-umbral" lado="derecha" alto="24rem" fuerza={.36} />
-        <div className="centro centro--medio">
+        <div className="centro">
           <h2 className="rotulo" data-revelar>{t.instalar}</h2>
           <p className="guia sub" data-revelar>{t.instalarGuia}</p>
-          <div data-revelar><Orden>{INSTALAR}</Orden></div>
+          <Sistemas textos={t} />
         </div>
       </section>
 
@@ -105,10 +106,12 @@ export default function Descargas() {
             <div className="barra-codigo"><span>pom.xml</span></div>
             <pre>{POM}</pre>
           </div>
-          <p className="nota" data-revelar>
-            {t.coordenadasCentral[0]}<b>{VERSION_CENTRAL}</b>{t.coordenadasCentral[1]}
-            <b>{VERSION}</b>{t.coordenadasCentral[2]}
-          </p>
+          {VERSION_CENTRAL !== VERSION && (
+            <p className="nota" data-revelar>
+              {t.coordenadasCentral[0]}<b>{VERSION_CENTRAL}</b>{t.coordenadasCentral[1]}
+              <b>{VERSION}</b>{t.coordenadasCentral[2]}
+            </p>
+          )}
         </div>
       </section>
 

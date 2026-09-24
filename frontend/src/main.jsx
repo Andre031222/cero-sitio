@@ -12,28 +12,32 @@ import './portada.css'
 import './producto.css'
 import './documento.css'
 import './piezas.css'
+import './flujo.css'
+import './sistemas.css'
 
-// El contenido se incrusta en el bundle con ?raw: son archivos nuestros, del repositorio, no
-// algo que llegue por la red. Así una página no espera a una segunda petición para pintarse.
-import empezar from './contenido/empezar.html?raw'
-import guia from './contenido/guia.html?raw'
-import modulos from './contenido/modulos.html?raw'
-import referencia from './contenido/referencia.html?raw'
-import acerca from './contenido/acerca.html?raw'
-import empezarEn from './contenido/en/empezar.html?raw'
-import guiaEn from './contenido/en/guia.html?raw'
-import modulosEn from './contenido/en/modulos.html?raw'
-import referenciaEn from './contenido/en/referencia.html?raw'
-import acercaEn from './contenido/en/acerca.html?raw'
+// El contenido se pide al entrar en su ruta, no se incrusta: son 324 kB de documentación y
+// quien solo abre la portada no tiene por qué descargarlos.
+const CONTENIDO = {
+  'empezar:es': () => import('./contenido/empezar.html?raw'),
+  'empezar:en': () => import('./contenido/en/empezar.html?raw'),
+  'guia:es': () => import('./contenido/guia.html?raw'),
+  'guia:en': () => import('./contenido/en/guia.html?raw'),
+  'modulos:es': () => import('./contenido/modulos.html?raw'),
+  'modulos:en': () => import('./contenido/en/modulos.html?raw'),
+  'referencia:es': () => import('./contenido/referencia.html?raw'),
+  'referencia:en': () => import('./contenido/en/referencia.html?raw'),
+  'acerca:es': () => import('./contenido/acerca.html?raw'),
+  'acerca:en': () => import('./contenido/en/acerca.html?raw'),
+}
 
 // Los nombres de ruta no se traducen: /en/guia y no /en/guide. Así cada página y su pareja se
 // corresponden con una sustitución, sin tabla de equivalencias que se desincronice.
 const PAGINAS = [
-  ['empezar', { es: [empezar, 'Empezar'], en: [empezarEn, 'Get started'] }],
-  ['guia', { es: [guia, 'Guía'], en: [guiaEn, 'Guide'] }],
-  ['modulos', { es: [modulos, 'Módulos'], en: [modulosEn, 'Modules'] }],
-  ['referencia', { es: [referencia, 'Referencia'], en: [referenciaEn, 'Reference'] }],
-  ['acerca', { es: [acerca, 'Acerca de'], en: [acercaEn, 'About'] }],
+  ['empezar', { es: 'Empezar', en: 'Get started' }],
+  ['guia', { es: 'Guía', en: 'Guide' }],
+  ['modulos', { es: 'Módulos', en: 'Modules' }],
+  ['referencia', { es: 'Referencia', en: 'Reference' }],
+  ['acerca', { es: 'Acerca de', en: 'About' }],
 ]
 
 const noEncontrada = (idioma) => {
@@ -54,11 +58,11 @@ createRoot(document.getElementById('raiz')).render(
           <Route path="/en/descargas" element={<Descargas />} />
           {PAGINAS.map(([ruta, v]) => (
             <Route key={ruta} path={`/${ruta}`}
-                   element={<Contenido titulo={v.es[1]} html={v.es[0]} />} />
+                   element={<Contenido titulo={v.es} pide={CONTENIDO[`${ruta}:es`]} />} />
           ))}
           {PAGINAS.map(([ruta, v]) => (
             <Route key={`en-${ruta}`} path={`/en/${ruta}`}
-                   element={<Contenido titulo={v.en[1]} html={v.en[0]} />} />
+                   element={<Contenido titulo={v.en} pide={CONTENIDO[`${ruta}:en`]} />} />
           ))}
           <Route path="/en/*" element={<Contenido titulo="Not found" html={noEncontrada('en')} />} />
           <Route path="*" element={<Contenido titulo="No encontrada" html={noEncontrada('es')} />} />

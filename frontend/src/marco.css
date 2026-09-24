@@ -214,3 +214,65 @@
   .idioma { padding: 0 .45rem; }
   .idioma .codigo { display: none; }
 }
+
+/* ── La barra de abajo, solo en el teléfono ───────────────────────────── */
+
+.barra-abajo { display: none; }
+
+@media (max-width: 52rem) {
+  /* El menú de arriba se va: en el teléfono los destinos viven abajo, al alcance del pulgar. */
+  .barra-sitio .barra-menu { display: none; }
+  .barra-caja { grid-template-columns: auto 1fr; min-height: 3.6rem; }
+  .barra-sitio .mandos { justify-self: end; }
+
+  .barra-abajo {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    z-index: 40;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(4.2rem, 1fr);
+    gap: .1rem;
+    padding: .4rem .3rem calc(.4rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--linea);
+    background: color-mix(in srgb, var(--papel) 88%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(1.6);
+            backdrop-filter: blur(16px) saturate(1.6);
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Siete destinos no caben en un teléfono: el desvanecido dice que hay más, en vez de
+       dejar el último cortado como si faltara. */
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 1.6rem), transparent);
+            mask-image: linear-gradient(to right, #000 calc(100% - 1.6rem), transparent);
+  }
+  .barra-abajo::-webkit-scrollbar { display: none; }
+
+  /* Sin `backdrop-filter` el velo deja pasar el contenido que corre por debajo. */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .barra-abajo { background: var(--papel); }
+  }
+
+  .barra-abajo a {
+    display: grid; justify-items: center; align-content: center; gap: .2rem;
+    padding: .4rem .2rem;
+    border-radius: 10px;
+    color: var(--apagado); text-decoration: none;
+    transition: color .16s, background .16s;
+  }
+  .barra-abajo a svg { width: 1.35rem; height: 1.35rem; }
+  .barra-abajo a span {
+    font-family: var(--mono); font-size: .58rem;
+    letter-spacing: .02em; white-space: nowrap;
+  }
+  /* El activo no se distingue solo por el color. */
+  .barra-abajo a.activo {
+    color: var(--acento);
+    background: color-mix(in srgb, var(--acento) 12%, transparent);
+  }
+
+  /* Hueco para que la barra no tape el final de la página. */
+  .pie-sitio { padding-bottom: calc(var(--e6) + env(safe-area-inset-bottom)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barra-abajo a { transition: none; }
+}

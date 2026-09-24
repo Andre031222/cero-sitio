@@ -1,6 +1,6 @@
   <header class="cabecera-pagina">
     <h1 class="titulo-pagina">Guide</h1>
-    <p class="entradilla">Everything you need to write an application: routes, parameters, responses, injection, validation, errors, sessions, access, tasks, metrics and deploying behind a proxy.</p>
+    <p class="entradilla">Everything you need to write an application: routes, parameters, responses, injection, validation, errors, sessions, access, tasks, metrics, testing, migrations, configuration and deploying behind a proxy.</p>
   </header>
 
   <div class="cuerpo">
@@ -16,13 +16,16 @@
         <li><a href="#sesiones"><span class="n">08</span> Sessions and access</a></li>
         <li><a href="#tareas"><span class="n">09</span> Tasks and cache</a></li>
         <li><a href="#observar"><span class="n">10</span> Metrics and OpenAPI</a></li>
-        <li><a href="#proxy"><span class="n">11</span> Behind a proxy</a></li>
-        <li><a href="#frontend"><span class="n">12</span> With React, Svelte or Vue</a></li>
-        <li><a href="#tiempo-real"><span class="n">13</span> Real time</a></li>
-        <li><a href="#idiomas"><span class="n">14</span> Multiple languages</a></li>
-        <li><a href="#live"><span class="n">15</span> Regions that repaint themselves</a></li>
-        <li><a href="#salud"><span class="n">16</span> Health</a></li>
-        <li><a href="#entradas"><span class="n">17</span> Untrusted input</a></li>
+        <li><a href="#pruebas"><span class="n">11</span> Testing</a></li>
+        <li><a href="#datos"><span class="n">12</span> Migrations and rows</a></li>
+        <li><a href="#config"><span class="n">13</span> Configuration and environment</a></li>
+        <li><a href="#proxy"><span class="n">14</span> Behind a proxy</a></li>
+        <li><a href="#frontend"><span class="n">15</span> With React, Svelte or Vue</a></li>
+        <li><a href="#tiempo-real"><span class="n">16</span> Real time</a></li>
+        <li><a href="#idiomas"><span class="n">17</span> Multiple languages</a></li>
+        <li><a href="#live"><span class="n">18</span> Regions that repaint themselves</a></li>
+        <li><a href="#salud"><span class="n">19</span> Health</a></li>
+        <li><a href="#entradas"><span class="n">20</span> Untrusted input</a></li>
       </ol>
     </nav>
     <main>
@@ -88,6 +91,16 @@
             </tbody>
           </table>
         </div>
+
+        <p class="medida">
+          <code>orElse</code> accepts the <b>empty string</b>:
+          <code>@Query(value = "q", orElse = "") String q</code> arrives as <code>""</code> when
+          the parameter is not there. This is a <b>behaviour change in 0.7.0</b>: the empty string
+          used to be the sentinel for «no default declared» and that parameter arrived
+          <code>null</code>, so a search filter written that way blew up with a
+          <code>NullPointerException</code> on the first visit. The sentinel is now a value nobody
+          can type. The same goes for <code>@Form</code>.
+        </p>
 
         <h3>By type, with no annotation</h3>
         <div class="envoltura">
@@ -507,13 +520,485 @@ Cero.app()
         </div>
       </section>
 
-      <section id="proxy">
-        <div class="titulo-seccion"><span class="indice-num">11</span><h2>Behind a proxy</h2></div>
+      <section id="pruebas">
+        <div class="titulo-seccion"><span class="indice-num">11</span><h2>Testing</h2></div>
 
         <p class="medida">
-          Cero speaks <b>HTTP/1.1</b>. For HTTP/2, HTTP/3 and automatic certificates you put
+          <code>cero-test</code> is the new module in 0.7.0, and it is already on Maven Central.
+          It boots your application on a free port, asks it for something with a client that keeps
+          cookies, and asserts on the response. Before it existed, every project wrote its own
+          assertions by hand and copied the Maven wiring by reading our <code>pom.xml</code>.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">pom.xml</span><span class="etiqueta">XML</span></div>
+<pre>&lt;dependency&gt;
+    &lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;
+    &lt;artifactId&gt;<span class="st">cero-test</span>&lt;/artifactId&gt;
+    &lt;version&gt;<span class="st">0.7.0</span>&lt;/version&gt;
+    &lt;scope&gt;<span class="st">test</span>&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+
+        <p class="medida">
+          It drags in nothing outside the JDK. <code>cero-data</code> is optional —only
+          <code>TestDatabase</code> needs it— so an application without a database never sees it.
+        </p>
+
+        <h3>A complete example</h3>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">TareasTest.java</span><span class="etiqueta">Java</span></div>
+<pre><span class="kw">import</span> cero.test.TestClient;
+<span class="kw">import</span> cero.test.TestResponse;
+<span class="kw">import</span> cero.test.TestServer;
+<span class="kw">import</span> java.util.Map;
+
+<span class="kw">public class</span> TareasTest {
+
+    <span class="kw">public static void</span> main(String[] args) {
+        <span class="cm">// App.app() returns the configured Cero, the same one main() boots</span>
+        <span class="kw">try</span> (TestServer app = TestServer.start(App.app())) {
+            TestClient cliente = app.client();
+
+            cliente.get(<span class="st">"/api/tareas"</span>).ok().contentType(<span class="st">"application/json"</span>);
+
+            TestResponse creada = cliente.post(<span class="st">"/api/tareas"</span>,
+                    Map.of(<span class="st">"titulo"</span>, <span class="st">"Terminar la web"</span>, <span class="st">"prioridad"</span>, <span class="st">"alta"</span>));
+            creada.status(<span class="st">201</span>)
+                  .json(<span class="st">"titulo"</span>, <span class="st">"Terminar la web"</span>);
+
+            cliente.post(<span class="st">"/api/tareas"</span>, Map.of(<span class="st">"titulo"</span>, <span class="st">"x"</span>))
+                   .status(<span class="st">422</span>)
+                   .contains(<span class="st">"titulo"</span>);
+
+            cliente.get(<span class="st">"/api/tareas/9999"</span>).status(<span class="st">404</span>);
+        }
+    }
+}</pre>
+        </div>
+
+        <p class="medida">
+          The operating system picks the port, so two modules testing at the same time do not
+          collide. <code>close()</code> closes the clients it handed out and stops the server.
+        </p>
+
+        <h3>The session, which is what breaks most</h3>
+
+        <p class="medida">
+          The client keeps cookies and <b>does not follow redirects</b>: a successful login
+          answers 302 and that response is exactly the one the test wants to look at. Every
+          <code>client()</code> gets its own cookie jar, that is, its own session.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Log in and stay in</span><span class="etiqueta">Java</span></div>
+<pre>TestClient cliente = app.client();
+
+cliente.get(<span class="st">"/yo"</span>).status(<span class="st">401</span>);
+cliente.form(<span class="st">"/acceso"</span>, Map.of(<span class="st">"usuario"</span>, <span class="st">"ada"</span>, <span class="st">"clave"</span>, <span class="st">"secreta"</span>))
+       .status(<span class="st">302</span>)
+       .cookie(<span class="st">"CEROSESSION"</span>);
+cliente.get(<span class="st">"/yo"</span>).ok().json(<span class="st">"usuario.nombre"</span>, <span class="st">"Ada"</span>);</pre>
+        </div>
+
+        <h3>The same test over HTTP/2</h3>
+
+        <p class="medida">
+          By default the client negotiates the version. <code>http1()</code> and
+          <code>http2()</code> pin it, which is how you check that something works the same
+          through both doors.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Session over HTTP/2</span><span class="etiqueta">Java</span></div>
+<pre>TestClient cliente = app.client().http2();
+TestResponse portada = cliente.get(<span class="st">"/"</span>).ok();
+
+<span class="kw">if</span> (portada.version() != HttpClient.Version.HTTP_2) {
+    <span class="kw">throw new</span> AssertionError(<span class="st">"the server did not speak HTTP/2"</span>);
+}
+
+cliente.form(<span class="st">"/tareas"</span>, Map.of(<span class="st">"_csrf"</span>, token(portada.body()), <span class="st">"titulo"</span>, <span class="st">"Alta"</span>))
+       .status(<span class="st">302</span>);   <span class="cm">// the session survives the second request</span></pre>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Why that test is written down</div>
+          <p>
+            In 0.7.0 the session cookie was lost over HTTP/2: the first request opened a session
+            and the second one arrived as a stranger. A test that only goes over HTTP/1.1 sees
+            none of that. <code>version()</code> exists so you can assert which version the
+            response actually came over, instead of trusting that you asked for it.
+          </p>
+        </div>
+
+        <h3>The three classes</h3>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>TestServer</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-clave">TestServer.start(Cero app)</td><td>The application, on <code>127.0.0.1</code> and a free port</td></tr>
+              <tr><td class="mono-clave">TestServer.start(Class&lt;?&gt;... controllers)</td><td>Shortcut: just a few controllers</td></tr>
+              <tr><td class="mono-clave">int port()</td><td>The port the system picked</td></tr>
+              <tr><td class="mono-clave">String url() / String url(String path)</td><td>The base, or the base plus a path</td></tr>
+              <tr><td class="mono-clave">TestClient client()</td><td>A new client, with its own cookie jar</td></tr>
+              <tr><td class="mono-clave">Server server()</td><td>The <code>cero-http</code> server, if you need it</td></tr>
+              <tr><td class="mono-clave">void close()</td><td>Closes the clients and stops the server</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>TestClient</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-clave">TestClient.of(String baseUrl)</td><td>A standalone client, against the URL you give it</td></tr>
+              <tr><td class="mono-clave">http1() / http2()</td><td>Pin the version; without them, it negotiates</td></tr>
+              <tr><td class="mono-clave">header(String name, String value)</td><td>Header for every following request</td></tr>
+              <tr><td class="mono-clave">get(String) / delete(String) / post(String)</td><td>With no body</td></tr>
+              <tr><td class="mono-clave">post / put / patch (String path, Object json)</td><td>A string goes as is; anything else is serialized</td></tr>
+              <tr><td class="mono-clave">form(String path, Map&lt;String,String&gt; fields)</td><td>POST <code>x-www-form-urlencoded</code></td></tr>
+              <tr><td class="mono-clave">send(String method, String path, String contentType, String body)</td><td>Whatever does not fit the above</td></tr>
+              <tr><td class="mono-clave">String cookie(String name)</td><td>The stored value, or <code>null</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>TestResponse</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-clave">status() / body() / header(String)</td><td>Read and return the value</td></tr>
+              <tr><td class="mono-clave">HttpClient.Version version()</td><td>Which version the response came over</td></tr>
+              <tr><td class="mono-clave">HttpResponse&lt;String&gt; raw()</td><td>The JDK response, whole</td></tr>
+              <tr><td class="mono-clave">Object json() / Object json(String path)</td><td>The tree, or <code>"usuario.nombre"</code>, <code>"items.0.id"</code></td></tr>
+              <tr><td class="mono-clave">ok() / status(int)</td><td>200, or whichever you say</td></tr>
+              <tr><td class="mono-clave">header(String name, String expected)</td><td>Exact header</td></tr>
+              <tr><td class="mono-clave">contentType(String expected)</td><td>Compares without the <code>; charset=…</code></td></tr>
+              <tr><td class="mono-clave">contains(String fragment)</td><td>The body carries that text</td></tr>
+              <tr><td class="mono-clave">json(String path, Object expected)</td><td>1 and 1L are not told apart: JSON does not either</td></tr>
+              <tr><td class="mono-clave">cookie(String name)</td><td>The response carries that <code>Set-Cookie</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="medida">
+          The readers return the value; the rest assert and chain. When an assertion fails, the
+          <code>AssertionError</code> says what was expected, what arrived and an extract of the
+          body — which is almost always where the reason is:
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">A failure</span><span class="etiqueta">Text</span></div>
+<pre>GET /json: se esperaba json usuario.nombre = &lt;Grace&gt; y llegó &lt;Ada&gt;
+  estado: 200
+  cuerpo: {"usuario":{"nombre":"Ada","edad":36}}</pre>
+        </div>
+
+        <h3>With a database</h3>
+
+        <p class="medida">
+          <code>TestDatabase</code> opens a throwaway database and <b>registers it as the default
+          source</b>, so the application under test uses it without touching anything.
+          <code>migrate</code> applies the whole batch against it and fails naming the broken
+          migration.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">TestDatabase</span><span class="etiqueta">Java</span></div>
+<pre><span class="kw">try</span> (TestDatabase db = TestDatabase.of(<span class="st">"jdbc:h2:mem:pruebas"</span>);
+     TestServer app = TestServer.start(App.app())) {
+
+    <span class="kw">int</span> aplicadas = db.migrate(Migrations.from(Path.of(<span class="st">"db/migraciones"</span>)));
+
+    app.client().get(<span class="st">"/usuarios"</span>).ok();
+}</pre>
+        </div>
+
+        <p class="medida">
+          <code>TestDatabase.of(String jdbcUrl)</code> takes the default source;
+          <code>TestDatabase.of(String source, String jdbcUrl)</code> registers a named one.
+          <code>pool()</code> and <code>source()</code> return what was registered.
+        </p>
+
+        <div class="aviso nota">
+          <div class="etiqueta">How they are run</div>
+          <p>
+            Cero does not use JUnit: every module has a class with a <code>main</code> that runs
+            its tests and exits with a non-zero code if any of them fails, and
+            <code>exec-maven-plugin</code> launches it in the <code>test</code> phase. You copy it
+            from the <code>pom.xml</code> of <code>cero-test</code>, changing the class name.
+          </p>
+          <p>
+            If your project does use JUnit, none of that is needed:
+            <code>TestServer</code> and <code>TestDatabase</code> are <code>AutoCloseable</code>
+            and fit into a <code>@BeforeAll</code>/<code>@AfterAll</code> or a try-with-resources.
+          </p>
+        </div>
+      </section>
+
+      <section id="datos">
+        <div class="titulo-seccion"><span class="indice-num">12</span><h2>Migrations and rows</h2></div>
+
+        <p class="medida">
+          Migrations are numbered <code>.sql</code> files, and <code>run()</code> applies the ones
+          that are missing and records each of them with its fingerprint:
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Migrations</span><span class="etiqueta">Java</span></div>
+<pre>Migrations migraciones = Migrations.from(Path.of(<span class="st">"db/migraciones"</span>));
+<span class="cm">// or Migrations.fromClasspath("db/migraciones") if they live inside the jar</span>
+
+<span class="kw">int</span> aplicadas = migraciones.run();          <span class="cm">// only the missing ones</span>
+List&lt;String&gt; yaEstan = migraciones.applied();</pre>
+        </div>
+
+        <h3>An already applied migration that gets corrected</h3>
+
+        <p class="medida">
+          The fingerprint is what stops an already applied file from changing behind everyone's
+          back. But sometimes the correction is legitimate —a comment, a misspelt name inside the
+          SQL itself— and <b>does not alter what that migration left in the schema</b>. At that
+          point startup stops in every environment at once, and until 0.7.0 the only way out was
+          editing the bookkeeping table by hand.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">repair()</span><span class="etiqueta">Java</span></div>
+<pre><span class="cm">// Recomputes the fingerprints and rewrites the ones that changed. It re-runs nothing.</span>
+List&lt;String&gt; reparadas = Migrations.from(Path.of(<span class="st">"db/migraciones"</span>)).repair();</pre>
+        </div>
+
+        <p class="medida">
+          It returns the names whose fingerprints were rewritten. <b>It is only valid if the
+          correction does not change the resulting schema</b>: if it does, what you need is a new
+          migration —<code>repair()</code> would leave the database without the change and the
+          record saying it is there.
+        </p>
+
+        <h3>So the failure shows up in continuous integration</h3>
+
+        <p class="medida">
+          <code>verify(String)</code> applies the whole batch against <b>another source</b> —an
+          empty, throwaway database— and returns the result instead of throwing. That way a broken
+          batch shows up in the pipeline and not while bringing up a new environment, which is
+          when there is least time.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">verify()</span><span class="etiqueta">Java</span></div>
+<pre>DataSources.register(<span class="st">"ensayo"</span>, Pool.to(<span class="st">"jdbc:h2:mem:ensayo"</span>).build());
+
+Migrations.Verificacion resultado =
+        Migrations.from(Path.of(<span class="st">"db/migraciones"</span>)).verify(<span class="st">"ensayo"</span>);
+
+<span class="kw">if</span> (!resultado.correcta()) {
+    <span class="kw">throw new</span> AssertionError(resultado.resumen());
+}</pre>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>record Verificacion</th><th>What it carries</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-clave">boolean correcta()</td><td>Whether the whole batch applied</td></tr>
+              <tr><td class="mono-clave">int aplicadas()</td><td>How many ran before stopping</td></tr>
+              <tr><td class="mono-clave">String migracion()</td><td>The one that broke, or <code>null</code></td></tr>
+              <tr><td class="mono-clave">String fallo()</td><td>The error message, or <code>null</code></td></tr>
+              <tr><td class="mono-clave">String resumen()</td><td>Both things in one line, for the log</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="medida">
+          If you already use <a href="#pruebas"><code>cero-test</code></a>,
+          <code>TestDatabase.migrate(…)</code> does this on its own: it calls <code>verify</code>
+          against its own database and throws with the name of the broken one.
+        </p>
+
+        <h3>A row is a map</h3>
+
+        <p class="medida">
+          <code>Row</code> implements <code>Map&lt;String,Object&gt;</code>, read-only and with
+          case-insensitive column lookup. What that solves: a <code>Row</code> nested inside a
+          response is serialized <b>as a JSON object</b>, instead of falling into getter
+          introspection and forcing you to convert it by hand with <code>toMap()</code>.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Row</span><span class="etiqueta">Java</span></div>
+<pre>Row fila = Db.open().one(<span class="st">"select id, titulo, creada from tareas where id = ?"</span>, id);
+
+<span class="kw">return</span> Map.of(<span class="st">"tarea"</span>, fila, <span class="st">"servidor"</span>, nombre);   <span class="cm">// comes out as {"tarea":{…}}</span>
+
+fila.get(<span class="st">"TITULO"</span>);        <span class="cm">// the column is looked up ignoring case</span>
+fila.text(<span class="st">"titulo"</span>);       fila.date(<span class="st">"creada"</span>);      fila.as(Tarea.class);</pre>
+        </div>
+
+        <div class="aviso">
+          <div class="etiqueta">Breaking change: <code>Row.put</code> is no longer <code>Row</code>'s</div>
+          <p>
+            A row is built with <code>Row.of(key, value, …)</code> or
+            <code>Row.from(map)</code>. The <code>put</code> that remains is the one from the
+            <code>Map</code> contract, and like the rest of the write operations it throws
+            <code>UnsupportedOperationException</code>.
+          </p>
+          <p>
+            Code that chained —<code>Row.of().put("a", 1).put("b", 2)</code>— or that stored the
+            result in a <code>Row</code> variable <b>stops compiling</b>: <code>Map</code>'s
+            <code>put</code> returns the previous value, not the row.
+          </p>
+        </div>
+
+        <h3>SQL dates in JSON</h3>
+
+        <p class="medida">
+          The three <code>java.sql</code> types inherit from <code>java.util.Date</code>, so they
+          used to fall into its branch and come out as instants: 19:00 turned into
+          <code>1970-01-02T00:00:00Z</code> and a date moved a day forward on its way to UTC. Now
+          each one comes out as what it is.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Type</th><th>Comes out as</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-clave">java.sql.Date</td><td class="mono">yyyy-MM-dd</td><td class="mono">"2026-03-14"</td></tr>
+              <tr><td class="mono-clave">java.sql.Time</td><td class="mono">HH:mm:ss</td><td class="mono">"19:00:00"</td></tr>
+              <tr><td class="mono-clave">java.sql.Timestamp</td><td>ISO-8601 instant</td><td class="mono">"2026-03-14T19:00:00Z"</td></tr>
+              <tr><td class="mono-clave">java.util.Date</td><td>ISO-8601 instant</td><td class="mono">"2026-03-14T19:00:00Z"</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="medida">
+          This is what saves you from filling your queries with <code>to_char(…)</code> so the
+          JSON reads well: a <code>date</code> and a <code>time</code> from the database now reach
+          the client with the shape they have in the database.
+        </p>
+      </section>
+
+      <section id="config">
+        <div class="titulo-seccion"><span class="indice-num">13</span><h2>Configuration and environment</h2></div>
+
+        <p class="medida">
+          <code>loadConfig()</code> reads, in this order,
+          <code>application.properties</code> from the classpath, the same file next to the
+          process, the <code>CERO_*</code> variables and the <code>-Dcero.*</code> system
+          properties. The last one wins.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Startup</span><span class="etiqueta">Java</span></div>
+<pre>Cero app = Cero.app()
+                .loadConfig()          <span class="cm">// or .config(Config.load("mi.properties"))</span>
+                .controllers(TareasController.class);
+
+<span class="kw">int</span> tope = app.configuration().getInt(<span class="st">"limite.peticiones"</span>, <span class="st">100</span>);
+
+app.start();                           <span class="cm">// this is where the warnings come out</span></pre>
+        </div>
+
+        <p class="medida">
+          A variable is translated by dropping the prefix, lowercasing the name and turning
+          <code>_</code> into dots: <code>CERO_SERVER_PORT</code> is <code>server.port</code>.
+        </p>
+
+        <h3>The startup warnings</h3>
+
+        <p class="medida">
+          At startup, once everyone has asked, Cero goes over the <code>CERO_*</code> variables
+          that have not ended up in any key anyone reads, and warns. There are three cases:
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>What happens</th><th>What you see on the console</th></tr></thead>
+            <tbody>
+              <tr><td>The variable matches no known key</td><td class="mono">CERO_SERVER_PORTT no corresponde a ninguna clave conocida (server.portt)</td></tr>
+              <tr><td>The key is camelCase and the environment cannot reach it</td><td class="mono">CERO_SERVER_BEHINDPROXY no se aplica: la clave es server.behindProxy, en camelCase, y el entorno no distingue mayúsculas</td></tr>
+              <tr><td>The application never calls <code>loadConfig()</code></td><td class="mono">CERO_SERVER_PORT no se leen: la aplicación no llama a loadConfig()</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso">
+          <div class="etiqueta">Why a warning and not a footnote</div>
+          <p>
+            A misspelt variable did not fail: it came in with the default value, silently. In
+            production that meant the session cookie going out <b>without <code>Secure</code></b>
+            because <code>behindProxy</code> never got switched on, and the rate limiter counting
+            everyone together because <code>trustProxy</code> never arrived either. A deployment
+            that starts perfectly and does not do what the configuration file says is the worst
+            place to hide that.
+          </p>
+          <p>
+            The list of known keys is not maintained by hand: <b>asking for a key declares
+            it</b>, even if it is not there. That is why the pass happens at the end of startup
+            and not before.
+          </p>
+        </div>
+
+        <p class="medida">
+          The camelCase case has no way back from the environment, because the translation
+          lowercases the name. That key goes in <code>application.properties</code> or as a system
+          property, which does keep the capitals:
+          <code>-Dcero.server.behindProxy=true</code>.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Key</th><th>Sets</th></tr></thead>
+            <tbody>
+              <tr><td class="mono-clave">server.port</td><td>Listening port</td></tr>
+              <tr><td class="mono-clave">server.host</td><td>Interface</td></tr>
+              <tr><td class="mono-clave">server.maxConnections</td><td>Connections at once</td></tr>
+              <tr><td class="mono-clave">server.maxBodyBytes</td><td>Maximum body size</td></tr>
+              <tr><td class="mono-clave">server.idleTimeoutMillis</td><td>Idle connection</td></tr>
+              <tr><td class="mono-clave">server.behindProxy</td><td>Honour <code>X-Forwarded-*</code></td></tr>
+              <tr><td class="mono-clave">server.handlerTimeoutMillis</td><td>Cap on the action</td></tr>
+              <tr><td class="mono-clave">server.gzipMinBytes</td><td>When to start compressing</td></tr>
+              <tr><td class="mono-clave">server.sessionTimeoutMillis</td><td>Session inactivity</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="proxy">
+        <div class="titulo-seccion"><span class="indice-num">14</span><h2>Behind a proxy</h2></div>
+
+        <p class="medida">
+          Cero speaks <b>HTTP/1.1 and HTTP/2</b>. For HTTP/3 and automatic certificates you put
           nginx or Caddy in front, which also absorbs slow connections. It is the recommended way
           to deploy it.
+        </p>
+
+        <h3 id="http2">HTTP/2, and how to turn it off</h3>
+
+        <p class="medida">
+          It ships <b>on</b>. An application never notices: it gets the same
+          <code>Request</code> and the same <code>Response</code> as on HTTP/1.1. You come in
+          through three doors: both <b>h2c</b> ones in the clear —prior knowledge, or
+          <code>Upgrade: h2c</code> from an HTTP/1.1 request—, which is what a proxy terminating
+          TLS for you speaks, and <b>ALPN over TLS</b>, the only one a browser will use: none of
+          them speaks h2c.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">HTTP/1.1 only</span><span class="etiqueta">Java</span></div>
+<pre>ServerOptions.builder()
+    .http2(<span class="kw">false</span>)     <span class="cm">// ALPN does not announce h2, and h2c is not accepted</span>
+    .build();</pre>
+        </div>
+
+        <p class="medida">
+          Turning it off makes sense in one concrete place: an intermediary that chokes on h2c, or
+          a measurement that wants to compare both versions without the client negotiating on its
+          own. <code>PUSH_PROMISE</code> is announced as disabled —it is deprecated— and
+          <code>PRIORITY</code> is read and discarded, which is what RFC 9113 allows.
         </p>
 
         <div class="aviso">
@@ -553,7 +1038,7 @@ StaticFiles.fromClasspath(<span class="st">"estaticos"</span>)
       </section>
 
       <section id="frontend">
-        <div class="titulo-seccion"><span class="indice-num">12</span><h2>With React, Svelte or Vue</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">15</span><h2>With React, Svelte or Vue</h2></div>
 
         <p class="medida">
           Cero does not force you to use its template engine. It can serve <b>JSON and nothing
@@ -639,7 +1124,7 @@ StaticFiles.fromClasspath(<span class="st">"estaticos"</span>)
       </section>
 
       <section id="tiempo-real">
-        <div class="titulo-seccion"><span class="indice-num">13</span><h2>Real time</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">16</span><h2>Real time</h2></div>
 
         <p class="medida">
           Two ways, and nearly always you want the first.
@@ -738,7 +1223,7 @@ eventos.onmessage = e =&gt; pintar(JSON.parse(e.data));</pre>
         </div>
       </section>
       <section id="idiomas">
-        <div class="titulo-seccion"><span class="indice-num">14</span><h2>Multiple languages</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">17</span><h2>Multiple languages</h2></div>
 
         <p>
           Texts live in <code>.properties</code> on the classpath: one base file and one per language.
@@ -815,7 +1300,7 @@ mensajes.qu.properties</pre>
       </section>
 
       <section id="live">
-        <div class="titulo-seccion"><span class="indice-num">15</span><h2>Regions that repaint themselves</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">18</span><h2>Regions that repaint themselves</h2></div>
 
         <p>
           Mark a region in the template and the server repaints it whenever it wants, without you
@@ -899,7 +1384,7 @@ live.push(<span class="st">"carrito"</span>, <span class="st">"carrito.html"</sp
       </section>
 
       <section id="salud">
-        <div class="titulo-seccion"><span class="indice-num">16</span><h2>Health</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">19</span><h2>Health</h2></div>
 
         <div class="codigo">
           <div class="barra"><span class="etiqueta">Startup</span><span class="etiqueta">Java</span></div>
@@ -967,7 +1452,7 @@ live.push(<span class="st">"carrito"</span>, <span class="st">"carrito.html"</sp
       </section>
 
       <section id="entradas">
-        <div class="titulo-seccion"><span class="indice-num">17</span><h2>Untrusted input</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">20</span><h2>Untrusted input</h2></div>
 
         <p class="medida">
           Most of the time you need nothing: <b>templates escape by default</b>. A

@@ -2,15 +2,15 @@ import { useEffect, useRef } from 'react'
 
 const QUIETO = '(prefers-reduced-motion: reduce)'
 
-const PIEZAS = [
-  { lados: 3, radio: 54, color: '#22d3ee' },
-  { lados: 4, radio: 40, color: '#38bdf8' },
-  { lados: 3, radio: 34, color: '#f59e0b' },
-  { lados: 6, radio: 44, color: '#1d4ed8' },
-  { lados: 4, radio: 58, color: '#e2e8f0' },
-  { lados: 3, radio: 42, color: '#22d3ee' },
-  { lados: 5, radio: 36, color: '#38bdf8' },
-  { lados: 4, radio: 30, color: '#f59e0b' },
+// Dos paletas: sobre blanco, el cian y el hielo del tema oscuro se pierden.
+const PALETAS = {
+  oscuro: ['#22d3ee', '#38bdf8', '#f59e0b', '#1d4ed8', '#e2e8f0', '#22d3ee', '#38bdf8', '#f59e0b'],
+  claro: ['#0e7490', '#1d4ed8', '#b45309', '#1e3a8a', '#475569', '#0e7490', '#1d4ed8', '#b45309'],
+}
+
+const FORMAS = [
+  { lados: 3, radio: 54 }, { lados: 4, radio: 40 }, { lados: 3, radio: 34 }, { lados: 6, radio: 44 },
+  { lados: 4, radio: 58 }, { lados: 3, radio: 42 }, { lados: 5, radio: 36 }, { lados: 4, radio: 30 },
 ]
 
 /** Formas del kit cayendo y chocando. Decorativa: el motor se carga solo si va a verse. */
@@ -47,18 +47,30 @@ export default function Fisica() {
 
       const muro = (x, y, w, h) =>
         M.Bodies.rectangle(x, y, w, h, { isStatic: true, render: { visible: false } })
+      // El texto vive en la columna izquierda: un muro invisible impide que las piezas caigan
+      // encima. En pantallas anchas empieza al 46 %; en las justas, al 20 %.
+      const linea = ancho > 1100 ? ancho * 0.46 : ancho * 0.2
       M.Composite.add(motor.world, [
         muro(ancho / 2, alto + 30, ancho * 2, 60),
-        muro(-30, alto / 2, 60, alto * 2),
+        muro(linea - 30, alto / 2, 60, alto * 2),
         muro(ancho + 30, alto / 2, 60, alto * 2),
       ])
 
-      const cuerpos = PIEZAS.map((p, i) =>
-        M.Bodies.polygon(ancho * (0.15 + 0.1 * i), -120 - i * 90, p.lados, p.radio, {
+      const claro = document.documentElement.getAttribute('data-tema') === 'claro'
+        || (!document.documentElement.getAttribute('data-tema')
+            && window.matchMedia('(prefers-color-scheme: light)').matches)
+      const paleta = PALETAS[claro ? 'claro' : 'oscuro']
+
+      const cuerpos = FORMAS.map((p, i) =>
+        M.Bodies.polygon(linea + (ancho - linea) * (0.1 + 0.11 * i), -120 - i * 90, p.lados, p.radio, {
           restitution: 0.45,
           friction: 0.06,
           angle: Math.random() * Math.PI,
-          render: { fillStyle: 'transparent', strokeStyle: p.color, lineWidth: 1.6 },
+          render: {
+            fillStyle: claro ? 'rgba(29, 78, 216, 0.05)' : 'transparent',
+            strokeStyle: paleta[i],
+            lineWidth: claro ? 2.2 : 1.6,
+          },
         }))
       M.Composite.add(motor.world, cuerpos)
 
@@ -75,7 +87,7 @@ export default function Fisica() {
         for (const cuerpo of cuerpos) {
           const { x, y } = cuerpo.position
           if (y > alto + 200 || x < -200 || x > ancho + 200) {
-            M.Body.setPosition(cuerpo, { x: ancho * (0.25 + Math.random() * 0.5), y: -80 })
+            M.Body.setPosition(cuerpo, { x: linea + (ancho - linea) * (0.15 + Math.random() * 0.7), y: -80 })
             M.Body.setVelocity(cuerpo, { x: 0, y: 0 })
           }
         }

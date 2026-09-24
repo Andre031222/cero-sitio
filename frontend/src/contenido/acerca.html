@@ -1,11 +1,9 @@
-  <div class="producto">
+  <header class="cabecera-pagina">
+    <h1 class="titulo-pagina">Acerca de</h1>
+    <p class="entradilla">Quién hace Cero, por qué existe, con qué licencia se distribuye y cómo citarlo.</p>
+  </header>
 
-    <section class="escena escena--alta">
-      <div class="centro">
-        <h1 class="heroe" data-revelar>Acerca de</h1>
-        <p class="guia sub" data-revelar>
-          Quién hace Cero, por qué existe, con qué licencia se distribuye y cómo citarlo.
-        </p>
+  <div class="cuerpo">
         <nav class="indice" aria-label="En esta página" data-revelar>
           <ol>
             <li><a href="#quien"><span class="n">01</span> Quién lo hace</a></li>
@@ -14,11 +12,9 @@
             <li><a href="#licencia"><span class="n">04</span> Licencia y cita</a></li>
           </ol>
         </nav>
-      </div>
-    </section>
 
-    <section id="quien" class="escena escena--panel">
-      <div class="centro centro--medio">
+    <div class="prosa">
+    <section id="quien" class="seccion">
         <header class="paso" data-revelar>
           <span class="n">01</span>
           <h2 class="titulo">Quién lo hace</h2>
@@ -64,11 +60,9 @@
             </p>
           </div>
         </div>
-      </div>
     </section>
 
-    <section id="origen" class="escena">
-      <div class="centro centro--medio">
+    <section id="origen" class="seccion">
         <header class="paso" data-revelar>
           <span class="n">02</span>
           <h2 class="titulo">Por qué existe</h2>
@@ -88,7 +82,7 @@
           </blockquote>
 
           <p data-revelar>
-            Así que se escribió uno. <b>6 696 líneas de servidor HTTP/1.1 y HTTP/2</b> sobre la biblioteca
+            Así que se escribió uno, sobre la biblioteca
             estándar de Java: lectura de peticiones, cabeceras, cuerpos por trozos, TLS recargable,
             multipart, gzip, estáticos con rangos, WebSocket y SSE. Un hilo virtual por conexión,
             que es lo que hace que un modelo tan directo aguante.
@@ -137,11 +131,9 @@
             minúscula, como siempre: <code>cero-core</code>, <code>cero new</code>.
           </p>
         </div>
-      </div>
     </section>
 
-    <section id="estado" class="escena escena--panel">
-      <div class="centro centro--medio">
+    <section id="estado" class="seccion">
         <header class="paso" data-revelar>
           <span class="n">03</span>
           <h2 class="titulo">En qué estado está</h2>
@@ -154,7 +146,7 @@
 
           <div class="datos" data-revelar>
             <div class="dato">
-              <p><b class="cifra-grande">1 726</b><span class="pie">Pruebas en verde</span></p>
+              <p><b class="cifra-grande">1 762</b><span class="pie">Pruebas en verde</span></p>
             </div>
             <div class="dato">
               <p><b class="cifra-grande">0</b><span class="pie">Dependencias en ejecución</span></p>
@@ -168,7 +160,7 @@
             <table>
               <thead><tr><th></th><th>Estado</th></tr></thead>
               <tbody>
-                <tr><td>Batería de pruebas</td><td><b>1 726</b> en verde, sobre macOS y sobre Linux, con PostgreSQL y MySQL reales</td></tr>
+                <tr><td>Batería de pruebas</td><td><b>1 762</b> en verde, sobre macOS y sobre Linux, con PostgreSQL y MySQL reales</td></tr>
                 <tr><td>Integración continua</td><td>JDK 25, en cada cambio</td></tr>
                 <tr><td>Dependencias en ejecución</td><td><b>Cero</b></td></tr>
                 <tr><td>Aplicaciones en producción</td><td>Seis, todas nuestras</td></tr>
@@ -192,11 +184,9 @@
             </p>
           </div>
         </div>
-      </div>
     </section>
 
-    <section id="licencia" class="escena">
-      <div class="centro centro--medio">
+    <section id="licencia" class="seccion">
         <header class="paso" data-revelar>
           <span class="n">04</span>
           <h2 class="titulo">Licencia y cita</h2>
@@ -226,7 +216,7 @@
             </div>
           </div>
         </div>
-      </div>
     </section>
 
+    </div>
   </div>

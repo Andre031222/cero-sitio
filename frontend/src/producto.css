@@ -28,10 +28,7 @@
 
 /* ── Cabecera de página ────────────────────────────────────────────────── El titular y su entradilla. */
 .producto .heroe { margin: 0; text-wrap: balance; }
-.producto .sub {
-  margin: var(--e3) 0 0;
-  max-width: 40rem;
-}
+.producto .sub { margin: var(--e3) 0 0; max-width: 42rem; }
 .producto .antetexto {
   display: block;
   margin: 0 0 var(--e2);
@@ -88,14 +85,20 @@
 }
 
 /* ── Dato grande ───────────────────────────────────────────────────────── Una cifra por pantalla, con su pie. */
-.producto .datos {
+.producto .datos,
+.pagina.documento .datos {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
   gap: var(--e4) var(--e3);
   margin: var(--e4) 0 0;
 }
-.producto .dato p { margin: 0; max-width: none; }
-.producto .dato .cifra-grande {
+.producto .dato p,
+.pagina.documento .dato p { margin: 0; max-width: none; }
+
+/* Datos y citas comparten la columna de la prosa: a 52rem quedaban desalineados con ella. */
+.producto .datos, .producto .cita, .producto .formal, .producto .envoltura { max-width: 42rem; }
+.producto .dato .cifra-grande,
+.pagina.documento .dato .cifra-grande {
   display: block;
   font-family: var(--mono);
   font-size: var(--t-escena);
@@ -110,7 +113,8 @@
           background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.producto .dato .pie {
+.producto .dato .pie,
+.pagina.documento .dato .pie {
   display: block;
   margin-top: var(--e1);
   font-family: var(--mono);
@@ -121,14 +125,16 @@
 }
 
 /* ── Cita destacada ────────────────────────────────────────────────────── Va en serif y en peso normal: */
-.producto .cita {
+.producto .cita,
+.pagina.documento .cita {
   margin: var(--e4) 0;
   font-family: var(--serif);
   font-weight: 400;
   line-height: 1.28;
   text-wrap: balance;
 }
-.producto .cita::before {
+.producto .cita::before,
+.pagina.documento .cita::before {
   content: "";
   display: block;
   width: 3rem;
@@ -136,8 +142,10 @@
   margin-bottom: var(--e3);
   background: linear-gradient(90deg, var(--acento), var(--acento-2));
 }
-.producto .cita p { margin: 0; max-width: none; font-size: inherit; }
-.producto .cita cite {
+.producto .cita p,
+.pagina.documento .cita p { margin: 0; max-width: none; font-size: inherit; }
+.producto .cita cite,
+.pagina.documento .cita cite {
   display: block;
   margin-top: var(--e2);
   font-family: var(--mono);
@@ -172,14 +180,17 @@
 .producto .envoltura td { padding-block: .8rem; }
 
 /* ── Ficha formal ──────────────────────────────────────────────────────── Autoría, licencia y cita. */
-.producto .formal {
+.producto .formal,
+.pagina.documento .formal {
   border: 1px solid var(--linea);
   border-radius: 10px;
   padding: var(--e3);
   background: var(--papel);
 }
-.producto .formal > :last-child { margin-bottom: 0; }
-.producto .formal .codigo { background: var(--panel); }
+.producto .formal > :last-child,
+.pagina.documento .formal > :last-child { margin-bottom: 0; }
+.producto .formal .codigo,
+.pagina.documento .formal .codigo { background: var(--panel); }
 .producto .escena--panel .formal { background: var(--papel); }
 .producto .escena--panel .formal .codigo { background: var(--panel); }
 @media (min-width: 46rem) {
@@ -229,7 +240,7 @@
 
 .rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1px;
   background: var(--linea); border: 1px solid var(--linea); border-radius: 6px; overflow: hidden; }
-/* auto-fit repartía seis módulos en cinco columnas y dejaba el sexto solo en una fila. */
+/* auto-fit dejaba el último módulo solo en una fila. */
 @media (min-width: 62rem) {
   .rejilla { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
@@ -320,7 +331,68 @@
 
 /* El filete y la sangría del pie del dato venían del pie viejo del sitio, que alcanzaba a
    `.dato .pie` por el nombre. La regla se fue; el aspecto se queda escrito donde toca. */
-.producto .dato .pie { border-top: 2px solid var(--tinta); padding: 1.25rem 1.5rem 3rem; }
+.producto .dato .pie,
+.pagina.documento .dato .pie { border-top: 2px solid var(--tinta); padding: 1.25rem 1.5rem 3rem; }
 @media (max-width: 26rem) {
   .producto .dato .pie { padding-left: 1rem; padding-right: 1rem; }
 }
+
+/* ── Portadilla de las páginas de producto ────────────────────────────── */
+
+.producto .portadilla { padding-top: var(--e4); }
+
+/* El índice en fila: como lista vertical dejaba una columna de aire a su derecha. */
+.producto .portadilla nav.indice ol {
+  list-style: none; margin: var(--e3) 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: .5rem;
+}
+.producto .portadilla nav.indice a {
+  display: inline-flex; align-items: baseline; gap: .45rem;
+  padding: .45rem .8rem;
+  border: 1px solid var(--linea); border-radius: 99px;
+  font-family: var(--mono); font-size: var(--t-nota);
+  color: var(--apagado); text-decoration: none;
+  transition: color .18s, border-color .18s;
+}
+.producto .portadilla nav.indice a:hover { color: var(--acento); border-color: var(--acento); }
+.producto .portadilla nav.indice a .n { opacity: .65; font-size: .9em; }
+
+@media (prefers-reduced-motion: reduce) {
+  .producto .portadilla nav.indice a { transition: none; }
+}
+
+/* Geometría en «Por qué existe»: ahí vivía una ilustración y la sección quedó desnuda.
+   Va por CSS porque el contenido es HTML plano y no admite componentes. */
+#origen { position: relative; overflow: hidden; }
+#origen::after {
+  content: "";
+  position: absolute;
+  top: 50%; right: -6%;
+  width: clamp(16rem, 30vw, 34rem);
+  aspect-ratio: 1600 / 1000;
+  transform: translateY(-50%);
+  background: url("/catalogo/imagenes/03-orbita-azul.svg") center/contain no-repeat;
+  opacity: .34;
+  pointer-events: none;
+  z-index: 0;
+  -webkit-mask-image: radial-gradient(72% 72% at 62% 50%, #000 30%, transparent 76%);
+          mask-image: radial-gradient(72% 72% at 62% 50%, #000 30%, transparent 76%);
+}
+#origen > * { position: relative; z-index: 1; }
+
+/* Trae fondo casi negro: en claro se invierte, como las demás láminas. */
+:root[data-tema="claro"] #origen::after {
+  filter: invert(1) hue-rotate(180deg) saturate(1.25) brightness(1.06);
+  opacity: .2;
+  mix-blend-mode: multiply;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-tema="oscuro"]) #origen::after {
+    filter: invert(1) hue-rotate(180deg) saturate(1.25) brightness(1.06);
+    opacity: .2;
+    mix-blend-mode: multiply;
+  }
+}
+
+/* Por debajo de la anchura del contenido taparía el texto. */
+@media (max-width: 68rem) { #origen::after { display: none; } }

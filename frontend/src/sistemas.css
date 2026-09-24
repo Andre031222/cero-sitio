@@ -1,0 +1,121 @@
+/* ── Instalación por sistema: un podio donde el elegido se levanta ────── */
+
+.sis { margin-top: var(--e3); display: grid; gap: var(--e3); }
+
+/* Alto fijo al alto de la torre: si la fila creciera al elegir, empujaría todo lo de abajo. */
+.sis-pestanas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--e2);
+  align-items: end;
+  height: 15rem;
+}
+
+.sis-pestana {
+  position: relative;
+  display: grid; justify-items: center; align-content: center; gap: var(--e2);
+  min-height: 11rem;
+  padding: var(--e3) var(--e2);
+  border: 1px solid var(--linea); border-radius: 18px;
+  background: color-mix(in srgb, var(--panel) 60%, transparent);
+  color: var(--apagado);
+  cursor: pointer;
+  transition: min-height .42s var(--curva), color .22s, border-color .22s,
+              background .22s, transform .42s var(--curva), box-shadow .42s var(--curva);
+}
+@media (hover: hover) {
+  .sis-pestana:not(.activa):hover { color: var(--tinta); transform: translateY(-4px); }
+}
+
+/* El elegido crece: la torre es la que dice dónde estás, antes que el color. */
+.sis-pestana.activa {
+  min-height: 15rem;
+  color: var(--acento);
+  border-color: color-mix(in srgb, var(--acento) 55%, var(--linea));
+  background:
+    radial-gradient(130% 80% at 50% 100%, color-mix(in srgb, var(--acento) 14%, transparent), transparent 72%),
+    color-mix(in srgb, var(--panel) 60%, transparent);
+  box-shadow: 0 26px 60px -34px color-mix(in srgb, var(--acento) 85%, transparent);
+}
+
+.sis-glifo { display: grid; place-items: center; }
+.sis-logo {
+  display: block;
+  width: 3.2rem; height: 3.2rem;
+  background: currentColor;
+  -webkit-mask: var(--logo) center/contain no-repeat;
+          mask: var(--logo) center/contain no-repeat;
+  transition: width .42s var(--curva), height .42s var(--curva);
+}
+.sis-pestana.activa .sis-logo { width: 4.4rem; height: 4.4rem; }
+
+.sis-nombre { font-family: var(--sans); font-weight: 620; font-size: var(--t-menor); }
+.sis-pestana.activa .sis-nombre { font-size: var(--t-guia); }
+
+.sis-tuyo {
+  position: absolute; top: -.6rem; right: .7rem;
+  padding: .12rem .5rem; border-radius: 99px;
+  background: var(--acento); color: var(--papel);
+  font-family: var(--mono); font-size: .6rem;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+
+/* Alto reservado: sin esto, un detalle de dos líneas frente a uno de una movía todo al cambiar. */
+.sis-panel {
+  display: grid; gap: .8rem; justify-items: center;
+  max-width: 42rem; margin-inline: auto;
+}
+.sis-detalle {
+  margin: 0; min-height: 2.6em;
+  display: grid; align-content: center;
+  font-size: var(--t-menor); color: var(--apagado); text-align: center;
+}
+
+.sis-orden {
+  display: inline-flex; align-items: center; gap: var(--e2);
+  max-width: 100%;
+  padding: .7rem .7rem .7rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--acento) 28%, var(--linea));
+  border-radius: 12px;
+  background: var(--papel);
+  box-shadow: 0 14px 40px -30px color-mix(in srgb, var(--acento) 70%, transparent);
+}
+/* La señal del intérprete: se ve que es una orden de terminal sin tener que leerla. */
+.sis-orden::before {
+  content: "$";
+  flex: none;
+  font-family: var(--mono); font-size: .85rem;
+  color: var(--acento); opacity: .8;
+}
+.sis-orden code {
+  min-width: 0;
+  font-family: var(--mono); font-size: .8rem;
+  overflow-x: auto; white-space: nowrap; scrollbar-width: none;
+}
+.sis-orden code::-webkit-scrollbar { display: none; }
+.sis-orden button {
+  flex: none;
+  padding: .35rem .7rem;
+  border: 1px solid var(--linea); border-radius: 8px;
+  background: transparent; color: var(--apagado);
+  font-family: var(--mono); font-size: .68rem;
+  letter-spacing: .06em; text-transform: uppercase;
+  cursor: pointer;
+  transition: color .16s, border-color .16s;
+}
+.sis-orden button:hover { color: var(--acento); border-color: var(--acento); }
+
+@media (max-width: 34rem) {
+  .sis-pestanas { height: 10.5rem; }
+  .sis-pestana { min-height: 8rem; padding: var(--e2) .5rem; }
+  .sis-pestana.activa { min-height: 10.5rem; }
+  .sis-logo { width: 2.2rem; height: 2.2rem; }
+  .sis-pestana.activa .sis-logo { width: 3rem; height: 3rem; }
+  .sis-tuyo { right: .3rem; font-size: .55rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sis-pestana, .sis-logo, .sis-orden button { transition: none; }
+  .sis-pestana:hover { transform: none; }
+  .sis-panel { animation: none; }
+}

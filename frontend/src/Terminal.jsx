@@ -7,7 +7,7 @@ const GUION = [
   { orden: 'curl -fsSL https://cero.ginit.dev/instalar | sh', salida: [
       `descargando cero-${VERSION}.tar.gz … 736 KB`,
       'comprobando huella sha256 … correcta',
-      'compilando … 1 726 pruebas en verde',
+      'compilando … 1 762 pruebas en verde',
       'orden cero lista en ~/.local/bin',
   ]},
   { orden: 'cero new mi-app', salida: [

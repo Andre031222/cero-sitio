@@ -9,4 +9,4 @@ export const VERSION = '0.7.0'
 
 /** La última en Maven Central. Va aparte porque Central es inmutable y siempre va por detrás
  *  de la versión que sirve el instalador: entregar coordenadas que no resuelven rompe builds. */
-export const VERSION_CENTRAL = '0.6.0'
+export const VERSION_CENTRAL = '0.7.0'

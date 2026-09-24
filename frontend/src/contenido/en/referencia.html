@@ -1,19 +1,389 @@
   <header class="cabecera-pagina">
     <h1 class="titulo-pagina">Reference</h1>
-    <p class="entradilla">Verified database engines, systems it runs on, and a comparison with its predecessor on Tomcat.</p>
+    <p class="entradilla">Signatures and defaults: the test module, migrations, server options, the verified database engines, where it runs and the comparison against the others.</p>
   </header>
 
   <div class="cuerpo">
     <nav class="indice" aria-label="On this page">
       <ol>
-        <li><a href="#bases"><span class="n">01</span> Databases</a></li>
-        <li><a href="#sistemas"><span class="n">02</span> Where it runs</a></li>
-        <li><a href="#comparacion"><span class="n">03</span> Against the others</a></li>
+        <li><a href="#pruebas"><span class="n">01</span> cero-test</a></li>
+        <li><a href="#migraciones"><span class="n">02</span> Migrations</a></li>
+        <li><a href="#servidor"><span class="n">03</span> Server options</a></li>
+        <li><a href="#filas"><span class="n">04</span> Rows</a></li>
+        <li><a href="#configuracion"><span class="n">05</span> Configuration</a></li>
+        <li><a href="#json"><span class="n">06</span> Types in JSON</a></li>
+        <li><a href="#parametros"><span class="n">07</span> Request parameters</a></li>
+        <li><a href="#bases"><span class="n">08</span> Databases</a></li>
+        <li><a href="#sistemas"><span class="n">09</span> Where it runs</a></li>
+        <li><a href="#comparacion"><span class="n">10</span> Against the others</a></li>
       </ol>
     </nav>
     <main>
+<!-- 0.7.0: the test module, just published. -->
+<section id="pruebas">
+        <div class="titulo-seccion"><span class="indice-num">01</span><h2>cero-test</h2></div>
+
+        <p>
+          It starts the application on a free port, asks it for something with a client that keeps
+          the cookies, and asserts on the response. No dependencies outside the JDK:
+          <code>cero-data</code> and the JDBC driver are optional and only needed for
+          <code>TestDatabase</code>.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Adding it</span><span class="etiqueta">Maven</span></div>
+<pre>&lt;dependency&gt;
+    &lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;
+    &lt;artifactId&gt;<span class="st">cero-test</span>&lt;/artifactId&gt;
+    &lt;version&gt;<span class="st">0.7.0</span>&lt;/version&gt;
+    &lt;scope&gt;<span class="st">test</span>&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">A whole test</span><span class="etiqueta">Java</span></div>
+<pre><span class="kw">try</span> (TestServer app = TestServer.start(MyApplication.app())) {
+    TestClient client = app.client();
+
+    client.get(<span class="st">"/me"</span>).status(<span class="st">401</span>);
+    client.form(<span class="st">"/login"</span>, Map.of(<span class="st">"usuario"</span>, <span class="st">"ada"</span>, <span class="st">"clave"</span>, <span class="st">"secreta"</span>))
+          .status(<span class="st">302</span>)
+          .cookie(<span class="st">"CEROSESSION"</span>);
+    client.get(<span class="st">"/me"</span>).ok().json(<span class="st">"usuario.nombre"</span>, <span class="st">"Ada"</span>);
+}</pre>
+        </div>
+
+        <h3>TestServer</h3>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Method</th><th>Returns</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">TestServer.start(Cero app)</td><td class="mono">TestServer</td><td>Starts on <code>127.0.0.1</code>, port <code>0</code> —the system picks it— and quietly.</td></tr>
+              <tr><td class="mono">TestServer.start(Class&lt;?&gt;… controllers)</td><td class="mono">TestServer</td><td>The same over <code>Cero.app().controllers(…)</code>.</td></tr>
+              <tr><td class="mono">port()</td><td class="mono">int</td><td>The port the operating system assigned.</td></tr>
+              <tr><td class="mono">url()</td><td class="mono">String</td><td><code>http://127.0.0.1:</code> plus the port.</td></tr>
+              <tr><td class="mono">url(String path)</td><td class="mono">String</td><td>The base plus the path, with or without a leading <code>/</code>.</td></tr>
+              <tr><td class="mono">client()</td><td class="mono">TestClient</td><td>A fresh client with its own cookie jar: one session per client.</td></tr>
+              <tr><td class="mono">server()</td><td class="mono">Server</td><td>The <code>cero-http</code> server underneath.</td></tr>
+              <tr><td class="mono">close()</td><td class="mono">void</td><td>Closes the clients it handed out and stops the server. It is <code>AutoCloseable</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>TestClient</h3>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Method</th><th>Returns</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">TestClient.of(String baseUrl)</td><td class="mono">TestClient</td><td>A client against that base.</td></tr>
+              <tr><td class="mono">http1()</td><td class="mono">TestClient</td><td>Forces HTTP/1.1. By default it negotiates.</td></tr>
+              <tr><td class="mono">http2()</td><td class="mono">TestClient</td><td>Forces HTTP/2.</td></tr>
+              <tr><td class="mono">header(String name, String value)</td><td class="mono">TestClient</td><td>A header for every following request.</td></tr>
+              <tr><td class="mono">get(String path)</td><td class="mono">TestResponse</td><td>GET.</td></tr>
+              <tr><td class="mono">delete(String path)</td><td class="mono">TestResponse</td><td>DELETE.</td></tr>
+              <tr><td class="mono">post(String path)</td><td class="mono">TestResponse</td><td>POST with no body.</td></tr>
+              <tr><td class="mono">post(String path, Object json)</td><td class="mono">TestResponse</td><td>POST: a string goes as is; anything else is serialised.</td></tr>
+              <tr><td class="mono">put(String path, Object json)</td><td class="mono">TestResponse</td><td>PUT, same rule.</td></tr>
+              <tr><td class="mono">patch(String path, Object json)</td><td class="mono">TestResponse</td><td>PATCH, same rule.</td></tr>
+              <tr><td class="mono">form(String path, Map&lt;String, String&gt; fields)</td><td class="mono">TestResponse</td><td>Form POST.</td></tr>
+              <tr><td class="mono">send(String method, String path,<br>String contentType, String body)</td><td class="mono">TestResponse</td><td>A request built by hand.</td></tr>
+              <tr><td class="mono">cookie(String name)</td><td class="mono">String</td><td>The value held in the jar, or <code>null</code>.</td></tr>
+              <tr><td class="mono">close()</td><td class="mono">void</td><td>Closes the client. It is <code>AutoCloseable</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>TestResponse</h3>
+        <p>The readers return the value; the rest assert and chain.</p>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Method</th><th>Returns</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">status()</td><td class="mono">int</td><td>The code.</td></tr>
+              <tr><td class="mono">body()</td><td class="mono">String</td><td>The whole body.</td></tr>
+              <tr><td class="mono">header(String name)</td><td class="mono">String</td><td>The header, or <code>null</code>.</td></tr>
+              <tr><td class="mono">version()</td><td class="mono">HttpClient.Version</td><td>The protocol it was served over.</td></tr>
+              <tr><td class="mono">raw()</td><td class="mono">HttpResponse&lt;String&gt;</td><td>The JDK client's response.</td></tr>
+              <tr><td class="mono">json()</td><td class="mono">Object</td><td>The body parsed as JSON.</td></tr>
+              <tr><td class="mono">json(String path)</td><td class="mono">Object</td><td>One point of the tree: <code>"usuario.nombre"</code>, <code>"items.0.id"</code>.</td></tr>
+              <tr><td class="mono">ok()</td><td class="mono">TestResponse</td><td>Asserts 200.</td></tr>
+              <tr><td class="mono">status(int expected)</td><td class="mono">TestResponse</td><td>Asserts the code.</td></tr>
+              <tr><td class="mono">header(String name, String expected)</td><td class="mono">TestResponse</td><td>Asserts the header.</td></tr>
+              <tr><td class="mono">contentType(String expected)</td><td class="mono">TestResponse</td><td>Compares without the <code>; charset=…</code>.</td></tr>
+              <tr><td class="mono">contains(String fragment)</td><td class="mono">TestResponse</td><td>Asserts the body contains the fragment.</td></tr>
+              <tr><td class="mono">json(String path, Object expected)</td><td class="mono">TestResponse</td><td>Asserts the value at that point of the tree.</td></tr>
+              <tr><td class="mono">cookie(String name)</td><td class="mono">TestResponse</td><td>Asserts the response sets it.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>TestDatabase</h3>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Method</th><th>Returns</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">TestDatabase.of(String jdbcUrl)</td><td class="mono">TestDatabase</td><td>Opens a <code>Pool</code> and registers it as the <b>default source</b>: the application under test uses it with nothing to change.</td></tr>
+              <tr><td class="mono">TestDatabase.of(String source, String jdbcUrl)</td><td class="mono">TestDatabase</td><td>The same, under a source name of your own.</td></tr>
+              <tr><td class="mono">source()</td><td class="mono">String</td><td>The name it was registered under.</td></tr>
+              <tr><td class="mono">pool()</td><td class="mono">Pool</td><td>The connection pool.</td></tr>
+              <tr><td class="mono">migrate(Migrations migrations)</td><td class="mono">int</td><td>Applies the whole batch and returns how many ran. On failure it throws <code>AssertionError</code> naming the broken migration.</td></tr>
+              <tr><td class="mono">close()</td><td class="mono">void</td><td>Closes the pool. It is <code>AutoCloseable</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Two details that change a test</div>
+          <p>
+            The client does <b>not follow redirects</b>: a successful login answers 302 and that
+            is the response you look at. And the operating system picks the port, so two modules
+            testing in parallel do not collide.
+          </p>
+        </div>
+      </section>
+<!-- 0.7.0: repair(), verify() and a configurable control table. -->
+<section id="migraciones">
+        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Migrations</h2></div>
+
+        <p>
+          <code>cero.data.Migrations</code>: schema versioned by fingerprint. The name of the
+          control table is configurable, which is worth knowing before pointing two applications
+          at the same database.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Method</th><th>Returns</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">Migrations.from(Path directory)</td><td class="mono">Migrations</td><td>Migrations on disk, against the default source.</td></tr>
+              <tr><td class="mono">Migrations.from(String source, Path directory)</td><td class="mono">Migrations</td><td>On disk, against a named source.</td></tr>
+              <tr><td class="mono">Migrations.fromClasspath(String prefix)</td><td class="mono">Migrations</td><td>Migrations inside the JAR.</td></tr>
+              <tr><td class="mono">table(String name)</td><td class="mono">Migrations</td><td>Changes the control table. Defaults to <code>cero_migraciones</code>.</td></tr>
+              <tr><td class="mono">run()</td><td class="mono">int</td><td>Applies whatever is missing and returns how many were applied.</td></tr>
+              <tr><td class="mono">applied()</td><td class="mono">List&lt;String&gt;</td><td>The ones already applied, in the order they were applied.</td></tr>
+              <tr><td class="mono">repair()</td><td class="mono">List&lt;String&gt;</td><td>Recomputes fingerprints and rewrites the ones that changed, <b>re-running nothing</b>. Returns the names rewritten.</td></tr>
+              <tr><td class="mono">verify(String throwawaySource)</td><td class="mono">Verificacion</td><td>Applies the whole batch against another already registered source and returns the result instead of throwing.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>record Verificacion</th><th>Type</th><th>What it carries</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">correcta()</td><td class="mono">boolean</td><td>The whole batch applied with no errors.</td></tr>
+              <tr><td class="mono">aplicadas()</td><td class="mono">int</td><td>How many ran before finishing or breaking.</td></tr>
+              <tr><td class="mono">migracion()</td><td class="mono">String</td><td>The one that broke; <code>null</code> if it went well.</td></tr>
+              <tr><td class="mono">fallo()</td><td class="mono">String</td><td>The error message; <code>null</code> if it went well.</td></tr>
+              <tr><td class="mono">resumen()</td><td class="mono">String</td><td>One line ready for the log: the count applied, or <code>falló …</code> with the reason.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">What <code>repair()</code> is for</div>
+          <p>
+            It is the way out for a corrected migration that does not change what it left in the
+            schema. Without it, startup stops in every environment over a fingerprint that no
+            longer matches, and the only remedy is editing the table by hand.
+          </p>
+        </div>
+      </section>
+<!-- Defaults copied from the ServerOptions builder. -->
+<section id="servidor">
+        <div class="titulo-seccion"><span class="indice-num">03</span><h2>Server options</h2></div>
+
+        <p>
+          <code>ServerOptions.builder()</code> and <code>ServerOptions.defaults()</code>. On top of
+          that, <code>secure()</code> says whether there is TLS and <code>toBuilder()</code>
+          returns a builder carrying what is already set.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Option</th><th>Default</th><th>What it controls</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">host(String)</td><td class="mono">0.0.0.0</td><td>Listening interface.</td></tr>
+              <tr><td class="mono">port(int)</td><td class="mono">8080</td><td>Port. <code>0</code> lets the system pick.</td></tr>
+              <tr><td class="mono">backlog(int)</td><td class="mono">1,024</td><td>Queue of connections accepted by the system.</td></tr>
+              <tr><td class="mono">maxConnections(int)</td><td class="mono">10,000</td><td>Live connections at once.</td></tr>
+              <tr><td class="mono">idleTimeoutMillis(int)</td><td class="mono">30,000</td><td>Silence tolerated on a connection.</td></tr>
+              <tr><td class="mono">handlerTimeoutMillis(int)</td><td class="mono">30,000</td><td>How long a handler may take.</td></tr>
+              <tr><td class="mono">shutdownGraceMillis(int)</td><td class="mono">10,000</td><td>Grace period on orderly shutdown.</td></tr>
+              <tr><td class="mono">maxRequestLineBytes(int)</td><td class="mono">8,192</td><td>Request line.</td></tr>
+              <tr><td class="mono">maxHeaderBytes(int)</td><td class="mono">32,768</td><td>Headers of one request.</td></tr>
+              <tr><td class="mono">maxHeaderCount(int)</td><td class="mono">100</td><td>Number of headers.</td></tr>
+              <tr><td class="mono">maxBodyBytes(long)</td><td class="mono">10 MiB</td><td>Request body.</td></tr>
+              <tr><td class="mono">readBufferBytes(int)</td><td class="mono">16,384</td><td>Read buffer; minimum 512.</td></tr>
+              <tr><td class="mono">maxKeepAliveRequests(int)</td><td class="mono">1,000</td><td>Requests per persistent connection.</td></tr>
+              <tr><td class="mono">http2(boolean)</td><td class="mono">true</td><td>Turning it off leaves the server on HTTP/1.1 only: ALPN does not advertise <code>h2</code> and <code>h2c</code> is not accepted.</td></tr>
+              <tr><td class="mono">http2MaxFlujos(int)</td><td class="mono">128</td><td>Streams open at once per connection. Advertised in SETTINGS.</td></tr>
+              <tr><td class="mono">http2MaxBloqueCabeceras(int)</td><td class="mono">64 KiB</td><td>Compressed header block including its CONTINUATIONs. Against CVE-2024-27316.</td></tr>
+              <tr><td class="mono">http2MaxListaCabeceras(int)</td><td class="mono">32 KiB</td><td>Header list once decompressed; also advertised in <code>SETTINGS_MAX_HEADER_LIST_SIZE</code>.</td></tr>
+              <tr><td class="mono">http2MaxAnulados(int)</td><td class="mono">100</td><td>Streams cancelled without an answer before the connection closes. Against CVE-2023-44487, "Rapid Reset".</td></tr>
+              <tr><td class="mono">http2MaxControlSeguidas(int)</td><td class="mono">1,000</td><td>Control frames in a row without the client opening any stream.</td></tr>
+              <tr><td class="mono">sessionTimeoutMillis(int)</td><td class="mono">1,800,000</td><td>Idle time that expires a session: half an hour.</td></tr>
+              <tr><td class="mono">sessionMaxLifetime(Duration)</td><td class="mono">off</td><td>Total lifetime of a session, used or not.</td></tr>
+              <tr><td class="mono">sessionStore(SessionStore)</td><td class="mono">in memory</td><td>Where sessions live.</td></tr>
+              <tr><td class="mono">gzipMinBytes(int)</td><td class="mono">1,024</td><td>Size from which responses are compressed.</td></tr>
+              <tr><td class="mono">requireHost(boolean)</td><td class="mono">true</td><td>Requires a <code>Host</code> header.</td></tr>
+              <tr><td class="mono">behindProxy(boolean)</td><td class="mono">false</td><td>Trusts <code>X-Forwarded-Proto</code> so the session cookie is marked <code>Secure</code>.</td></tr>
+              <tr><td class="mono">trustProxy(String…)</td><td class="mono">empty</td><td>Addresses whose <code>X-Forwarded-For</code> is believed. Never on by default.</td></tr>
+              <tr><td class="mono">tls(SSLContext)</td><td class="mono">null</td><td>Without it, the server runs in the clear.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+<!-- Row is a read-only Map as of 0.7.0. -->
+<section id="filas">
+        <div class="titulo-seccion"><span class="indice-num">04</span><h2>Rows</h2></div>
+
+        <p>
+          <code>cero.data.Row</code> implements a <b>read-only</b>
+          <code>Map&lt;String, Object&gt;</code>, so that when nested in a response it serialises as
+          a JSON object instead of being introspected through getters. Column lookup is
+          case-insensitive.
+        </p>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Writing into a row no longer compiles the same</div>
+          <p>
+            The write operations of the <code>Map</code> contract —<code>put</code>,
+            <code>putAll</code>, <code>remove</code>, <code>clear</code>— throw
+            <code>UnsupportedOperationException</code>, and <code>Row.put</code> <b>is no longer
+            public</b>. A row is built with <code>Row.of(…)</code> or <code>Row.from(Map)</code>.
+          </p>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Method</th><th>Returns</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">Row.of(Object… keysAndValues)</td><td class="mono">Row</td><td>Key/value pairs; an odd count is <code>IllegalArgumentException</code>.</td></tr>
+              <tr><td class="mono">Row.from(Map&lt;String, ?&gt; source)</td><td class="mono">Row</td><td>A copy of a map.</td></tr>
+              <tr><td class="mono">get(Object column)</td><td class="mono">Object</td><td>Exact match first; failing that, case-insensitive.</td></tr>
+              <tr><td class="mono">has(String column)</td><td class="mono">boolean</td><td>Same rule as <code>get</code>.</td></tr>
+              <tr><td class="mono">columns()</td><td class="mono">Set&lt;String&gt;</td><td>The names, in the order they arrived.</td></tr>
+              <tr><td class="mono">toMap()</td><td class="mono">Map&lt;String, Object&gt;</td><td>A mutable, independent copy.</td></tr>
+              <tr><td class="mono">text(String column)</td><td class="mono">String</td><td><code>null</code> if the column is null.</td></tr>
+              <tr><td class="mono">text(String column, String fallback)</td><td class="mono">String</td><td>With a fallback value.</td></tr>
+              <tr><td class="mono">integer(String column)</td><td class="mono">int</td><td>Integer.</td></tr>
+              <tr><td class="mono">asLong(String column)</td><td class="mono">long</td><td>Long integer.</td></tr>
+              <tr><td class="mono">decimal(String column)</td><td class="mono">double</td><td>Floating point.</td></tr>
+              <tr><td class="mono">exact(String column)</td><td class="mono">BigDecimal</td><td>Exact decimal, for money.</td></tr>
+              <tr><td class="mono">flag(String column)</td><td class="mono">boolean</td><td>Boolean, however the engine hands it over.</td></tr>
+              <tr><td class="mono">date(String column)</td><td class="mono">LocalDate</td><td>Calendar date.</td></tr>
+              <tr><td class="mono">moment(String column)</td><td class="mono">LocalDateTime</td><td>Date and time.</td></tr>
+              <tr><td class="mono">as(Class&lt;T&gt; type)</td><td class="mono">T</td><td>The row as an object, honouring <code>@Column</code>.</td></tr>
+              <tr><td class="mono">toJson()</td><td class="mono">String</td><td>The row, serialised.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+<!-- 0.7.0: startup warnings for CERO_* variables that do not apply. -->
+<section id="configuracion">
+        <div class="titulo-seccion"><span class="indice-num">05</span><h2>Configuration</h2></div>
+
+        <p>
+          A <code>CERO_*</code> environment variable loses the prefix, goes to lower case and turns
+          <code>_</code> into <code>.</code>: <code>CERO_SERVER_PORT</code> is
+          <code>server.port</code>. At the end of startup, once everyone has asked,
+          <code>Config</code> warns about the ones that did not end up in any key anybody reads.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Situation</th><th>Warning</th><th>What happened</th></tr></thead>
+            <tbody>
+              <tr><td>There are <code>CERO_*</code> variables and nobody read the environment</td><td class="mono">… no se leen: la aplicación no llama a loadConfig()</td><td>It names them all, sorted. None of them applied.</td></tr>
+              <tr><td>The real key is in camelCase</td><td class="mono">… no se aplica: la clave es …, en camelCase, y el entorno no distingue mayúsculas</td><td>The translation lowercases, so it never matches the key the application asks for.</td></tr>
+              <tr><td>Nobody asks for the translated key</td><td class="mono">… no corresponde a ninguna clave conocida (…)</td><td>A misspelt name, or a key that no longer exists. In brackets, the key the translation produced.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Why it matters</div>
+          <p>
+            All three used to apply with no effect and in silence: the variable was set, the
+            configuration did not change, and nothing in the log said so.
+          </p>
+        </div>
+      </section>
+<!-- Type table for Json.value(), including the three java.sql ones. -->
+<section id="json">
+        <div class="titulo-seccion"><span class="indice-num">06</span><h2>Types in JSON</h2></div>
+
+        <p>
+          How each Java type comes out through <code>cero.core.Json</code>.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Java type</th><th>JSON</th><th>Note</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">null</td><td class="mono">null</td><td></td></tr>
+              <tr><td class="mono">String, Character</td><td>string</td><td>Escaped.</td></tr>
+              <tr><td class="mono">Boolean</td><td class="mono">true</td><td>Literal.</td></tr>
+              <tr><td class="mono">Number</td><td>number</td><td><code>NaN</code> and infinities of <code>Double</code> and <code>Float</code> come out as <code>null</code>.</td></tr>
+              <tr><td class="mono">Enum</td><td>string</td><td>The constant's <code>name()</code>.</td></tr>
+              <tr><td class="mono">Optional</td><td>value or <code>null</code></td><td>Unwrapped.</td></tr>
+              <tr><td class="mono">UUID</td><td>string</td><td></td></tr>
+              <tr><td class="mono">java.time.Temporal</td><td>ISO string</td><td>Its own <code>toString()</code>.</td></tr>
+              <tr><td class="mono">java.sql.Timestamp</td><td class="mono nowrap">"2026-08-14T17:00:00Z"</td><td>An instant: <code>toInstant()</code> in UTC.</td></tr>
+              <tr><td class="mono">java.sql.Time</td><td class="mono nowrap">"19:00:00"</td><td>A clock label, not an instant.</td></tr>
+              <tr><td class="mono">java.sql.Date</td><td class="mono nowrap">"2026-08-14"</td><td>A calendar label: <code>toLocalDate()</code>.</td></tr>
+              <tr><td class="mono">java.util.Date</td><td>ISO string</td><td>An instant from the epoch milliseconds.</td></tr>
+              <tr><td class="mono">Map</td><td>object</td><td></td></tr>
+              <tr><td class="mono">Collection, array</td><td>list</td><td></td></tr>
+              <tr><td class="mono">record</td><td>object</td><td>By its components.</td></tr>
+              <tr><td class="mono">anything else</td><td>object</td><td>By its getters.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">The three <code>java.sql</code> types are checked before <code>java.util.Date</code></div>
+          <p>
+            They inherit from it, so they fell into its branch and were treated as instants: 19:00
+            was written <code>1970-01-02T00:00:00Z</code> and dates moved a day forward on the way
+            to UTC. <code>time</code> and <code>date</code> are clock and calendar labels, and now
+            they come out as such.
+          </p>
+        </div>
+      </section>
+<!-- 0.7.0: the orElse sentinel in @Query and @Form. -->
+<section id="parametros">
+        <div class="titulo-seccion"><span class="indice-num">07</span><h2>Request parameters</h2></div>
+
+        <p>
+          <code>@Query</code> takes the parameter from the query string and <code>@Form</code> from
+          the form body. Both have the same shape.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Member</th><th>Type</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">value()</td><td class="mono">String</td><td>Name of the parameter. Required.</td></tr>
+              <tr><td class="mono">orElse()</td><td class="mono">String</td><td>Default value when the parameter does not arrive. Defaults to the sentinel.</td></tr>
+              <tr><td class="mono">SIN_DEFECTO</td><td class="mono">String</td><td>Sentinel for "no default declared": <code>"\u0000cero.sin-defecto"</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Correction: <code>orElse = ""</code> now applies the empty string</div>
+          <p>
+            The sentinel exists precisely because the empty string is a legitimate value. Declaring
+            <code class="nowrap">@Query(value = "q", orElse = "")</code> hands over <code>""</code>
+            when the parameter is missing; <b>it used to arrive as <code>null</code></b>. With no
+            <code>orElse</code> declared, the binding is still <code>null</code>.
+          </p>
+        </div>
+      </section>
 <section id="bases">
-        <div class="titulo-seccion"><span class="indice-num">01</span><h2>Databases</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">08</span><h2>Databases</h2></div>
 
         <p>
           <code>cero-data</code> speaks JDBC and nothing else. Any engine with a JDBC driver works —
@@ -25,7 +395,7 @@
           <table>
             <thead><tr><th>Engine</th><th>Status</th><th>Note</th></tr></thead>
             <tbody>
-              <tr><td class="mono">H2 2.2</td><td><span class="pastilla ok">Verified</span></td><td>In memory and on file. The engine behind the example application and its 36 end-to-end tests.</td></tr>
+              <tr><td class="mono">H2 2.2</td><td><span class="pastilla ok">Verified</span></td><td>In memory and on file. The engine behind the example application and its 43 end-to-end tests.</td></tr>
               <tr><td class="mono">PostgreSQL 16</td><td><span class="pastilla ok">Verified</span></td><td>47 cases in a container: <code>BIGSERIAL</code>, exact decimals, native booleans, dates and <code>LIMIT/OFFSET</code>.</td></tr>
               <tr><td class="mono">MySQL 8</td><td><span class="pastilla ok">Verified</span></td><td>The same 47 cases: <code>AUTO_INCREMENT</code>, booleans over <code>TINYINT</code> and generated keys.</td></tr>
               <tr><td class="mono">MariaDB</td><td><span class="pastilla parcial">Not verified</span></td><td>Shares protocol and dialect with MySQL, so it should behave the same.</td></tr>
@@ -48,7 +418,7 @@
         </div>
       </section>
 <section id="sistemas">
-        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Where it runs</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">09</span><h2>Where it runs</h2></div>
 
         <p>
           There is no native code and nothing platform-specific. Wherever there is a JDK 25 or
@@ -59,10 +429,28 @@
           <table>
             <thead><tr><th>System</th><th>Status</th><th>Note</th></tr></thead>
             <tbody>
-              <tr><td class="mono">macOS</td><td><span class="pastilla ok">Tested</span></td><td>Intel and Apple Silicon. Where it was developed and where the 1,726 tests run.</td></tr>
-              <tr><td class="mono">Linux</td><td><span class="pastilla ok">Tested</span></td><td>All 1,726 tests green on Linux 6.12, with real PostgreSQL and MySQL. In continuous integration, on JDK 25, on every change.</td></tr>
-              <tr><td class="mono">Windows</td><td><span class="pastilla parcial">Not verified</span></td><td>Nothing touches system-specific paths or permissions.</td></tr>
-              <tr><td class="mono">Containers</td><td><span class="pastilla parcial">Not verified</span></td><td>Any image with a JRE 21. With no servlet container, the image is the JRE plus 223 KB.</td></tr>
+              <tr><td class="mono">macOS</td><td><span class="pastilla ok">Tested</span></td><td>Intel and Apple Silicon. Where it was developed and where the 1,762 tests run.</td></tr>
+              <tr><td class="mono">Linux</td><td><span class="pastilla ok">Tested</span></td><td>All 1,762 tests green on Linux 6.12, with real PostgreSQL and MySQL. In continuous integration, on JDK 25, on every change.</td></tr>
+              <tr><td class="mono">Windows</td><td><span class="pastilla parcial">Not verified</span></td><td>Nothing touches system-specific paths or permissions. The installer recognises it under MinGW, MSYS and Cygwin.</td></tr>
+              <tr><td class="mono">BSD</td><td><span class="pastilla parcial">Not verified</span></td><td>FreeBSD, OpenBSD, NetBSD and DragonFly: the installer tells them apart and gives the command for their package manager.</td></tr>
+              <tr><td class="mono">Solaris</td><td><span class="pastilla parcial">Not verified</span></td><td>Detected as <code>SunOS</code>.</td></tr>
+              <tr><td class="mono">AIX</td><td><span class="pastilla parcial">Not verified</span></td><td>Detected with version and release from <code>uname</code>.</td></tr>
+              <tr><td class="mono">Haiku</td><td><span class="pastilla parcial">Not verified</span></td><td>Detected by kernel name.</td></tr>
+              <tr><td class="mono">Containers</td><td><span class="pastilla parcial">Not verified</span></td><td>Any image with a JRE 25. With no servlet container, the image is the JRE plus the 416 KB of the four core jars.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Architecture</th><th><code>uname -m</code></th></tr></thead>
+            <tbody>
+              <tr><td class="mono">arm64</td><td class="mono">arm64, aarch64</td></tr>
+              <tr><td class="mono">x86_64</td><td class="mono">x86_64, amd64</td></tr>
+              <tr><td class="mono">arm32</td><td class="mono">armv7*, armv6*, armhf</td></tr>
+              <tr><td class="mono">riscv64</td><td class="mono">riscv64</td></tr>
+              <tr><td class="mono">ppc64</td><td class="mono">ppc64le, ppc64</td></tr>
+              <tr><td class="mono">s390x</td><td class="mono">s390x</td></tr>
             </tbody>
           </table>
         </div>
@@ -75,13 +463,18 @@
               without them the model does not hold up. Developed and measured with OpenJDK 25.</div>
           </div>
           <div class="campo">
+            <div class="etiqueta">Detecting is not testing</div>
+            <div>The installer recognises those systems and architectures and knows which command to
+              give on each. Tested, with the whole suite green, is only what is marked above.</div>
+          </div>
+          <div class="campo">
             <div class="etiqueta">No native code</div>
             <div>No JNI, no system libraries, no absolute paths. The JAR is the same everywhere.</div>
           </div>
         </div>
       </section>
 <section id="comparacion">
-        <div class="titulo-seccion"><span class="indice-num">03</span><h2>Against the others</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">10</span><h2>Against the others</h2></div>
 
         <p>
           All five in identical containers, 64 connections, 30 seconds, median of five runs, zero

@@ -78,14 +78,14 @@
 :root:not([data-tema="oscuro"]) .lamina { }
 @media (prefers-color-scheme: light) {
   :root:not([data-tema="oscuro"]) .lamina {
-    filter: invert(1) hue-rotate(180deg) saturate(1.25) brightness(1.06);
-    opacity: calc(var(--fuerza) * .55);
+    filter: invert(1) hue-rotate(180deg) saturate(.6) brightness(1.04);
+    opacity: calc(var(--fuerza) * .4);
     mix-blend-mode: multiply;
   }
 }
 :root[data-tema="claro"] .lamina {
-  filter: invert(1) hue-rotate(180deg) saturate(1.25) brightness(1.06);
-  opacity: calc(var(--fuerza) * .55);
+  filter: invert(1) hue-rotate(180deg) saturate(.6) brightness(1.04);
+  opacity: calc(var(--fuerza) * .4);
   mix-blend-mode: multiply;
 }
 
@@ -105,16 +105,16 @@
 }
 /* El vídeo también se invierte: la geometría se lee igual y el fondo pasa a claro. */
 :root[data-tema="claro"] .fondo-video {
-  filter: invert(1) hue-rotate(180deg) saturate(1.2);
-  opacity: .22;
+  filter: invert(1) hue-rotate(180deg) saturate(.55) contrast(1.15);
+  opacity: .1;
 }
-:root[data-tema="claro"] .fondo-video--tenue { opacity: .1; }
+:root[data-tema="claro"] .fondo-video--tenue { opacity: .05; }
 @media (prefers-color-scheme: light) {
   :root:not([data-tema="oscuro"]) .fondo-video {
-    filter: invert(1) hue-rotate(180deg) saturate(1.2);
-    opacity: .22;
+    filter: invert(1) hue-rotate(180deg) saturate(.55) contrast(1.15);
+    opacity: .1;
   }
-  :root:not([data-tema="oscuro"]) .fondo-video--tenue { opacity: .1; }
+  :root:not([data-tema="oscuro"]) .fondo-video--tenue { opacity: .05; }
 }
 
 /* En escenas con texto denso el vídeo baja para no competir con la lectura. */

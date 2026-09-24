@@ -1,19 +1,389 @@
   <header class="cabecera-pagina">
     <h1 class="titulo-pagina">Referencia</h1>
-    <p class="entradilla">Motores de base de datos verificados, sistemas donde corre y comparación con su antecesor sobre Tomcat.</p>
+    <p class="entradilla">Firmas y valores por omisión: el módulo de pruebas, las migraciones, las opciones del servidor, los motores de base de datos verificados, dónde corre y la comparación con los demás.</p>
   </header>
 
   <div class="cuerpo">
     <nav class="indice" aria-label="En esta página">
       <ol>
-        <li><a href="#bases"><span class="n">01</span> Bases de datos</a></li>
-        <li><a href="#sistemas"><span class="n">02</span> Dónde corre</a></li>
-        <li><a href="#comparacion"><span class="n">03</span> Frente a Tomcat</a></li>
+        <li><a href="#pruebas"><span class="n">01</span> cero-test</a></li>
+        <li><a href="#migraciones"><span class="n">02</span> Migraciones</a></li>
+        <li><a href="#servidor"><span class="n">03</span> Opciones del servidor</a></li>
+        <li><a href="#filas"><span class="n">04</span> Filas</a></li>
+        <li><a href="#configuracion"><span class="n">05</span> Configuración</a></li>
+        <li><a href="#json"><span class="n">06</span> Tipos en JSON</a></li>
+        <li><a href="#parametros"><span class="n">07</span> Parámetros de petición</a></li>
+        <li><a href="#bases"><span class="n">08</span> Bases de datos</a></li>
+        <li><a href="#sistemas"><span class="n">09</span> Dónde corre</a></li>
+        <li><a href="#comparacion"><span class="n">10</span> Frente a Tomcat</a></li>
       </ol>
     </nav>
     <main>
+<!-- 0.7.0: módulo de pruebas recién publicado. -->
+<section id="pruebas">
+        <div class="titulo-seccion"><span class="indice-num">01</span><h2>cero-test</h2></div>
+
+        <p>
+          Levanta la aplicación en un puerto libre, le pide algo con un cliente que conserva las
+          cookies y afirma sobre la respuesta. Sin dependencias fuera del JDK:
+          <code>cero-data</code> y el driver JDBC son opcionales y solo hacen falta para
+          <code>TestDatabase</code>.
+        </p>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Añadirlo</span><span class="etiqueta">Maven</span></div>
+<pre>&lt;dependency&gt;
+    &lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;
+    &lt;artifactId&gt;<span class="st">cero-test</span>&lt;/artifactId&gt;
+    &lt;version&gt;<span class="st">0.7.0</span>&lt;/version&gt;
+    &lt;scope&gt;<span class="st">test</span>&lt;/scope&gt;
+&lt;/dependency&gt;</pre>
+        </div>
+
+        <div class="codigo">
+          <div class="barra"><span class="etiqueta">Una prueba entera</span><span class="etiqueta">Java</span></div>
+<pre><span class="kw">try</span> (TestServer app = TestServer.start(MiAplicacion.app())) {
+    TestClient client = app.client();
+
+    client.get(<span class="st">"/yo"</span>).status(<span class="st">401</span>);
+    client.form(<span class="st">"/acceso"</span>, Map.of(<span class="st">"usuario"</span>, <span class="st">"ada"</span>, <span class="st">"clave"</span>, <span class="st">"secreta"</span>))
+          .status(<span class="st">302</span>)
+          .cookie(<span class="st">"CEROSESSION"</span>);
+    client.get(<span class="st">"/yo"</span>).ok().json(<span class="st">"usuario.nombre"</span>, <span class="st">"Ada"</span>);
+}</pre>
+        </div>
+
+        <h3>TestServer</h3>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Método</th><th>Devuelve</th><th>Qué hace</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">TestServer.start(Cero app)</td><td class="mono">TestServer</td><td>Arranca en <code>127.0.0.1</code>, puerto <code>0</code> —lo elige el sistema— y en modo silencioso.</td></tr>
+              <tr><td class="mono">TestServer.start(Class&lt;?&gt;… controllers)</td><td class="mono">TestServer</td><td>Lo mismo sobre <code>Cero.app().controllers(…)</code>.</td></tr>
+              <tr><td class="mono">port()</td><td class="mono">int</td><td>El puerto que asignó el sistema operativo.</td></tr>
+              <tr><td class="mono">url()</td><td class="mono">String</td><td><code>http://127.0.0.1:</code> más el puerto.</td></tr>
+              <tr><td class="mono">url(String path)</td><td class="mono">String</td><td>La base más la ruta, con <code>/</code> o sin él.</td></tr>
+              <tr><td class="mono">client()</td><td class="mono">TestClient</td><td>Cliente nuevo con su propio tarro de cookies: una sesión por cliente.</td></tr>
+              <tr><td class="mono">server()</td><td class="mono">Server</td><td>El servidor de <code>cero-http</code> por debajo.</td></tr>
+              <tr><td class="mono">close()</td><td class="mono">void</td><td>Cierra los clientes que entregó y para el servidor. Es <code>AutoCloseable</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>TestClient</h3>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Método</th><th>Devuelve</th><th>Qué hace</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">TestClient.of(String baseUrl)</td><td class="mono">TestClient</td><td>Cliente contra esa base.</td></tr>
+              <tr><td class="mono">http1()</td><td class="mono">TestClient</td><td>Fuerza HTTP/1.1. Por omisión negocia.</td></tr>
+              <tr><td class="mono">http2()</td><td class="mono">TestClient</td><td>Fuerza HTTP/2.</td></tr>
+              <tr><td class="mono">header(String name, String value)</td><td class="mono">TestClient</td><td>Cabecera para todas las peticiones siguientes.</td></tr>
+              <tr><td class="mono">get(String path)</td><td class="mono">TestResponse</td><td>GET.</td></tr>
+              <tr><td class="mono">delete(String path)</td><td class="mono">TestResponse</td><td>DELETE.</td></tr>
+              <tr><td class="mono">post(String path)</td><td class="mono">TestResponse</td><td>POST sin cuerpo.</td></tr>
+              <tr><td class="mono">post(String path, Object json)</td><td class="mono">TestResponse</td><td>POST: una cadena va tal cual; lo demás se serializa.</td></tr>
+              <tr><td class="mono">put(String path, Object json)</td><td class="mono">TestResponse</td><td>PUT, con el mismo criterio.</td></tr>
+              <tr><td class="mono">patch(String path, Object json)</td><td class="mono">TestResponse</td><td>PATCH, con el mismo criterio.</td></tr>
+              <tr><td class="mono">form(String path, Map&lt;String, String&gt; fields)</td><td class="mono">TestResponse</td><td>POST de formulario.</td></tr>
+              <tr><td class="mono">send(String method, String path,<br>String contentType, String body)</td><td class="mono">TestResponse</td><td>Petición a medida.</td></tr>
+              <tr><td class="mono">cookie(String name)</td><td class="mono">String</td><td>El valor guardado en el tarro, o <code>null</code>.</td></tr>
+              <tr><td class="mono">close()</td><td class="mono">void</td><td>Cierra el cliente. Es <code>AutoCloseable</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>TestResponse</h3>
+        <p>Los lectores devuelven el valor; los demás afirman y se encadenan.</p>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Método</th><th>Devuelve</th><th>Qué hace</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">status()</td><td class="mono">int</td><td>El código.</td></tr>
+              <tr><td class="mono">body()</td><td class="mono">String</td><td>El cuerpo completo.</td></tr>
+              <tr><td class="mono">header(String name)</td><td class="mono">String</td><td>La cabecera, o <code>null</code>.</td></tr>
+              <tr><td class="mono">version()</td><td class="mono">HttpClient.Version</td><td>Protocolo con el que se resolvió.</td></tr>
+              <tr><td class="mono">raw()</td><td class="mono">HttpResponse&lt;String&gt;</td><td>La respuesta del cliente del JDK.</td></tr>
+              <tr><td class="mono">json()</td><td class="mono">Object</td><td>El cuerpo interpretado como JSON.</td></tr>
+              <tr><td class="mono">json(String path)</td><td class="mono">Object</td><td>Un punto del árbol: <code>"usuario.nombre"</code>, <code>"items.0.id"</code>.</td></tr>
+              <tr><td class="mono">ok()</td><td class="mono">TestResponse</td><td>Afirma 200.</td></tr>
+              <tr><td class="mono">status(int expected)</td><td class="mono">TestResponse</td><td>Afirma el código.</td></tr>
+              <tr><td class="mono">header(String name, String expected)</td><td class="mono">TestResponse</td><td>Afirma la cabecera.</td></tr>
+              <tr><td class="mono">contentType(String expected)</td><td class="mono">TestResponse</td><td>Compara sin el <code>; charset=…</code>.</td></tr>
+              <tr><td class="mono">contains(String fragment)</td><td class="mono">TestResponse</td><td>Afirma que el cuerpo contiene el fragmento.</td></tr>
+              <tr><td class="mono">json(String path, Object expected)</td><td class="mono">TestResponse</td><td>Afirma el valor en ese punto del árbol.</td></tr>
+              <tr><td class="mono">cookie(String name)</td><td class="mono">TestResponse</td><td>Afirma que la respuesta la asienta.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>TestDatabase</h3>
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Método</th><th>Devuelve</th><th>Qué hace</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">TestDatabase.of(String jdbcUrl)</td><td class="mono">TestDatabase</td><td>Abre un <code>Pool</code> y lo registra como <b>origen por omisión</b>: la aplicación bajo prueba lo usa sin tocar nada.</td></tr>
+              <tr><td class="mono">TestDatabase.of(String source, String jdbcUrl)</td><td class="mono">TestDatabase</td><td>Igual, con nombre de origen propio.</td></tr>
+              <tr><td class="mono">source()</td><td class="mono">String</td><td>El nombre con el que quedó registrado.</td></tr>
+              <tr><td class="mono">pool()</td><td class="mono">Pool</td><td>El pool de conexiones.</td></tr>
+              <tr><td class="mono">migrate(Migrations migrations)</td><td class="mono">int</td><td>Aplica el lote entero y devuelve cuántas corrieron. Si falla, lanza <code>AssertionError</code> nombrando la migración rota.</td></tr>
+              <tr><td class="mono">close()</td><td class="mono">void</td><td>Cierra el pool. Es <code>AutoCloseable</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Dos detalles que cambian una prueba</div>
+          <p>
+            El cliente <b>no sigue redirecciones</b>: un acceso correcto responde 302 y esa
+            respuesta es la que se mira. Y el puerto lo elige el sistema operativo, así que dos
+            módulos que prueban en paralelo no chocan.
+          </p>
+        </div>
+      </section>
+<!-- 0.7.0: repair(), verify() y tabla de control configurable. -->
+<section id="migraciones">
+        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Migraciones</h2></div>
+
+        <p>
+          <code>cero.data.Migrations</code>: esquema versionado por huella. El nombre de la tabla
+          de control es configurable, y conviene saberlo antes de apuntar dos aplicaciones a la
+          misma base.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Método</th><th>Devuelve</th><th>Qué hace</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">Migrations.from(Path directorio)</td><td class="mono">Migrations</td><td>Migraciones en disco, sobre el origen por omisión.</td></tr>
+              <tr><td class="mono">Migrations.from(String fuente, Path directorio)</td><td class="mono">Migrations</td><td>En disco, sobre un origen con nombre.</td></tr>
+              <tr><td class="mono">Migrations.fromClasspath(String prefijo)</td><td class="mono">Migrations</td><td>Migraciones dentro del JAR.</td></tr>
+              <tr><td class="mono">table(String nombre)</td><td class="mono">Migrations</td><td>Cambia la tabla de control. Por omisión <code>cero_migraciones</code>.</td></tr>
+              <tr><td class="mono">run()</td><td class="mono">int</td><td>Aplica lo que falte y devuelve cuántas se aplicaron.</td></tr>
+              <tr><td class="mono">applied()</td><td class="mono">List&lt;String&gt;</td><td>Las ya aplicadas, en el orden en que se aplicaron.</td></tr>
+              <tr><td class="mono">repair()</td><td class="mono">List&lt;String&gt;</td><td>Recalcula huellas y reescribe las que cambiaron, <b>sin reejecutar nada</b>. Devuelve los nombres reescritos.</td></tr>
+              <tr><td class="mono">verify(String fuenteDesechable)</td><td class="mono">Verificacion</td><td>Aplica el lote completo contra otro origen ya registrado y devuelve el resultado en vez de lanzar.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>record Verificacion</th><th>Tipo</th><th>Qué trae</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">correcta()</td><td class="mono">boolean</td><td>El lote entero aplicó sin errores.</td></tr>
+              <tr><td class="mono">aplicadas()</td><td class="mono">int</td><td>Cuántas corrieron antes de terminar o de romperse.</td></tr>
+              <tr><td class="mono">migracion()</td><td class="mono">String</td><td>La que rompió; <code>null</code> si fue bien.</td></tr>
+              <tr><td class="mono">fallo()</td><td class="mono">String</td><td>El mensaje del error; <code>null</code> si fue bien.</td></tr>
+              <tr><td class="mono">resumen()</td><td class="mono">String</td><td>Una línea lista para el registro: las aplicadas, o <code>falló …</code> con el motivo.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Para qué sirve <code>repair()</code></div>
+          <p>
+            Es la salida para una migración corregida que no altera lo que dejó en el esquema.
+            Sin ella, el arranque se para en todos los entornos por la huella que ya no casa y
+            solo queda editar la tabla a mano.
+          </p>
+        </div>
+      </section>
+<!-- Valores por omisión copiados del Builder de ServerOptions. -->
+<section id="servidor">
+        <div class="titulo-seccion"><span class="indice-num">03</span><h2>Opciones del servidor</h2></div>
+
+        <p>
+          <code>ServerOptions.builder()</code> y <code>ServerOptions.defaults()</code>. Además,
+          <code>secure()</code> dice si hay TLS y <code>toBuilder()</code> devuelve un constructor
+          con lo ya puesto.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Opción</th><th>Por omisión</th><th>Qué controla</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">host(String)</td><td class="mono">0.0.0.0</td><td>Interfaz de escucha.</td></tr>
+              <tr><td class="mono">port(int)</td><td class="mono">8080</td><td>Puerto. <code>0</code> lo elige el sistema.</td></tr>
+              <tr><td class="mono">backlog(int)</td><td class="mono">1 024</td><td>Cola de conexiones aceptadas por el sistema.</td></tr>
+              <tr><td class="mono">maxConnections(int)</td><td class="mono">10 000</td><td>Conexiones vivas a la vez.</td></tr>
+              <tr><td class="mono">idleTimeoutMillis(int)</td><td class="mono">30 000</td><td>Silencio tolerado en una conexión.</td></tr>
+              <tr><td class="mono">handlerTimeoutMillis(int)</td><td class="mono">30 000</td><td>Lo que puede tardar un manejador.</td></tr>
+              <tr><td class="mono">shutdownGraceMillis(int)</td><td class="mono">10 000</td><td>Margen del apagado ordenado.</td></tr>
+              <tr><td class="mono">maxRequestLineBytes(int)</td><td class="mono">8 192</td><td>Línea de petición.</td></tr>
+              <tr><td class="mono">maxHeaderBytes(int)</td><td class="mono">32 768</td><td>Cabeceras de una petición.</td></tr>
+              <tr><td class="mono">maxHeaderCount(int)</td><td class="mono">100</td><td>Número de cabeceras.</td></tr>
+              <tr><td class="mono">maxBodyBytes(long)</td><td class="mono">10 MiB</td><td>Cuerpo de la petición.</td></tr>
+              <tr><td class="mono">readBufferBytes(int)</td><td class="mono">16 384</td><td>Buffer de lectura; mínimo 512.</td></tr>
+              <tr><td class="mono">maxKeepAliveRequests(int)</td><td class="mono">1 000</td><td>Peticiones por conexión persistente.</td></tr>
+              <tr><td class="mono">http2(boolean)</td><td class="mono">true</td><td>Apagarlo deja el servidor solo en HTTP/1.1: ni ALPN anuncia <code>h2</code>, ni se acepta <code>h2c</code>.</td></tr>
+              <tr><td class="mono">http2MaxFlujos(int)</td><td class="mono">128</td><td>Flujos abiertos a la vez por conexión. Se anuncia en SETTINGS.</td></tr>
+              <tr><td class="mono">http2MaxBloqueCabeceras(int)</td><td class="mono">64 KiB</td><td>Bloque de cabeceras comprimido con sus CONTINUATION. Contra CVE-2024-27316.</td></tr>
+              <tr><td class="mono">http2MaxListaCabeceras(int)</td><td class="mono">32 KiB</td><td>Lista de cabeceras ya descomprimida; se anuncia en <code>SETTINGS_MAX_HEADER_LIST_SIZE</code>.</td></tr>
+              <tr><td class="mono">http2MaxAnulados(int)</td><td class="mono">100</td><td>Flujos anulados sin responder antes de cerrar. Contra CVE-2023-44487, «Rapid Reset».</td></tr>
+              <tr><td class="mono">http2MaxControlSeguidas(int)</td><td class="mono">1 000</td><td>Tramas de control seguidas sin abrir ningún flujo.</td></tr>
+              <tr><td class="mono">sessionTimeoutMillis(int)</td><td class="mono">1 800 000</td><td>Inactividad que caduca una sesión: media hora.</td></tr>
+              <tr><td class="mono">sessionMaxLifetime(Duration)</td><td class="mono">apagado</td><td>Vida total de la sesión, se use o no.</td></tr>
+              <tr><td class="mono">sessionStore(SessionStore)</td><td class="mono">en memoria</td><td>Dónde viven las sesiones.</td></tr>
+              <tr><td class="mono">gzipMinBytes(int)</td><td class="mono">1 024</td><td>Tamaño a partir del cual se comprime.</td></tr>
+              <tr><td class="mono">requireHost(boolean)</td><td class="mono">true</td><td>Exige cabecera <code>Host</code>.</td></tr>
+              <tr><td class="mono">behindProxy(boolean)</td><td class="mono">false</td><td>Hace caso a <code>X-Forwarded-Proto</code> para marcar la cookie <code>Secure</code>.</td></tr>
+              <tr><td class="mono">trustProxy(String…)</td><td class="mono">vacío</td><td>Direcciones cuyo <code>X-Forwarded-For</code> se cree. Nunca activa por omisión.</td></tr>
+              <tr><td class="mono">tls(SSLContext)</td><td class="mono">null</td><td>Sin él, el servidor va en claro.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+<!-- Row es un Map de solo lectura desde 0.7.0. -->
+<section id="filas">
+        <div class="titulo-seccion"><span class="indice-num">04</span><h2>Filas</h2></div>
+
+        <p>
+          <code>cero.data.Row</code> implementa <code>Map&lt;String, Object&gt;</code> de
+          <b>solo lectura</b>, para que al anidarse en una respuesta se serialice como objeto JSON
+          en vez de introspeccionarse por getters. La búsqueda de columna no distingue mayúsculas.
+        </p>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Escribir en una fila ya no compila igual</div>
+          <p>
+            Las operaciones de escritura del contrato <code>Map</code> —<code>put</code>,
+            <code>putAll</code>, <code>remove</code>, <code>clear</code>— lanzan
+            <code>UnsupportedOperationException</code>, y <code>Row.put</code> <b>dejó de ser
+            público</b>. Una fila se construye con <code>Row.of(…)</code> o
+            <code>Row.from(Map)</code>.
+          </p>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Método</th><th>Devuelve</th><th>Qué hace</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">Row.of(Object… keysAndValues)</td><td class="mono">Row</td><td>Pares clave/valor; número impar es <code>IllegalArgumentException</code>.</td></tr>
+              <tr><td class="mono">Row.from(Map&lt;String, ?&gt; source)</td><td class="mono">Row</td><td>Copia de un mapa.</td></tr>
+              <tr><td class="mono">get(Object column)</td><td class="mono">Object</td><td>Exacto primero; si no, sin distinguir mayúsculas.</td></tr>
+              <tr><td class="mono">has(String column)</td><td class="mono">boolean</td><td>Con el mismo criterio que <code>get</code>.</td></tr>
+              <tr><td class="mono">columns()</td><td class="mono">Set&lt;String&gt;</td><td>Los nombres, en el orden en que llegaron.</td></tr>
+              <tr><td class="mono">toMap()</td><td class="mono">Map&lt;String, Object&gt;</td><td>Copia mutable e independiente.</td></tr>
+              <tr><td class="mono">text(String column)</td><td class="mono">String</td><td><code>null</code> si la columna es nula.</td></tr>
+              <tr><td class="mono">text(String column, String fallback)</td><td class="mono">String</td><td>Con valor de respaldo.</td></tr>
+              <tr><td class="mono">integer(String column)</td><td class="mono">int</td><td>Entero.</td></tr>
+              <tr><td class="mono">asLong(String column)</td><td class="mono">long</td><td>Entero largo.</td></tr>
+              <tr><td class="mono">decimal(String column)</td><td class="mono">double</td><td>Coma flotante.</td></tr>
+              <tr><td class="mono">exact(String column)</td><td class="mono">BigDecimal</td><td>Decimal exacto, para dinero.</td></tr>
+              <tr><td class="mono">flag(String column)</td><td class="mono">boolean</td><td>Booleano, venga como venga del motor.</td></tr>
+              <tr><td class="mono">date(String column)</td><td class="mono">LocalDate</td><td>Fecha de calendario.</td></tr>
+              <tr><td class="mono">moment(String column)</td><td class="mono">LocalDateTime</td><td>Fecha y hora.</td></tr>
+              <tr><td class="mono">as(Class&lt;T&gt; type)</td><td class="mono">T</td><td>La fila como objeto, respetando <code>@Column</code>.</td></tr>
+              <tr><td class="mono">toJson()</td><td class="mono">String</td><td>La fila serializada.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+<!-- 0.7.0: avisos de arranque por variables CERO_* que no se aplican. -->
+<section id="configuracion">
+        <div class="titulo-seccion"><span class="indice-num">05</span><h2>Configuración</h2></div>
+
+        <p>
+          Una variable de entorno <code>CERO_*</code> pierde el prefijo, pasa a minúsculas y
+          cambia <code>_</code> por <code>.</code>: <code>CERO_SERVER_PORT</code> es
+          <code>server.port</code>. Al final del arranque, cuando ya han preguntado todos,
+          <code>Config</code> avisa de las que no han acabado en ninguna clave que alguien lea.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Situación</th><th>Aviso</th><th>Qué pasó</th></tr></thead>
+            <tbody>
+              <tr><td>Hay variables <code>CERO_*</code> y nadie leyó el entorno</td><td class="mono">… no se leen: la aplicación no llama a loadConfig()</td><td>Las nombra todas, ordenadas. Ninguna se aplicó.</td></tr>
+              <tr><td>La clave real está en camelCase</td><td class="mono">… no se aplica: la clave es …, en camelCase, y el entorno no distingue mayúsculas</td><td>La traducción baja a minúsculas, así que nunca casa con la clave que consulta la aplicación.</td></tr>
+              <tr><td>La clave traducida no la consulta nadie</td><td class="mono">… no corresponde a ninguna clave conocida (…)</td><td>Nombre mal escrito o clave que ya no existe. Entre paréntesis, la clave que salió de traducir.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Por qué importa</div>
+          <p>
+            Antes las tres se aplicaban sin efecto y en silencio: la variable estaba puesta, la
+            configuración no cambiaba y no había nada en el registro que lo dijera.
+          </p>
+        </div>
+      </section>
+<!-- Tabla de tipos de Json.value(), incluidos los tres de java.sql. -->
+<section id="json">
+        <div class="titulo-seccion"><span class="indice-num">06</span><h2>Tipos en JSON</h2></div>
+
+        <p>
+          Cómo sale cada tipo de Java por <code>cero.core.Json</code>.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Tipo Java</th><th>JSON</th><th>Nota</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">null</td><td class="mono">null</td><td></td></tr>
+              <tr><td class="mono">String, Character</td><td>cadena</td><td>Escapada.</td></tr>
+              <tr><td class="mono">Boolean</td><td class="mono">true</td><td>Literal.</td></tr>
+              <tr><td class="mono">Number</td><td>número</td><td><code>NaN</code> e infinitos de <code>Double</code> y <code>Float</code> salen como <code>null</code>.</td></tr>
+              <tr><td class="mono">Enum</td><td>cadena</td><td>El <code>name()</code> de la constante.</td></tr>
+              <tr><td class="mono">Optional</td><td>valor o <code>null</code></td><td>Se desenvuelve.</td></tr>
+              <tr><td class="mono">UUID</td><td>cadena</td><td></td></tr>
+              <tr><td class="mono">java.time.Temporal</td><td>cadena ISO</td><td>Su propio <code>toString()</code>.</td></tr>
+              <tr><td class="mono">java.sql.Timestamp</td><td class="mono nowrap">"2026-08-14T17:00:00Z"</td><td>Instante: <code>toInstant()</code> en UTC.</td></tr>
+              <tr><td class="mono">java.sql.Time</td><td class="mono nowrap">"19:00:00"</td><td>Etiqueta de reloj, no instante.</td></tr>
+              <tr><td class="mono">java.sql.Date</td><td class="mono nowrap">"2026-08-14"</td><td>Etiqueta de calendario: <code>toLocalDate()</code>.</td></tr>
+              <tr><td class="mono">java.util.Date</td><td>cadena ISO</td><td>Instante desde los milisegundos de época.</td></tr>
+              <tr><td class="mono">Map</td><td>objeto</td><td></td></tr>
+              <tr><td class="mono">Collection, array</td><td>lista</td><td></td></tr>
+              <tr><td class="mono">record</td><td>objeto</td><td>Por sus componentes.</td></tr>
+              <tr><td class="mono">cualquier otro</td><td>objeto</td><td>Por sus getters.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Los tres de <code>java.sql</code> se miran antes que <code>java.util.Date</code></div>
+          <p>
+            Heredan de él, así que caían en su rama y se trataban como instantes: las 19:00 se
+            escribían <code>1970-01-02T00:00:00Z</code> y las fechas adelantaban un día al pasarlas
+            a UTC. <code>time</code> y <code>date</code> son etiquetas de reloj y de calendario, y
+            ahora salen como tales.
+          </p>
+        </div>
+      </section>
+<!-- 0.7.0: centinela de orElse en @Query y @Form. -->
+<section id="parametros">
+        <div class="titulo-seccion"><span class="indice-num">07</span><h2>Parámetros de petición</h2></div>
+
+        <p>
+          <code>@Query</code> toma el parámetro de la cadena de consulta y <code>@Form</code> del
+          cuerpo del formulario. Las dos tienen la misma forma.
+        </p>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Miembro</th><th>Tipo</th><th>Qué hace</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">value()</td><td class="mono">String</td><td>Nombre del parámetro. Obligatorio.</td></tr>
+              <tr><td class="mono">orElse()</td><td class="mono">String</td><td>Valor por omisión cuando el parámetro no viene. Por omisión, el centinela.</td></tr>
+              <tr><td class="mono">SIN_DEFECTO</td><td class="mono">String</td><td>Centinela de «no se declaró defecto»: <code>"\u0000cero.sin-defecto"</code>.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="aviso nota">
+          <div class="etiqueta">Corrección: <code>orElse = ""</code> ahora aplica la cadena vacía</div>
+          <p>
+            El centinela existe justamente porque la cadena vacía es un valor legítimo. Declarar
+            <code class="nowrap">@Query(value = "q", orElse = "")</code> entrega <code>""</code>
+            cuando el parámetro falta; <b>antes llegaba <code>null</code></b>. Sin declarar
+            <code>orElse</code>, el vínculo sigue siendo <code>null</code>.
+          </p>
+        </div>
+      </section>
 <section id="bases">
-        <div class="titulo-seccion"><span class="indice-num">01</span><h2>Bases de datos</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">08</span><h2>Bases de datos</h2></div>
 
         <p>
           <code>cero-data</code> habla JDBC y nada más. Sirve cualquier motor con driver JDBC — el
@@ -24,7 +394,7 @@
           <table>
             <thead><tr><th>Motor</th><th>Estado</th><th>Nota</th></tr></thead>
             <tbody>
-              <tr><td class="mono">H2 2.2</td><td><span class="pastilla ok">Verificado</span></td><td>En memoria y en archivo. Motor de la aplicación de ejemplo y de sus 36 pruebas de punta a punta.</td></tr>
+              <tr><td class="mono">H2 2.2</td><td><span class="pastilla ok">Verificado</span></td><td>En memoria y en archivo. Motor de la aplicación de ejemplo y de sus 43 pruebas de punta a punta.</td></tr>
               <tr><td class="mono">PostgreSQL 16</td><td><span class="pastilla ok">Verificado</span></td><td>47 casos en contenedor: <code>BIGSERIAL</code>, decimales exactos, booleanos nativos, fechas y <code>LIMIT/OFFSET</code>.</td></tr>
               <tr><td class="mono">MySQL 8</td><td><span class="pastilla ok">Verificado</span></td><td>Los mismos 47 casos: <code>AUTO_INCREMENT</code>, booleanos sobre <code>TINYINT</code> y claves generadas.</td></tr>
               <tr><td class="mono">MariaDB</td><td><span class="pastilla parcial">Sin verificar</span></td><td>Comparte protocolo y dialecto con MySQL, así que debería comportarse igual.</td></tr>
@@ -48,7 +418,7 @@
         </div>
       </section>
 <section id="sistemas">
-        <div class="titulo-seccion"><span class="indice-num">02</span><h2>Dónde corre</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">09</span><h2>Dónde corre</h2></div>
 
         <p>
           No hay código nativo ni nada específico de una plataforma. Donde haya un JDK 25 o
@@ -59,10 +429,28 @@
           <table>
             <thead><tr><th>Sistema</th><th>Estado</th><th>Nota</th></tr></thead>
             <tbody>
-              <tr><td class="mono">macOS</td><td><span class="pastilla ok">Probado</span></td><td>Intel y Apple Silicon. Donde se desarrolló y donde corren las 1 726 pruebas.</td></tr>
-              <tr><td class="mono">Linux</td><td><span class="pastilla ok">Probado</span></td><td>Las 1 726 pruebas en verde sobre Linux 6.12, con PostgreSQL y MySQL reales. En integración continua, sobre JDK 25, en cada cambio.</td></tr>
-              <tr><td class="mono">Windows</td><td><span class="pastilla parcial">Sin verificar</span></td><td>Nada toca rutas ni permisos específicos del sistema.</td></tr>
-              <tr><td class="mono">Contenedores</td><td><span class="pastilla parcial">Sin verificar</span></td><td>Cualquier imagen con JRE 21. Sin contenedor de servlets, la imagen es el JRE más 223 KB.</td></tr>
+              <tr><td class="mono">macOS</td><td><span class="pastilla ok">Probado</span></td><td>Intel y Apple Silicon. Donde se desarrolló y donde corren las 1 762 pruebas.</td></tr>
+              <tr><td class="mono">Linux</td><td><span class="pastilla ok">Probado</span></td><td>Las 1 762 pruebas en verde sobre Linux 6.12, con PostgreSQL y MySQL reales. En integración continua, sobre JDK 25, en cada cambio.</td></tr>
+              <tr><td class="mono">Windows</td><td><span class="pastilla parcial">Sin verificar</span></td><td>Nada toca rutas ni permisos específicos del sistema. El instalador lo reconoce bajo MinGW, MSYS y Cygwin.</td></tr>
+              <tr><td class="mono">BSD</td><td><span class="pastilla parcial">Sin verificar</span></td><td>FreeBSD, OpenBSD, NetBSD y DragonFly: el instalador los distingue y da la orden de su gestor.</td></tr>
+              <tr><td class="mono">Solaris</td><td><span class="pastilla parcial">Sin verificar</span></td><td>Detectado como <code>SunOS</code>.</td></tr>
+              <tr><td class="mono">AIX</td><td><span class="pastilla parcial">Sin verificar</span></td><td>Detectado con versión y revisión de <code>uname</code>.</td></tr>
+              <tr><td class="mono">Haiku</td><td><span class="pastilla parcial">Sin verificar</span></td><td>Detectado por nombre de núcleo.</td></tr>
+              <tr><td class="mono">Contenedores</td><td><span class="pastilla parcial">Sin verificar</span></td><td>Cualquier imagen con JRE 25. Sin contenedor de servlets, la imagen es el JRE más los 416 KB de los cuatro jar del núcleo.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="envoltura">
+          <table>
+            <thead><tr><th>Arquitectura</th><th><code>uname -m</code></th></tr></thead>
+            <tbody>
+              <tr><td class="mono">arm64</td><td class="mono">arm64, aarch64</td></tr>
+              <tr><td class="mono">x86_64</td><td class="mono">x86_64, amd64</td></tr>
+              <tr><td class="mono">arm32</td><td class="mono">armv7*, armv6*, armhf</td></tr>
+              <tr><td class="mono">riscv64</td><td class="mono">riscv64</td></tr>
+              <tr><td class="mono">ppc64</td><td class="mono">ppc64le, ppc64</td></tr>
+              <tr><td class="mono">s390x</td><td class="mono">s390x</td></tr>
             </tbody>
           </table>
         </div>
@@ -75,6 +463,11 @@
               el modelo no se sostiene. Se desarrolló y midió con OpenJDK 25.</div>
           </div>
           <div class="campo">
+            <div class="etiqueta">Detectar no es probar</div>
+            <div>El instalador reconoce esos sistemas y esas arquitecturas y sabe qué orden dar en
+              cada uno. Probado, con la batería entera en verde, solo está lo marcado arriba.</div>
+          </div>
+          <div class="campo">
             <div class="etiqueta">Sin código nativo</div>
             <div>Ni JNI, ni bibliotecas del sistema, ni rutas absolutas. El JAR es el mismo en
               todas partes.</div>
@@ -82,7 +475,7 @@
         </div>
       </section>
 <section id="comparacion">
-        <div class="titulo-seccion"><span class="indice-num">03</span><h2>Frente a los demás</h2></div>
+        <div class="titulo-seccion"><span class="indice-num">10</span><h2>Frente a los demás</h2></div>
 
         <p>
           Todos en contenedores idénticos, sobre la misma máquina y con la misma clase de acceso

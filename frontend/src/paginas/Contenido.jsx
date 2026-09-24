@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import '../documento.css'
 import useRevelar from '../revelar.js'
@@ -6,7 +6,7 @@ import useRevelar from '../revelar.js'
 /** El HTML es nuestro, del repositorio y compilado en el bundle: no hay inyección posible. */
 
 /** Las largas, las que se leen buscando algo y necesitan índice. */
-const DOCUMENTOS = new Set(['guia', 'modulos', 'referencia', 'empezar'])
+const DOCUMENTOS = new Set(['guia', 'modulos', 'referencia', 'empezar', 'acerca'])
 
 const ESTRECHO = '(max-width: 60rem)'
 const QUIETO = '(prefers-reduced-motion: reduce)'
@@ -19,12 +19,23 @@ const FLECHA =
   ' stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
   '<path d="m6 9 6 6 6-6"/></svg>'
 
-export default function Contenido({ html, titulo }) {
+export default function Contenido({ html, titulo, pide }) {
   const { pathname } = useLocation()
   const caja = useRef(null)
   const documento = esDocumento(pathname)
+  const [pedido, setPedido] = useState(html ?? null)
+  const cuerpo = html ?? pedido
 
-  useRevelar(html)
+  // La página 404 llega con su HTML hecho; las demás se piden al entrar en su ruta.
+  useEffect(() => {
+    if (html) return
+    let vigente = true
+    setPedido(null)
+    pide().then((m) => { if (vigente) setPedido(m.default) })
+    return () => { vigente = false }
+  }, [pide, html])
+
+  useRevelar(cuerpo)
 
   useEffect(() => {
     document.title = `${titulo} · Cero`
@@ -247,13 +258,13 @@ export default function Contenido({ html, titulo }) {
     }
 
     return () => { for (const limpieza of limpiezas) limpieza() }
-  }, [html, documento])
+  }, [cuerpo, documento])
 
   return (
     <div
       ref={caja}
       className={documento ? 'pagina documento' : 'pagina'}
-      dangerouslySetInnerHTML={{ __html: html }}
+      dangerouslySetInnerHTML={{ __html: cuerpo ?? '' }}
     />
   )
 }

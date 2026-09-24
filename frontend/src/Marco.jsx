@@ -4,6 +4,26 @@ import Tema from './Tema.jsx'
 import { idiomaDe, parejaDe, TEXTOS, raizDe } from './idioma.js'
 import './marco.css'
 
+/** Un glifo por destino. En el teléfono la barra baja y el icono es lo que se lee primero. */
+const ICONOS = {
+  '': 'M3 10.5 12 3l9 7.5M5.5 9.5V20h13V9.5',
+  '/empezar': 'M12 20V8M6 14l6-6 6 6M5 4h14',
+  '/guia': 'M4 5.5A1.5 1.5 0 0 1 5.5 4H19v14H5.5A1.5 1.5 0 0 0 4 19.5v-14ZM19 18v2H5.5',
+  '/modulos': 'M12 3 4 7v10l8 4 8-4V7l-8-4ZM4 7l8 4 8-4M12 11v10',
+  '/referencia': 'M4 6h10M4 12h16M4 18h12M18 6h2M18 18h2',
+  '/descargas': 'M12 4v11M7 11l5 5 5-5M5 20h14',
+  '/acerca': 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 11v5M12 7.5h.01',
+}
+
+function Icono({ ruta }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"
+         strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d={ICONOS[ruta] || ICONOS['']} />
+    </svg>
+  )
+}
+
 const subirDelTodo = (e) => {
   e.preventDefault()
   const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -107,6 +127,21 @@ export default function Marco({ children }) {
           </p>
         </div>
       </footer>
+
+      <nav className="barra-abajo" aria-label={t.menuMovil}>
+        {t.menu.map(([sufijo, texto]) => {
+          const a = `${raiz}${sufijo}` || '/'
+          const aqui = pathname === a
+          return (
+            <Link key={a} to={a} className={aqui ? 'activo' : undefined}
+                  aria-current={aqui ? 'page' : undefined}
+                  onClick={aqui ? subirDelTodo : undefined}>
+              <Icono ruta={sufijo} />
+              <span>{texto}</span>
+            </Link>
+          )
+        })}
+      </nav>
     </>
   )
 }
