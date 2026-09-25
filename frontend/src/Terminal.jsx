@@ -3,20 +3,23 @@ import { VERSION } from './version.js'
 
 /** Una terminal que escribe sola los cuatro pasos de la instalación. */
 
+// Lo que sale aquí es lo que sale de verdad al instalar y arrancar: medido el 25 de septiembre
+// de 2026 contra el paquete publicado, no escrito a ojo. Un demo que promete lo que no pasa se
+// nota a la primera vez que alguien lo prueba.
 const GUION = [
   { orden: 'curl -fsSL https://cero.ginit.dev/instalar | sh', salida: [
-      `descargando cero-${VERSION}.tar.gz … 736 KB`,
+      `descargando cero-${VERSION}.tar.gz … 349 KB`,
       'comprobando huella sha256 … correcta',
-      'compilando … 1 762 pruebas en verde',
+      'compilando … 1 764 pruebas en verde',
       'orden cero lista en ~/.local/bin',
   ]},
   { orden: 'cero new mi-app', salida: [
       'creando mi-app/ …',
-      'pom.xml · App.java · TareaController.java · plantillas/',
-      'listo. cd mi-app && cero run',
+      'pom.xml · App.java · InicioController.java · plantillas/ · estaticos/',
+      'listo. cd mi-app && mvn -q package',
   ]},
-  { orden: 'cd mi-app && cero run', salida: [
-      'cero · http://0.0.0.0:8080 · 4 rutas · 106 ms',
+  { orden: 'java -Xmx64m -jar target/mi-app.jar', salida: [
+      'cero · http://0.0.0.0:8080 · 2 rutas · 20 ms',
   ]},
 ]
 
