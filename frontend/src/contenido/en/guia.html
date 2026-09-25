@@ -64,7 +64,7 @@
           <div class="barra"><span class="etiqueta">Lambdas</span><span class="etiqueta">Java</span></div>
 <pre>.routes(r -&gt; r
     .get(<span class="st">"/salud"</span>, ctx -&gt; <span class="st">"ok"</span>)
-    .get(<span class="st">"/version"</span>, ctx -&gt; Map.of(<span class="st">"version"</span>, <span class="st">"0.7.0"</span>))
+    .get(<span class="st">"/version"</span>, ctx -&gt; Map.of(<span class="st">"version"</span>, <span class="st">"0.8.0"</span>))
     .post(<span class="st">"/eco"</span>, ctx -&gt; ctx.bodyText()))</pre>
         </div>
       </section>
@@ -535,7 +535,7 @@ Cero.app()
 <pre>&lt;dependency&gt;
     &lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;
     &lt;artifactId&gt;<span class="st">cero-test</span>&lt;/artifactId&gt;
-    &lt;version&gt;<span class="st">0.7.0</span>&lt;/version&gt;
+    &lt;version&gt;<span class="st">0.8.0</span>&lt;/version&gt;
     &lt;scope&gt;<span class="st">test</span>&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
         </div>
@@ -630,6 +630,14 @@ cliente.form(<span class="st">"/tareas"</span>, Map.of(<span class="st">"_csrf"<
             and the second one arrived as a stranger. A test that only goes over HTTP/1.1 sees
             none of that. <code>version()</code> exists so you can assert which version the
             response actually came over, instead of trusting that you asked for it.
+          </p>
+          <p>
+            <b>And it happened again in 0.8.0, wearing a different face.</b> Finishing a response
+            closes <i>our</i> half of the stream, not the stream: the client may keep sending a
+            body. The server dropped it as soon as the handler returned, so a later frame skipped
+            the <code>content-length</code> check — a request-smuggling precondition. It only
+            failed when the response won the race against the body, so all 432 checks in the
+            module passed every time. Twice the same shape: a whole exit path never exercised.
           </p>
         </div>
 

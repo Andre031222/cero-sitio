@@ -64,7 +64,7 @@
           <div class="barra"><span class="etiqueta">Lambdas</span><span class="etiqueta">Java</span></div>
 <pre>.routes(r -&gt; r
     .get(<span class="st">"/salud"</span>, ctx -&gt; <span class="st">"ok"</span>)
-    .get(<span class="st">"/version"</span>, ctx -&gt; Map.of(<span class="st">"version"</span>, <span class="st">"0.7.0"</span>))
+    .get(<span class="st">"/version"</span>, ctx -&gt; Map.of(<span class="st">"version"</span>, <span class="st">"0.8.0"</span>))
     .post(<span class="st">"/eco"</span>, ctx -&gt; ctx.bodyText()))</pre>
         </div>
       </section>
@@ -532,7 +532,7 @@ Cero.app()
 <pre>&lt;dependency&gt;
     &lt;groupId&gt;<span class="st">dev.ginit.cero</span>&lt;/groupId&gt;
     &lt;artifactId&gt;<span class="st">cero-test</span>&lt;/artifactId&gt;
-    &lt;version&gt;<span class="st">0.7.0</span>&lt;/version&gt;
+    &lt;version&gt;<span class="st">0.8.0</span>&lt;/version&gt;
     &lt;scope&gt;<span class="st">test</span>&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
         </div>
@@ -626,6 +626,15 @@ cliente.form(<span class="st">"/tareas"</span>, Map.of(<span class="st">"_csrf"<
             y la segunda llegaba como un desconocido. Una prueba que solo va por HTTP/1.1 no ve
             nada de eso. <code>version()</code> existe para poder afirmar por dónde fue de verdad
             la respuesta, y no fiarse de haberlo pedido.
+          </p>
+          <p>
+            <b>Y volvió a pasar en la 0.8.0, con otra cara.</b> Terminar de responder cierra
+            <i>nuestra</i> mitad del flujo, no el flujo: el cliente puede seguir mandando cuerpo.
+            El servidor lo olvidaba en cuanto el handler acababa, así que una trama posterior se
+            saltaba la comprobación de <code>content-length</code> —una precondición del
+            contrabando de peticiones—. Solo fallaba cuando la respuesta le ganaba la carrera al
+            cuerpo, así que las 432 comprobaciones del módulo pasaban siempre. Dos veces el mismo
+            patrón: un camino de salida entero sin ejercitar.
           </p>
         </div>
 
