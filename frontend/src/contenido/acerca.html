@@ -22,8 +22,8 @@
 
         <div class="paso__cuerpo">
           <p class="guia" data-revelar>
-            Cero es obra de dos autores de la <b>Universidad Nacional del Altiplano</b>, en Puno,
-            Perú.
+            Cero es obra de tres autores de la <b>Universidad Nacional del Altiplano</b>, Facultad
+            de Ingeniería Estadística e Informática, en Puno, Perú.
           </p>
 
           <!-- La autoría y sus ORCID van en ficha y sin tratamiento: es el dato que alguien viene
@@ -31,14 +31,21 @@
           <div class="formal" data-revelar>
             <div class="envoltura">
               <table>
-                <thead><tr><th>Autor</th><th>ORCID</th></tr></thead>
+                <thead><tr><th>Autor</th><th>Aportación</th><th>ORCID</th></tr></thead>
                 <tbody>
                   <tr>
                     <td>Richar Andre Vilca-Solorzano</td>
+                    <td>Diseño, implementación, medición y redacción</td>
                     <td class="mono-clave"><a href="https://orcid.org/0009-0003-2385-5263">0009-0003-2385-5263</a></td>
                   </tr>
                   <tr>
+                    <td>Fred Torres-Cruz</td>
+                    <td>Conceptualización del contrato poliglota · supervisión</td>
+                    <td class="mono-clave"><a href="https://orcid.org/0000-0003-0834-6834">0000-0003-0834-6834</a></td>
+                  </tr>
+                  <tr>
                     <td>Ramiro Pedro Laura-Murillo</td>
+                    <td>Conceptualización · supervisión</td>
                     <td class="mono-clave"><a href="https://orcid.org/0000-0003-1837-4871">0000-0003-1837-4871</a></td>
                   </tr>
                 </tbody>
@@ -46,8 +53,29 @@
             </div>
 
             <p>
-              <b>No se reparte el trabajo por partes:</b> los dos figuran como autores del proyecto
-              entero.
+              <b>No se reparte el trabajo por partes:</b> los tres figuran como autores del
+              proyecto entero.
+            </p>
+          </div>
+
+          <div class="aviso" data-revelar>
+            <div class="etiqueta">De dónde sale la idea que da forma al proyecto</div>
+            <p>
+              Cero podría haber sido un framework web más para Java. Lo que lo convierte en otra
+              cosa es el <b>contrato poliglota</b>: una especificación neutral respecto al
+              lenguaje, implementada varias veces, con un banco de conformidad que juzga a todas
+              por igual mandando bytes por un socket.
+            </p>
+            <p>
+              Esa idea es de <b>Fred Torres-Cruz</b>, y no es un detalle de encuadre: decide la
+              arquitectura entera. Por ella existe <code>spec/</code> en vez de tomar el código
+              Java como referencia, y por ella la pregunta del proyecto dejó de ser «¿cuánto rinde
+              este framework?» para pasar a ser <b>«¿qué supuestos mete un lenguaje en un diseño
+              sin que su autor se dé cuenta?»</b>.
+            </p>
+            <p>
+              Esa pregunta ya tiene cuatro respuestas medidas, y ninguna se podía obtener con una
+              sola implementación.
             </p>
           </div>
 
@@ -209,7 +237,8 @@
               <div class="barra"><span class="etiqueta">Citación</span><span class="etiqueta">BibTeX</span></div>
 <pre>@software{vilcasolorzano2026cero,
   title  = {Cero: núcleo de framework web poliglota sin dependencias},
-  author = {Vilca-Solorzano, Richar Andre and Laura-Murillo, Ramiro Pedro},
+  author = {Vilca-Solorzano, Richar Andre and Torres-Cruz, Fred and
+            Laura-Murillo, Ramiro Pedro},
   year   = {2026},
   url    = {https://github.com/Andre031222/Cero}
 }</pre>

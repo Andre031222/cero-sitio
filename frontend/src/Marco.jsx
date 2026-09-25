@@ -129,7 +129,7 @@ export default function Marco({ children }) {
         <div className="centro">
           <div className="pie-caja">
             <p className="pie-firma">
-              <b>Richar Andre Vilca-Solorzano · Ramiro Pedro Laura-Murillo</b>
+              <b>Richar Andre Vilca-Solorzano · Fred Torres-Cruz · Ramiro Pedro Laura-Murillo</b>
               {t.sede}
             </p>
             {/* Los enlaces del pie no van en otro <nav>: dos landmarks de navegación sin nada

@@ -22,8 +22,8 @@
 
         <div class="paso__cuerpo">
           <p class="guia" data-revelar>
-            Cero is the work of two authors at the <b>Universidad Nacional del Altiplano</b>, in Puno,
-            Peru.
+            Cero is the work of three authors at the <b>Universidad Nacional del Altiplano</b>,
+            Faculty of Statistical and Informatics Engineering, in Puno, Peru.
           </p>
 
           <!-- Authorship and ORCIDs go in a plain card and get no treatment: this is the record
@@ -31,14 +31,21 @@
           <div class="formal" data-revelar>
             <div class="envoltura">
               <table>
-                <thead><tr><th>Author</th><th>ORCID</th></tr></thead>
+                <thead><tr><th>Author</th><th>Contribution</th><th>ORCID</th></tr></thead>
                 <tbody>
                   <tr>
                     <td>Richar Andre Vilca-Solorzano</td>
+                    <td>Design, implementation, measurement and writing</td>
                     <td class="mono-clave"><a href="https://orcid.org/0009-0003-2385-5263">0009-0003-2385-5263</a></td>
                   </tr>
                   <tr>
+                    <td>Fred Torres-Cruz</td>
+                    <td>Conceptualisation of the polyglot contract · supervision</td>
+                    <td class="mono-clave"><a href="https://orcid.org/0000-0003-0834-6834">0000-0003-0834-6834</a></td>
+                  </tr>
+                  <tr>
                     <td>Ramiro Pedro Laura-Murillo</td>
+                    <td>Conceptualisation · supervision</td>
                     <td class="mono-clave"><a href="https://orcid.org/0000-0003-1837-4871">0000-0003-1837-4871</a></td>
                   </tr>
                 </tbody>
@@ -46,7 +53,28 @@
             </div>
 
             <p>
-              <b>The work is not split into parts:</b> both are credited as authors of the whole project.
+              <b>The work is not split into parts:</b> all three are credited as authors of the whole project.
+            </p>
+          </div>
+
+          <div class="aviso" data-revelar>
+            <div class="etiqueta">Where the idea that shapes the project comes from</div>
+            <p>
+              Cero could have been one more web framework for Java. What makes it something else
+              is the <b>polyglot contract</b>: a language-neutral specification, implemented more
+              than once, with a conformance bench that judges every implementation alike by
+              sending bytes over a socket.
+            </p>
+            <p>
+              That idea is <b>Fred Torres-Cruz</b>'s, and it is not framing: it decides the whole
+              architecture. Because of it <code>spec/</code> exists instead of the Java code
+              serving as the reference, and because of it the project's question stopped being
+              "how fast is this framework?" and became <b>"what assumptions does a language inject
+              into a design without its author noticing?"</b>
+            </p>
+            <p>
+              That question already has four measured answers, and none could have been obtained
+              with a single implementation.
             </p>
           </div>
 
@@ -205,7 +233,8 @@
               <div class="barra"><span class="etiqueta">Citation</span><span class="etiqueta">BibTeX</span></div>
 <pre>@software{vilcasolorzano2026cero,
   title  = {Cero: núcleo de framework web poliglota sin dependencias},
-  author = {Vilca-Solorzano, Richar Andre and Laura-Murillo, Ramiro Pedro},
+  author = {Vilca-Solorzano, Richar Andre and Torres-Cruz, Fred and
+            Laura-Murillo, Ramiro Pedro},
   year   = {2026},
   url    = {https://github.com/Andre031222/Cero}
 }</pre>
